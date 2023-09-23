@@ -1,13 +1,13 @@
-package com.example;
+package com.mjhylkema.SpiritTreeMap;
 
 import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 
-public class ExamplePluginTest
+public class SpiritTreeMapPluginTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		ExternalPluginManager.loadBuiltin(ExamplePlugin.class);
+		ExternalPluginManager.loadBuiltin(SpiritTreeMapPlugin.class);
 		RuneLite.main(args);
 	}
 }
