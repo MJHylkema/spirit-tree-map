@@ -7,13 +7,15 @@ import net.runelite.client.config.ConfigItem;
 @ConfigGroup("spirittreemap")
 public interface SpiritTreeMapConfig extends Config
 {
+	String KEY_DISPLAY_HOTKEYS = "displayHotkeys";
+
 	@ConfigItem(
-		keyName = "greeting",
-		name = "Welcome Greeting",
-		description = "The message to show to the user when they login"
+		keyName = KEY_DISPLAY_HOTKEYS,
+		name = "Display hotkeys",
+		description = "Display the travel keyboard hotkey for each tree"
 	)
-	default String greeting()
+	default boolean displayHotkeys()
 	{
-		return "Hello";
+		return true;
 	}
 }
