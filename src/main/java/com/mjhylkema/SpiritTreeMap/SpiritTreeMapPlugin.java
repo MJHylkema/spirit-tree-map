@@ -156,14 +156,14 @@ public class SpiritTreeMapPlugin extends Plugin
 		Widget existingBackground = spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CHILD_BACKGROUND);
 		existingBackground.setHidden(true);
 
-		Widget title = client.getWidget(WidgetID.ADVENTURE_LOG_ID, ADVENTURE_LOG_CHILD_TITLE);
+		Widget title = spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CHILD_TITLE);
 		title.setHidden(true);
 
 		Widget scrollbar = client.getWidget(WidgetID.ADVENTURE_LOG_ID, ADVENTURE_LOG_CHILD_SCROLLBAR);
 		scrollbar.setHidden(true);
 
-		Widget adventureLostList = client.getWidget(WidgetID.ADVENTURE_LOG_ID, ADVENTURE_LOG_LIST);
-		adventureLostList.setHidden(true);
+		Widget adventureLogTreeList = client.getWidget(WidgetID.ADVENTURE_LOG_ID, ADVENTURE_LOG_LIST);
+		adventureLogTreeList.setHidden(true);
 	}
 
 	/**
