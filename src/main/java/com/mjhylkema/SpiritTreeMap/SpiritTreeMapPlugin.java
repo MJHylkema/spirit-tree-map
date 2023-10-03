@@ -65,10 +65,11 @@ public class SpiritTreeMapPlugin extends Plugin
 	private static final String TRAVEL_ACTION = "Travel";
 	private static final String EXAMINE_ACTION = "Examine";
 	private static final int HOTKEY_LABEL_COLOR = 3287045; /*322805*/
-	private static final int ADVENTURE_LOG_LIST = 3;
 	private static final int ADVENTURE_LOG_CHILD_BACKGROUND = 0;
 	private static final int ADVENTURE_LOG_CHILD_TITLE = 1;
 	private static final int ADVENTURE_LOG_CHILD_SCROLLBAR = 2;
+	private static final int ADVENTURE_LOG_LIST = 3;
+	private static final int ADVENTURE_LOG_CLOSE_BUTTON = 4;
 	private static final String MENU_TITLE = "Spirit Tree Locations";
 
 	@Inject
@@ -127,19 +128,44 @@ public class SpiritTreeMapPlugin extends Plugin
 		}
 	}
 
+
+
 	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded e)
 	{
 		if (e.getGroupId() == WidgetID.ADVENTURE_LOG_ID)
 		{
+			setAdventureLogWidgetsHidden(new int[] {
+					ADVENTURE_LOG_CHILD_BACKGROUND,
+					ADVENTURE_LOG_CHILD_TITLE,
+					ADVENTURE_LOG_CHILD_SCROLLBAR,
+					ADVENTURE_LOG_LIST,
+					ADVENTURE_LOG_CLOSE_BUTTON
+			}, true);
+
 			clientThread.invokeLater(() ->
 			{
 				Widget spiritTreeAdventureLog = client.getWidget(WidgetInfo.ADVENTURE_LOG);
 
 				if (spiritTreeAdventureLog == null ||
 					spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CHILD_TITLE) == null ||
-					!spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CHILD_TITLE).getText().equals(MENU_TITLE))
+					!spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CHILD_TITLE).getText().equals(MENU_TITLE)) {
+
+					setAdventureLogWidgetsHidden(new int[] {
+							ADVENTURE_LOG_CHILD_BACKGROUND,
+							ADVENTURE_LOG_CHILD_TITLE,
+							ADVENTURE_LOG_CHILD_SCROLLBAR,
+							ADVENTURE_LOG_LIST,
+							ADVENTURE_LOG_CLOSE_BUTTON
+					}, false);
+
 					return;
+				}
+
+				setAdventureLogWidgetsHidden(new int[] {
+						ADVENTURE_LOG_CHILD_BACKGROUND,
+						ADVENTURE_LOG_CLOSE_BUTTON
+				}, false);
 
 				this.buildAvailableTreeList();
 				this.hideSpiritTreeInterfaceWidgets(spiritTreeAdventureLog);
@@ -148,6 +174,16 @@ public class SpiritTreeMapPlugin extends Plugin
 				this.createHouseWidget(spiritTreeAdventureLog);
 				this.createTeleportWidgets(spiritTreeAdventureLog);
 			});
+		}
+	}
+
+
+	private void setAdventureLogWidgetsHidden(int[] childIds, boolean hidden) {
+		for(int childId : childIds) {
+			Widget widget = client.getWidget(WidgetID.ADVENTURE_LOG_ID, childId);
+			if (widget != null) {
+				widget.setHidden(hidden);
+			}
 		}
 	}
 
