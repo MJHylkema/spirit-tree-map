@@ -149,11 +149,11 @@ public class SpiritTreeMapPlugin extends Plugin
 
 			clientThread.invokeLater(() ->
 			{
-				Widget spiritTreeAdventureLog = client.getWidget(WidgetInfo.ADVENTURE_LOG);
+				Widget adventureLogContainer = client.getWidget(WidgetInfo.ADVENTURE_LOG);
 
-				if (spiritTreeAdventureLog == null ||
-					spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CONTAINER_TITLE) == null ||
-					!spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CONTAINER_TITLE).getText().equals(MENU_TITLE)) {
+				if (adventureLogContainer == null ||
+					adventureLogContainer.getChild(ADVENTURE_LOG_CONTAINER_TITLE) == null ||
+					!adventureLogContainer.getChild(ADVENTURE_LOG_CONTAINER_TITLE).getText().equals(MENU_TITLE)) {
 					// It's not the Spirit Tree interface, un-hide widgets.
 					setAdventureLogWidgetsHidden(new int[] {
 						AdventureLog.CONTAINER,
@@ -164,12 +164,12 @@ public class SpiritTreeMapPlugin extends Plugin
 					return;
 				}
 
-				this.hideAdventureLogContainerChildren(spiritTreeAdventureLog);
+				this.hideAdventureLogContainerChildren(adventureLogContainer);
 				this.buildAvailableTreeList();
 
-				this.createMapWidget(spiritTreeAdventureLog);
-				this.createHouseWidget(spiritTreeAdventureLog);
-				this.createTeleportWidgets(spiritTreeAdventureLog);
+				this.createMapWidget(adventureLogContainer);
+				this.createHouseWidget(adventureLogContainer);
+				this.createTeleportWidgets(adventureLogContainer);
 
 				// Now that the appropriate children have been hidden / added, un-hide container.
 				// The Adventure log list / scrollbar will remain hidden.
@@ -192,13 +192,13 @@ public class SpiritTreeMapPlugin extends Plugin
 		}
 	}
 
-	private void hideAdventureLogContainerChildren(Widget spiritTreeAdventureLog)
+	private void hideAdventureLogContainerChildren(Widget adventureLogContainer)
 	{
-		Widget existingBackground = spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CONTAINER_BACKGROUND);
+		Widget existingBackground = adventureLogContainer.getChild(ADVENTURE_LOG_CONTAINER_BACKGROUND);
 		if (existingBackground != null)
 			existingBackground.setHidden(true);
 
-		Widget title = spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CONTAINER_TITLE);
+		Widget title = adventureLogContainer.getChild(ADVENTURE_LOG_CONTAINER_TITLE);
 		if (title != null)
 			title.setHidden(true);
 	}
@@ -268,10 +268,10 @@ public class SpiritTreeMapPlugin extends Plugin
 		}
 	}
 
-	private void createMapWidget(Widget adventureLog)
+	private void createMapWidget(Widget container)
 	{
 		// Create a graphic widget for the Spirit Tree Map background
-		Widget mapWidget = adventureLog.createChild(-1, WidgetType.GRAPHIC);
+		Widget mapWidget = container.createChild(-1, WidgetType.GRAPHIC);
 		mapWidget.setOriginalWidth(MAP_SPRITE_WIDTH);
 		mapWidget.setOriginalHeight(MAP_SPRITE_HEIGHT);
 		mapWidget.setOriginalX(0);
@@ -281,10 +281,10 @@ public class SpiritTreeMapPlugin extends Plugin
 
 	}
 
-	private void createHouseWidget(Widget adventureLog)
+	private void createHouseWidget(Widget container)
 	{
 		// Create a graphic widget for the Player Owned House
-		Widget houseWidget = adventureLog.createChild(-1, WidgetType.GRAPHIC);
+		Widget houseWidget = container.createChild(-1, WidgetType.GRAPHIC);
 		houseWidget.setOriginalWidth(HOUSE_SPRITE_WIDTH);
 		houseWidget.setOriginalHeight(HOUSE_SPRITE_HEIGHT);
 		houseWidget.setOriginalX(HOUSE_WIDGET_X);
@@ -293,13 +293,13 @@ public class SpiritTreeMapPlugin extends Plugin
 		houseWidget.revalidate();
 	}
 
-	private void createTeleportWidgets(Widget window)
+	private void createTeleportWidgets(Widget container)
 	{
 		this.activeHotkeyLabels.clear();
 
 		for (TreeDefinition treeDefinition : this.treeDefinitions)
 		{
-			Widget treeWidget = window.createChild(-1, WidgetType.GRAPHIC);
+			Widget treeWidget = container.createChild(-1, WidgetType.GRAPHIC);
 			UIButton treeButton = new UIButton(treeWidget);
 			treeButton.setPosition(treeDefinition.getX(), treeDefinition.getY());
 
@@ -312,7 +312,7 @@ public class SpiritTreeMapPlugin extends Plugin
 				treeButton.setName(tree.getDisplayedName());
 				treeButton.addAction(TRAVEL_ACTION, () -> this.triggerTeleport(tree));
 
-				this.createHotKeyLabel(window, tree);
+				this.createHotKeyLabel(container, tree);
 			}
 			else
 			{
@@ -326,11 +326,11 @@ public class SpiritTreeMapPlugin extends Plugin
 		}
 	}
 
-	private void createHotKeyLabel(Widget window, Tree tree)
+	private void createHotKeyLabel(Widget container, Tree tree)
 	{
 		HotKeyDefinition hotkeyDefinition = tree.getDefinition().getHotkey();
 
-		Widget hotKeyWidget = window.createChild(-1, WidgetType.GRAPHIC);
+		Widget hotKeyWidget = container.createChild(-1, WidgetType.GRAPHIC);
 		hotKeyWidget.setOriginalWidth(HOTKEY_LABEL_SPRITE_WIDTH);
 		hotKeyWidget.setOriginalHeight(HOTKEY_LABEL_SPRITE_HEIGHT);
 		hotKeyWidget.setOriginalX(hotkeyDefinition.getX());
@@ -342,7 +342,7 @@ public class SpiritTreeMapPlugin extends Plugin
 		if (config.displayHotkeys())
 			hotKeyWidget.revalidate();
 
-		Widget hotKeyText = window.createChild(-1, WidgetType.TEXT);
+		Widget hotKeyText = container.createChild(-1, WidgetType.TEXT);
 		hotKeyText.setText(tree.getKeyShortcut());
 		hotKeyText.setFontId(FontID.QUILL_8);
 		hotKeyText.setTextColor(HOTKEY_LABEL_COLOR);
