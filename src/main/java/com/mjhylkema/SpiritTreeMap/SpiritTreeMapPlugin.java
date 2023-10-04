@@ -65,11 +65,8 @@ public class SpiritTreeMapPlugin extends Plugin
 	private static final String TRAVEL_ACTION = "Travel";
 	private static final String EXAMINE_ACTION = "Examine";
 	private static final int HOTKEY_LABEL_COLOR = 3287045; /*322805*/
-	private static final int ADVENTURE_LOG_CHILD_BACKGROUND = 0;
-	private static final int ADVENTURE_LOG_CHILD_TITLE = 1;
-	private static final int ADVENTURE_LOG_CHILD_SCROLLBAR = 2;
-	private static final int ADVENTURE_LOG_LIST = 3;
-	private static final int ADVENTURE_LOG_CLOSE_BUTTON = 4;
+	private static final int ADVENTURE_LOG_CONTAINER_BACKGROUND = 0;
+	private static final int ADVENTURE_LOG_CONTAINER_TITLE = 1;
 	private static final String MENU_TITLE = "Spirit Tree Locations";
 
 	@Inject
@@ -92,6 +89,15 @@ public class SpiritTreeMapPlugin extends Plugin
 	private HashMap<String, TreeDefinition> treeDefinitionsLookup;
 	private HashMap<String, Tree> availableTrees;
 	private List<Widget> activeHotkeyLabels;
+
+	static class AdventureLog
+	{
+		static final int CONTAINER = 0;
+		static final int EVENT_LISTENER_LIST = 1;
+		static final int SCROLLBAR = 2;
+		static final int LIST = 3;
+		static final int CLOSE_BUTTON = 4;
+	}
 
 	@Override
 	protected void startUp()
@@ -128,19 +134,17 @@ public class SpiritTreeMapPlugin extends Plugin
 		}
 	}
 
-
-
 	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded e)
 	{
 		if (e.getGroupId() == WidgetID.ADVENTURE_LOG_ID)
 		{
+			// To avoid the default adventure log list flashing on the screen briefly, always hide it upfront.
+			// These widgets will be un-hidden in the invokeLater if it's not the "Spirit Tree Locations".
 			setAdventureLogWidgetsHidden(new int[] {
-					ADVENTURE_LOG_CHILD_BACKGROUND,
-					ADVENTURE_LOG_CHILD_TITLE,
-					ADVENTURE_LOG_CHILD_SCROLLBAR,
-					ADVENTURE_LOG_LIST,
-					ADVENTURE_LOG_CLOSE_BUTTON
+					AdventureLog.CONTAINER,
+					AdventureLog.LIST,
+					AdventureLog.SCROLLBAR
 			}, true);
 
 			clientThread.invokeLater(() ->
@@ -148,58 +152,55 @@ public class SpiritTreeMapPlugin extends Plugin
 				Widget spiritTreeAdventureLog = client.getWidget(WidgetInfo.ADVENTURE_LOG);
 
 				if (spiritTreeAdventureLog == null ||
-					spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CHILD_TITLE) == null ||
-					!spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CHILD_TITLE).getText().equals(MENU_TITLE)) {
-
+					spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CONTAINER_TITLE) == null ||
+					!spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CONTAINER_TITLE).getText().equals(MENU_TITLE)) {
+					// It's not the Spirit Tree interface, un-hide widgets.
 					setAdventureLogWidgetsHidden(new int[] {
-							ADVENTURE_LOG_CHILD_BACKGROUND,
-							ADVENTURE_LOG_CHILD_TITLE,
-							ADVENTURE_LOG_CHILD_SCROLLBAR,
-							ADVENTURE_LOG_LIST,
-							ADVENTURE_LOG_CLOSE_BUTTON
+						AdventureLog.CONTAINER,
+						AdventureLog.LIST,
+						AdventureLog.SCROLLBAR
 					}, false);
 
 					return;
 				}
 
-				setAdventureLogWidgetsHidden(new int[] {
-						ADVENTURE_LOG_CHILD_BACKGROUND,
-						ADVENTURE_LOG_CLOSE_BUTTON
-				}, false);
-
+				this.hideAdventureLogContainerChildren(spiritTreeAdventureLog);
 				this.buildAvailableTreeList();
-				this.hideSpiritTreeInterfaceWidgets(spiritTreeAdventureLog);
 
 				this.createMapWidget(spiritTreeAdventureLog);
 				this.createHouseWidget(spiritTreeAdventureLog);
 				this.createTeleportWidgets(spiritTreeAdventureLog);
+
+				// Now that the appropriate children have been hidden / added, un-hide container.
+				// The Adventure log list / scrollbar will remain hidden.
+				setAdventureLogWidgetsHidden(new int[] {
+					AdventureLog.CONTAINER
+				}, false);
 			});
 		}
 	}
 
-
-	private void setAdventureLogWidgetsHidden(int[] childIds, boolean hidden) {
-		for(int childId : childIds) {
+	private void setAdventureLogWidgetsHidden(int[] childIds, boolean hidden)
+	{
+		for(int childId : childIds)
+		{
 			Widget widget = client.getWidget(WidgetID.ADVENTURE_LOG_ID, childId);
-			if (widget != null) {
+			if (widget != null)
+			{
 				widget.setHidden(hidden);
 			}
 		}
 	}
 
-	private void hideSpiritTreeInterfaceWidgets(Widget spiritTreeAdventureLog)
+	private void hideAdventureLogContainerChildren(Widget spiritTreeAdventureLog)
 	{
-		Widget existingBackground = spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CHILD_BACKGROUND);
-		existingBackground.setHidden(true);
+		Widget existingBackground = spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CONTAINER_BACKGROUND);
+		if (existingBackground != null)
+			existingBackground.setHidden(true);
 
-		Widget title = spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CHILD_TITLE);
-		title.setHidden(true);
-
-		Widget scrollbar = client.getWidget(WidgetID.ADVENTURE_LOG_ID, ADVENTURE_LOG_CHILD_SCROLLBAR);
-		scrollbar.setHidden(true);
-
-		Widget adventureLogTreeList = client.getWidget(WidgetID.ADVENTURE_LOG_ID, ADVENTURE_LOG_LIST);
-		adventureLogTreeList.setHidden(true);
+		Widget title = spiritTreeAdventureLog.getChild(ADVENTURE_LOG_CONTAINER_TITLE);
+		if (title != null)
+			title.setHidden(true);
 	}
 
 	/**
