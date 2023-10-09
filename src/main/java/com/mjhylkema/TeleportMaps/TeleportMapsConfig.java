@@ -20,7 +20,7 @@ public interface TeleportMapsConfig extends Config
 	@ConfigSection(
 		name = "General Settings",
 		description = "Settings that apply to all maps",
-		position = 0
+		position = 1
 	)
 	String generalSettings = "generalSettings";
 
