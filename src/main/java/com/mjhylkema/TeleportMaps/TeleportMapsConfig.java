@@ -9,6 +9,8 @@ import net.runelite.client.config.ConfigSection;
 public interface TeleportMapsConfig extends Config
 {
 	String KEY_DISPLAY_HOTKEYS = "displayHotkeys";
+	String KEY_SHOW_SPIRIT_TREE_MAP = "showSpiritTreeMap";
+	String KEY_SHOW_MUSHTREE_MAP = "showMushtreeMap";
 
 	@ConfigSection(
 		name = "Teleport Maps",
@@ -25,12 +27,23 @@ public interface TeleportMapsConfig extends Config
 	String generalSettings = "generalSettings";
 
 	@ConfigItem(
-		keyName = KEY_DISPLAY_HOTKEYS,
+		keyName = KEY_SHOW_SPIRIT_TREE_MAP,
 		name = "Spirit Tree Map",
 		description = "Replace the Spirit Tree travel menu with an interactive map",
 		section = teleportMaps
 	)
 	default boolean showSpiritTreeMap()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = KEY_SHOW_MUSHTREE_MAP,
+		name = "Fossil Island Mushtree Map",
+		description = "Replace the Fossil Island Mushtree travel menu with an interactive map",
+		section = teleportMaps
+	)
+	default boolean showMushtreeMap()
 	{
 		return true;
 	}

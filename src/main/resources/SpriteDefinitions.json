@@ -102,5 +102,25 @@
   {
     "spriteId": -19201,
     "fileName": "/SpiritTreeMap/PortSarimOutlined.png"
+  },
+  {
+    "spriteId": -19300,
+    "fileName": "/MushtreeMap/FossilIslandMapWithCompass.png"
+  },
+  {
+    "spriteId": -19301,
+    "fileName": "/MushtreeMap/Mushtree.png"
+  },
+  {
+    "spriteId": -19302,
+    "fileName": "/MushtreeMap/MushtreeHighlighted.png"
+  },
+  {
+    "spriteId": -19303,
+    "fileName": "/MushtreeMap/MushtreeDisabled.png"
+  },
+  {
+    "spriteId": -19304,
+    "fileName": "/MushtreeMap/HotKeyCircle.png"
   }
 ]

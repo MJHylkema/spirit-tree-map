@@ -3,14 +3,15 @@ package com.mjhylkema.TeleportMaps.definition;
 import lombok.Getter;
 
 @Getter
-public class TreeDefinition
+public class MushtreeDefinition
 {
+	@Getter
+	static private int width = 30;
+	@Getter
+	static private int height = 35;
+
 	private String name;
 	private int x;
 	private int y;
-	private int width;
-	private int height;
-	private int spriteEnabled;
-	private int spriteHover;
 	private HotKeyDefinition hotkey;
 }

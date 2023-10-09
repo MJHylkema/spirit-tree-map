@@ -3,6 +3,7 @@ package com.mjhylkema.TeleportMaps;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
 import com.mjhylkema.TeleportMaps.components.BaseMap;
+import com.mjhylkema.TeleportMaps.components.MushtreeMap;
 import com.mjhylkema.TeleportMaps.components.SpiritTreeMap;
 import com.mjhylkema.TeleportMaps.definition.SpriteDefinition;
 import java.io.InputStream;
@@ -60,8 +61,11 @@ public class TeleportMapsPlugin extends Plugin
 
 		this.mapComponents = new ArrayList<>();
 
-		if(this.config.showSpiritTreeMap())
+		if (this.config.showSpiritTreeMap())
 			this.mapComponents.add(new SpiritTreeMap(this));
+
+		if (this.config.showMushtreeMap())
+			this.mapComponents.add(new MushtreeMap(this));
 	}
 
 	public  <T> T loadDefinitionResource(Class<T> classType, String resource)
@@ -104,6 +108,4 @@ public class TeleportMapsPlugin extends Plugin
 		boolean visible = config.displayHotkeys();
 		this.mapComponents.forEach((baseMap -> baseMap.changeHotkeyLabelVisibility(visible)));
 	}
-
-
 }

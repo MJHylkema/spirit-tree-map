@@ -37,15 +37,11 @@ public class SpiritTreeMap extends BaseMap
 	private static final int DISABLED_TREE_SPRITE_ID = -19102;
 	private static final int DISABLED_TREE_SPRITE_WIDTH = 19;
 	private static final int DISABLED_TREE_SPRITE_HEIGHT = 27;
-	private static final int HOTKEY_LABEL_SPRITE_ID = -19002;
-	private static final int HOTKEY_LABEL_SPRITE_WIDTH = 20;
-	private static final int HOTKEY_LABEL_SPRITE_HEIGHT = 19;
 
 	private static final int SCRIPT_TRIGGER_KEY = 1437;
 	private static final String TREE_LABEL_NAME_PATTERN = "<col=735a28>(.+)</col>: (<col=5f5f5f>)?(.+)";
 	private static final String TRAVEL_ACTION = "Travel";
 	private static final String EXAMINE_ACTION = "Examine";
-	private static final int HOTKEY_LABEL_COLOR = 3287045; /*322805*/
 	private static final int ADVENTURE_LOG_CONTAINER_BACKGROUND = 0;
 	private static final int ADVENTURE_LOG_CONTAINER_TITLE = 1;
 	private static final String MENU_TITLE = "Spirit Tree Locations";
@@ -62,14 +58,12 @@ public class SpiritTreeMap extends BaseMap
 	private TreeDefinition[] treeDefinitions;
 	private HashMap<String, TreeDefinition> treeDefinitionsLookup;
 	private HashMap<String, Tree> availableTrees;
-	private List<Widget> activeHotkeyLabels;
 
 	public SpiritTreeMap(TeleportMapsPlugin plugin)
 	{
 		super(plugin);
 		this.loadDefinitions();
 		this.buildTreeDefinitionLookup();
-		this.activeHotkeyLabels = new ArrayList<>();
 	}
 
 	private void loadDefinitions()
@@ -224,32 +218,27 @@ public class SpiritTreeMap extends BaseMap
 
 	private void createMapWidget(Widget container)
 	{
-		// Create a graphic widget for the Spirit Tree Map background
-		Widget mapWidget = container.createChild(-1, WidgetType.GRAPHIC);
-		mapWidget.setOriginalWidth(MAP_SPRITE_WIDTH);
-		mapWidget.setOriginalHeight(MAP_SPRITE_HEIGHT);
-		mapWidget.setOriginalX(0);
-		mapWidget.setOriginalY(0);
-		mapWidget.setSpriteId(MAP_SPRITE_ID);
-		mapWidget.revalidate();
-
+		this.createSpriteWidget(container,
+			MAP_SPRITE_WIDTH,
+			MAP_SPRITE_HEIGHT,
+			0,
+			0,
+			MAP_SPRITE_ID);
 	}
 
 	private void createHouseWidget(Widget container)
 	{
-		// Create a graphic widget for the Player Owned House
-		Widget houseWidget = container.createChild(-1, WidgetType.GRAPHIC);
-		houseWidget.setOriginalWidth(HOUSE_SPRITE_WIDTH);
-		houseWidget.setOriginalHeight(HOUSE_SPRITE_HEIGHT);
-		houseWidget.setOriginalX(HOUSE_WIDGET_X);
-		houseWidget.setOriginalY(HOUSE_WIDGET_Y);
-		houseWidget.setSpriteId(HOUSE_SPRITE_ID);
-		houseWidget.revalidate();
+		this.createSpriteWidget(container,
+			HOUSE_SPRITE_WIDTH,
+			HOUSE_SPRITE_HEIGHT,
+			HOUSE_WIDGET_X,
+			HOUSE_WIDGET_Y,
+			HOUSE_SPRITE_ID);
 	}
 
 	private void createTeleportWidgets(Widget container)
 	{
-		this.activeHotkeyLabels.clear();
+		this.clearHotKeyLabels();
 
 		for (TreeDefinition treeDefinition : this.treeDefinitions)
 		{
@@ -285,14 +274,14 @@ public class SpiritTreeMap extends BaseMap
 		HotKeyDefinition hotkeyDefinition = tree.getDefinition().getHotkey();
 		boolean displayHotkeys = this.plugin.getConfig().displayHotkeys();
 
-		Widget hotKeyWidget = container.createChild(-1, WidgetType.GRAPHIC);
-		hotKeyWidget.setOriginalWidth(HOTKEY_LABEL_SPRITE_WIDTH);
-		hotKeyWidget.setOriginalHeight(HOTKEY_LABEL_SPRITE_HEIGHT);
-		hotKeyWidget.setOriginalX(hotkeyDefinition.getX());
-		hotKeyWidget.setOriginalY(hotkeyDefinition.getY());
-		hotKeyWidget.setSpriteId(HOTKEY_LABEL_SPRITE_ID);
+		Widget hotKeyWidget = this.createSpriteWidget(container,
+			HOTKEY_LABEL_SPRITE_WIDTH,
+			HOTKEY_LABEL_SPRITE_HEIGHT,
+			hotkeyDefinition.getX(),
+			hotkeyDefinition.getY(),
+			HOTKEY_LABEL_SPRITE_ID);
 		hotKeyWidget.setHidden(!displayHotkeys);
-		this.activeHotkeyLabels.add(hotKeyWidget);
+		this.addHotkeyLabel(hotKeyWidget);
 
 		if (displayHotkeys)
 			hotKeyWidget.revalidate();
@@ -308,7 +297,7 @@ public class SpiritTreeMap extends BaseMap
 		hotKeyText.setXTextAlignment(WidgetTextAlignment.CENTER);
 		hotKeyText.setYTextAlignment(WidgetTextAlignment.CENTER);
 		hotKeyText.setHidden(!displayHotkeys);
-		this.activeHotkeyLabels.add(hotKeyText);
+		this.addHotkeyLabel(hotKeyText);
 
 		if (displayHotkeys)
 			hotKeyText.revalidate();
@@ -327,21 +316,6 @@ public class SpiritTreeMap extends BaseMap
 	private void triggerLockedMessage(TreeDefinition treeDefinition)
 	{
 		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("The Spirit Tree at %s is not available.", treeDefinition.getName()), null));
-	}
-
-	@Override
-	public void changeHotkeyLabelVisibility(boolean visible)
-	{
-		if (this.activeHotkeyLabels.size() == 0)
-			return;
-
-		this.plugin.getClientThread().invokeLater(() -> {
-			this.activeHotkeyLabels.forEach((label) -> {
-				label.setHidden(!visible);
-				label.revalidate();
-			});
-		});
-
 	}
 
 	@Override
