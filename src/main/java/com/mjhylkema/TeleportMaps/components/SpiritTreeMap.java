@@ -1,23 +1,17 @@
-package com.mjhylkema.SpiritTreeMap;
+package com.mjhylkema.TeleportMaps.components;
 
-import com.google.gson.Gson;
-import com.google.inject.Provides;
-import com.mjhylkema.SpiritTreeMap.definition.HotKeyDefinition;
-import com.mjhylkema.SpiritTreeMap.definition.TreeDefinition;
-import com.mjhylkema.SpiritTreeMap.definition.SpriteDefinition;
-import com.mjhylkema.SpiritTreeMap.ui.Tree;
-import com.mjhylkema.SpiritTreeMap.ui.UIButton;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
+import com.mjhylkema.TeleportMaps.definition.HotKeyDefinition;
+import com.mjhylkema.TeleportMaps.definition.SpriteDefinition;
+import com.mjhylkema.TeleportMaps.definition.TreeDefinition;
+import com.mjhylkema.TeleportMaps.ui.Tree;
+import com.mjhylkema.TeleportMaps.ui.UIButton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
-import net.runelite.api.Client;
 import net.runelite.api.FontID;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.Widget;
@@ -25,23 +19,11 @@ import net.runelite.api.widgets.WidgetID;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetTextAlignment;
 import net.runelite.api.widgets.WidgetType;
-import net.runelite.client.callback.ClientThread;
-import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.game.SpriteManager;
-import net.runelite.client.plugins.Plugin;
-import net.runelite.client.plugins.PluginDescriptor;
 
-@Slf4j
-@PluginDescriptor(
-	name = "Spirit Tree Map"
-)
-public class SpiritTreeMapPlugin extends Plugin
+public class SpiritTreeMap extends BaseMap
 {
 	/* Definition JSON files */
-	private static final String DEF_FILE_SPRITES = "/SpriteDefinitions.json";
-	private static final String DEF_FILE_TREES = "/TreeDefinitions.json";
+	private static final String DEF_FILE_TREES = "/SpiritTreeMap/TreeDefinitions.json";
 
 	/* Sprite IDs, dimensions and positions */
 	private static final int MAP_SPRITE_ID = -19000;
@@ -55,7 +37,6 @@ public class SpiritTreeMapPlugin extends Plugin
 	private static final int DISABLED_TREE_SPRITE_ID = -19102;
 	private static final int DISABLED_TREE_SPRITE_WIDTH = 19;
 	private static final int DISABLED_TREE_SPRITE_HEIGHT = 27;
-
 	private static final int HOTKEY_LABEL_SPRITE_ID = -19002;
 	private static final int HOTKEY_LABEL_SPRITE_WIDTH = 20;
 	private static final int HOTKEY_LABEL_SPRITE_HEIGHT = 19;
@@ -69,27 +50,6 @@ public class SpiritTreeMapPlugin extends Plugin
 	private static final int ADVENTURE_LOG_CONTAINER_TITLE = 1;
 	private static final String MENU_TITLE = "Spirit Tree Locations";
 
-	@Inject
-	private Client client;
-
-	@Inject
-	private ClientThread clientThread;
-
-	@Inject
-	private SpiritTreeMapConfig config;
-
-	@Inject
-	private SpriteManager spriteManager;
-
-	@Inject
-	private Gson gson;
-
-	private SpriteDefinition[] spriteDefinitions;
-	private TreeDefinition[] treeDefinitions;
-	private HashMap<String, TreeDefinition> treeDefinitionsLookup;
-	private HashMap<String, Tree> availableTrees;
-	private List<Widget> activeHotkeyLabels;
-
 	static class AdventureLog
 	{
 		static final int CONTAINER = 0;
@@ -99,29 +59,22 @@ public class SpiritTreeMapPlugin extends Plugin
 		static final int CLOSE_BUTTON = 4;
 	}
 
-	@Override
-	protected void startUp()
+	private TreeDefinition[] treeDefinitions;
+	private HashMap<String, TreeDefinition> treeDefinitionsLookup;
+	private HashMap<String, Tree> availableTrees;
+	private List<Widget> activeHotkeyLabels;
+
+	public SpiritTreeMap(TeleportMapsPlugin plugin)
 	{
+		super(plugin);
 		this.loadDefinitions();
 		this.buildTreeDefinitionLookup();
 		this.activeHotkeyLabels = new ArrayList<>();
-		this.spriteManager.addSpriteOverrides(spriteDefinitions);
 	}
 
 	private void loadDefinitions()
 	{
-		this.spriteDefinitions = loadDefinitionResource(SpriteDefinition[].class, DEF_FILE_SPRITES, gson);
-		this.treeDefinitions = loadDefinitionResource(TreeDefinition[].class, DEF_FILE_TREES, gson);
-	}
-
-	private <T> T loadDefinitionResource(Class<T> classType, String resource, Gson gson)
-	{
-		// Load the resource as a stream and wrap it in a reader
-		InputStream resourceStream = classType.getResourceAsStream(resource);
-		InputStreamReader definitionReader = new InputStreamReader(resourceStream);
-
-		// Load the objects from the JSON file
-		return gson.fromJson(definitionReader, classType);
+		this.treeDefinitions = this.plugin.loadDefinitionResource(TreeDefinition[].class, DEF_FILE_TREES);
 	}
 
 	private void buildTreeDefinitionLookup()
@@ -134,22 +87,22 @@ public class SpiritTreeMapPlugin extends Plugin
 		}
 	}
 
-	@Subscribe
-	public void onWidgetLoaded(WidgetLoaded e)
+	@Override
+	public void widgetLoaded(WidgetLoaded e)
 	{
 		if (e.getGroupId() == WidgetID.ADVENTURE_LOG_ID)
 		{
 			// To avoid the default adventure log list flashing on the screen briefly, always hide it upfront.
 			// These widgets will be un-hidden in the invokeLater if it's not the "Spirit Tree Locations".
 			setAdventureLogWidgetsHidden(new int[] {
-					AdventureLog.CONTAINER,
-					AdventureLog.LIST,
-					AdventureLog.SCROLLBAR
+				AdventureLog.CONTAINER,
+				AdventureLog.LIST,
+				AdventureLog.SCROLLBAR
 			}, true);
 
-			clientThread.invokeLater(() ->
+			this.plugin.getClientThread().invokeLater(() ->
 			{
-				Widget adventureLogContainer = client.getWidget(WidgetInfo.ADVENTURE_LOG);
+				Widget adventureLogContainer = this.plugin.getClient().getWidget(WidgetInfo.ADVENTURE_LOG);
 
 				if (adventureLogContainer == null ||
 					adventureLogContainer.getChild(ADVENTURE_LOG_CONTAINER_TITLE) == null ||
@@ -180,11 +133,12 @@ public class SpiritTreeMapPlugin extends Plugin
 		}
 	}
 
+
 	private void setAdventureLogWidgetsHidden(int[] childIds, boolean hidden)
 	{
 		for(int childId : childIds)
 		{
-			Widget widget = client.getWidget(WidgetID.ADVENTURE_LOG_ID, childId);
+			Widget widget = this.plugin.getClient().getWidget(WidgetID.ADVENTURE_LOG_ID, childId);
 			if (widget != null)
 			{
 				widget.setHidden(hidden);
@@ -215,7 +169,7 @@ public class SpiritTreeMapPlugin extends Plugin
 		Pattern labelPattern = Pattern.compile(TREE_LABEL_NAME_PATTERN);
 
 		// Get the parent widgets containing the tree list
-		Widget treeList = this.client.getWidget(WidgetID.ADVENTURE_LOG_ID, 3);
+		Widget treeList = this.plugin.getClient().getWidget(WidgetID.ADVENTURE_LOG_ID, 3);
 
 		// Fetch all tree label widgets
 		Widget[] labelWidgets = treeList.getDynamicChildren();
@@ -329,6 +283,7 @@ public class SpiritTreeMapPlugin extends Plugin
 	private void createHotKeyLabel(Widget container, Tree tree)
 	{
 		HotKeyDefinition hotkeyDefinition = tree.getDefinition().getHotkey();
+		boolean displayHotkeys = this.plugin.getConfig().displayHotkeys();
 
 		Widget hotKeyWidget = container.createChild(-1, WidgetType.GRAPHIC);
 		hotKeyWidget.setOriginalWidth(HOTKEY_LABEL_SPRITE_WIDTH);
@@ -336,10 +291,10 @@ public class SpiritTreeMapPlugin extends Plugin
 		hotKeyWidget.setOriginalX(hotkeyDefinition.getX());
 		hotKeyWidget.setOriginalY(hotkeyDefinition.getY());
 		hotKeyWidget.setSpriteId(HOTKEY_LABEL_SPRITE_ID);
-		hotKeyWidget.setHidden(!config.displayHotkeys());
+		hotKeyWidget.setHidden(!displayHotkeys);
 		this.activeHotkeyLabels.add(hotKeyWidget);
 
-		if (config.displayHotkeys())
+		if (displayHotkeys)
 			hotKeyWidget.revalidate();
 
 		Widget hotKeyText = container.createChild(-1, WidgetType.TEXT);
@@ -352,10 +307,10 @@ public class SpiritTreeMapPlugin extends Plugin
 		hotKeyText.setOriginalY(hotkeyDefinition.getY() + 1);
 		hotKeyText.setXTextAlignment(WidgetTextAlignment.CENTER);
 		hotKeyText.setYTextAlignment(WidgetTextAlignment.CENTER);
-		hotKeyText.setHidden(!config.displayHotkeys());
+		hotKeyText.setHidden(!displayHotkeys);
 		this.activeHotkeyLabels.add(hotKeyText);
 
-		if (config.displayHotkeys())
+		if (displayHotkeys)
 			hotKeyText.revalidate();
 	}
 
@@ -366,38 +321,32 @@ public class SpiritTreeMapPlugin extends Plugin
 
 	private void triggerTeleport(Tree tree)
 	{
-		this.clientThread.invokeLater(() -> client.runScript(SCRIPT_TRIGGER_KEY, client.getWidget(0xBB0003).getId(), tree.getWidget().getIndex()));
+		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().runScript(SCRIPT_TRIGGER_KEY, this.plugin.getClient().getWidget(0xBB0003).getId(), tree.getWidget().getIndex()));
 	}
 
 	private void triggerLockedMessage(TreeDefinition treeDefinition)
 	{
-		this.clientThread.invokeLater(() -> client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("The Spirit Tree at %s is not available.", treeDefinition.getName()), null));
+		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("The Spirit Tree at %s is not available.", treeDefinition.getName()), null));
 	}
 
-	@Provides
-	SpiritTreeMapConfig provideConfig(ConfigManager configManager)
+	@Override
+	public void changeHotkeyLabelVisibility(boolean visible)
 	{
-		return configManager.getConfig(SpiritTreeMapConfig.class);
-	}
+		if (this.activeHotkeyLabels.size() == 0)
+			return;
 
-	@Subscribe
-	public void onConfigChanged(ConfigChanged e)
-	{
-		switch (e.getKey())
-		{
-			case SpiritTreeMapConfig.KEY_DISPLAY_HOTKEYS:
-				this.clientThread.invokeLater(this::updateHotkeyLabels);
-				break;
-			default:
-				return;
-		}
-	}
-
-	private void updateHotkeyLabels()
-	{
-		this.activeHotkeyLabels.forEach((label) -> {
-			label.setHidden(!config.displayHotkeys());
-			label.revalidate();
+		this.plugin.getClientThread().invokeLater(() -> {
+			this.activeHotkeyLabels.forEach((label) -> {
+				label.setHidden(!visible);
+				label.revalidate();
+			});
 		});
+
+	}
+
+	@Override
+	public void changeLabelVisibility()
+	{
+
 	}
 }

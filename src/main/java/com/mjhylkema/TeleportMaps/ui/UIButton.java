@@ -1,4 +1,4 @@
-package com.mjhylkema.SpiritTreeMap.ui;
+package com.mjhylkema.TeleportMaps.ui;
 
 import net.runelite.api.ScriptEvent;
 import net.runelite.api.widgets.Widget;

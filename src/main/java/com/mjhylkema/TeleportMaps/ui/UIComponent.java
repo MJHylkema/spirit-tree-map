@@ -1,8 +1,7 @@
-package com.mjhylkema.SpiritTreeMap.ui;
+package com.mjhylkema.TeleportMaps.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import net.runelite.api.ScriptEvent;
@@ -25,10 +24,10 @@ public abstract class UIComponent
 	private List<MenuAction> actions;
 
 	@Setter
-	private ComponentEventListener hoverListener;
+	private UIComponentEventListener hoverListener;
 
 	@Setter
-	private ComponentEventListener leaveListener;
+	private UIComponentEventListener leaveListener;
 
 
 	/**
@@ -104,7 +103,7 @@ public abstract class UIComponent
 	 * hovering over the widget
 	 * @param listener the listener
 	 */
-	public void setOnHoverListener(ComponentEventListener listener)
+	public void setOnHoverListener(UIComponentEventListener listener)
 	{
 		this.hoverListener = listener;
 	}
@@ -114,7 +113,7 @@ public abstract class UIComponent
 	 * exiting from over the widget
 	 * @param listener the listener
 	 */
-	public void setOnLeaveListener(ComponentEventListener listener)
+	public void setOnLeaveListener(UIComponentEventListener listener)
 	{
 		this.leaveListener = listener;
 	}

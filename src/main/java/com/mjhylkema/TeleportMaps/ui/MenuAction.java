@@ -1,4 +1,4 @@
-package com.mjhylkema.SpiritTreeMap.ui;
+package com.mjhylkema.TeleportMaps.ui;
 
 /**
  * A listener interface for receiving menu actions

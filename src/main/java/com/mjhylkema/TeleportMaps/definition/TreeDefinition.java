@@ -1,4 +1,4 @@
-package com.mjhylkema.SpiritTreeMap.definition;
+package com.mjhylkema.TeleportMaps.definition;
 
 import lombok.Getter;
 
