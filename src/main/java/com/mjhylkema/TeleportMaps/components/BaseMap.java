@@ -14,7 +14,7 @@ public abstract class BaseMap
 {
 	protected static final int HOTKEY_LABEL_SPRITE_ID = -19002;
 	protected static final int HOTKEY_LABEL_SPRITE_WIDTH = 20;
-	protected static final int HOTKEY_LABEL_SPRITE_HEIGHT = 19;
+	protected static final int HOTKEY_LABEL_SPRITE_HEIGHT = 20;
 
 	protected static final int HOTKEY_LABEL_COLOR = 3287045; /*322805*/
 
@@ -87,7 +87,7 @@ public abstract class BaseMap
 		hotKeyText.setTextColor(HOTKEY_LABEL_COLOR);
 		hotKeyText.setOriginalWidth(HOTKEY_LABEL_SPRITE_WIDTH);
 		hotKeyText.setOriginalHeight(HOTKEY_LABEL_SPRITE_HEIGHT);
-		hotKeyText.setOriginalX(hotKeyDefinition.getX() + 1);
+		hotKeyText.setOriginalX(hotKeyDefinition.getX());
 		hotKeyText.setOriginalY(hotKeyDefinition.getY() + 1);
 		hotKeyText.setXTextAlignment(WidgetTextAlignment.CENTER);
 		hotKeyText.setYTextAlignment(WidgetTextAlignment.CENTER);
