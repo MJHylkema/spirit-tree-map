@@ -1,11 +1,7 @@
-package com.mjhylkema.SpiritTreeMap.ui;
+package com.mjhylkema.TeleportMaps.ui;
 
-import com.mjhylkema.SpiritTreeMap.definition.TreeDefinition;
-import java.util.ArrayList;
-import java.util.List;
+import com.mjhylkema.TeleportMaps.definition.TreeDefinition;
 import lombok.Getter;
-import net.runelite.api.ScriptEvent;
-import net.runelite.api.widgets.JavaScriptCallback;
 import net.runelite.api.widgets.Widget;
 
 @Getter

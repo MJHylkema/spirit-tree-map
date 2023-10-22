@@ -1,10 +1,10 @@
-package com.mjhylkema.SpiritTreeMap.ui;
+package com.mjhylkema.TeleportMaps.ui;
 
 /**
  * A listener interface for receiving UI component events
  * Credit to Antipixel for the original implementation
  */
-public interface ComponentEventListener
+public interface UIComponentEventListener
 {
 	/**
 	 * Invoked upon a component event

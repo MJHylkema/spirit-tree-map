@@ -1,11 +1,11 @@
 [
   {
     "spriteId": -19000,
-    "fileName": "/SpiritTreeMap.png"
+    "fileName": "/SpiritTreeMap/SpiritTreeMap.png"
   },
   {
     "spriteId": -19001,
-    "fileName": "/House.png"
+    "fileName": "/SpiritTreeMap/House.png"
   },
   {
     "spriteId": -19002,
@@ -13,94 +13,110 @@
   },
   {
     "spriteId": -19100,
-    "fileName": "/Default.png"
+    "fileName": "/SpiritTreeMap/Default.png"
   },
   {
     "spriteId": -19101,
-    "fileName": "/DefaultOutlined.png"
+    "fileName": "/SpiritTreeMap/DefaultOutlined.png"
   },
   {
     "spriteId": -19102,
-    "fileName": "/DefaultDisabled.png"
+    "fileName": "/SpiritTreeMap/DefaultDisabled.png"
   },
   {
     "spriteId": -19110,
-    "fileName": "/FarmingGuild.png"
+    "fileName": "/SpiritTreeMap/FarmingGuild.png"
   },
   {
     "spriteId": -19111,
-    "fileName": "/FarmingGuildOutlined.png"
+    "fileName": "/SpiritTreeMap/FarmingGuildOutlined.png"
   },
   {
     "spriteId": -19120,
-    "fileName": "/Hosidius.png"
+    "fileName": "/SpiritTreeMap/Hosidius.png"
   },
   {
     "spriteId": -19121,
-    "fileName": "/HosidiusOutlined.png"
+    "fileName": "/SpiritTreeMap/HosidiusOutlined.png"
   },
   {
     "spriteId": -19130,
-    "fileName": "/Prifddinas.png"
+    "fileName": "/SpiritTreeMap/Prifddinas.png"
   },
   {
     "spriteId": -19131,
-    "fileName": "/PrifddinasOutlined.png"
+    "fileName": "/SpiritTreeMap/PrifddinasOutlined.png"
   },
   {
     "spriteId": -19140,
-    "fileName": "/TreeGnomeStronghold.png"
+    "fileName": "/SpiritTreeMap/TreeGnomeStronghold.png"
   },
   {
     "spriteId": -19141,
-    "fileName": "/TreeGnomeStrongholdOutlined.png"
+    "fileName": "/SpiritTreeMap/TreeGnomeStrongholdOutlined.png"
   },
   {
     "spriteId": -19150,
-    "fileName": "/KhazardBattlefield.png"
+    "fileName": "/SpiritTreeMap/KhazardBattlefield.png"
   },
   {
     "spriteId": -19151,
-    "fileName": "/KhazardBattlefieldOutlined.png"
+    "fileName": "/SpiritTreeMap/KhazardBattlefieldOutlined.png"
   },
   {
     "spriteId": -19160,
-    "fileName": "/PoisonWaste.png"
+    "fileName": "/SpiritTreeMap/PoisonWaste.png"
   },
   {
     "spriteId": -19161,
-    "fileName": "/PoisonWasteOutlined.png"
+    "fileName": "/SpiritTreeMap/PoisonWasteOutlined.png"
   },
   {
     "spriteId": -19170,
-    "fileName": "/TreeGnomeVillage.png"
+    "fileName": "/SpiritTreeMap/TreeGnomeVillage.png"
   },
   {
     "spriteId": -19171,
-    "fileName": "/TreeGnomeVillageOutlined.png"
+    "fileName": "/SpiritTreeMap/TreeGnomeVillageOutlined.png"
   },
   {
     "spriteId": -19180,
-    "fileName": "/Etceteria.png"
+    "fileName": "/SpiritTreeMap/Etceteria.png"
   },
   {
     "spriteId": -19181,
-    "fileName": "/EtceteriaOutlined.png"
+    "fileName": "/SpiritTreeMap/EtceteriaOutlined.png"
   },
   {
     "spriteId": -19190,
-    "fileName": "/Brimhaven.png"
+    "fileName": "/SpiritTreeMap/Brimhaven.png"
   },
   {
     "spriteId": -19191,
-    "fileName": "/BrimhavenOutlined.png"
+    "fileName": "/SpiritTreeMap/BrimhavenOutlined.png"
   },
   {
     "spriteId": -19200,
-    "fileName": "/PortSarim.png"
+    "fileName": "/SpiritTreeMap/PortSarim.png"
   },
   {
     "spriteId": -19201,
-    "fileName": "/PortSarimOutlined.png"
+    "fileName": "/SpiritTreeMap/PortSarimOutlined.png"
+  },
+  {
+    "spriteId": -19300,
+    "fileName": "/MushtreeMap/FossilIslandMapWithCompass.png"
+  },
+  {
+    "spriteId": -19301,
+    "fileName": "/MushtreeMap/Mushtree.png"
+  },
+  {
+    "spriteId": -19302,
+    "fileName": "/MushtreeMap/MushtreeHighlighted.png"
+  },
+  {
+    "spriteId": -19303,
+    "fileName": "/MushtreeMap/MushtreeDisabled.png"
   }
 ]

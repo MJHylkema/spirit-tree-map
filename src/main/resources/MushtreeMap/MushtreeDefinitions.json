@@ -1,0 +1,46 @@
+[
+  {
+    "name": "House on the Hill",
+    "x": 266,
+    "y": 43,
+    "hotkey": {
+      "key": "1",
+      "keyCode": 49,
+      "x": 289,
+      "y": 59
+    }
+  },
+  {
+    "name": "Verdant Valley",
+    "x": 254,
+    "y": 183,
+    "hotkey": {
+      "key": "2",
+      "keyCode": 50,
+      "x": 277,
+      "y": 199
+    }
+  },
+  {
+    "name": "Sticky Swamp",
+    "x": 161,
+    "y": 181,
+    "hotkey": {
+      "key": "3",
+      "keyCode": 51,
+      "x": 184,
+      "y": 201
+    }
+  },
+  {
+    "name": "Mushroom Meadow",
+    "x": 154,
+    "y": 52,
+    "hotkey": {
+      "key": "4",
+      "keyCode": 52,
+      "x": 177,
+      "y": 68
+    }
+  }
+]

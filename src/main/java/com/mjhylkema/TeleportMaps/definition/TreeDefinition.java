@@ -1,11 +1,10 @@
-package com.mjhylkema.SpiritTreeMap.definition;
+package com.mjhylkema.TeleportMaps.definition;
 
 import lombok.Getter;
 
 @Getter
 public class TreeDefinition
 {
-	private int id;
 	private String name;
 	private int x;
 	private int y;
