@@ -26,7 +26,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 @Slf4j
 @PluginDescriptor(
 	name = "Teleport Maps",
-	configName = "SpiritTreeMapPlugin", // Original plugin name,
+	configName = "SpiritTreeMapPlugin", // Original plugin name
 	enabledByDefault = true
 )
 public class TeleportMapsPlugin extends Plugin
@@ -61,11 +61,7 @@ public class TeleportMapsPlugin extends Plugin
 
 		this.mapComponents = new ArrayList<>();
 
-		if (this.config.showSpiritTreeMap())
-			this.mapComponents.add(new SpiritTreeMap(this));
-
-		if (this.config.showMushtreeMap())
-			this.mapComponents.add(new MushtreeMap(this));
+		this.populateMaps();
 	}
 
 	public  <T> T loadDefinitionResource(Class<T> classType, String resource)
@@ -98,6 +94,10 @@ public class TeleportMapsPlugin extends Plugin
 			case TeleportMapsConfig.KEY_DISPLAY_HOTKEYS:
 				updateHotkeyLabels();
 				break;
+			case TeleportMapsConfig.KEY_SHOW_SPIRIT_TREE_MAP:
+			case TeleportMapsConfig.KEY_SHOW_MUSHTREE_MAP:
+				populateMaps();
+				break;
 			default:
 				return;
 		}
@@ -107,5 +107,16 @@ public class TeleportMapsPlugin extends Plugin
 	{
 		boolean visible = config.displayHotkeys();
 		this.mapComponents.forEach((baseMap -> baseMap.changeHotkeyLabelVisibility(visible)));
+	}
+
+	private void populateMaps()
+	{
+		this.mapComponents.clear();
+
+		if (this.config.showSpiritTreeMap())
+			this.mapComponents.add(new SpiritTreeMap(this));
+
+		if (this.config.showMushtreeMap())
+			this.mapComponents.add(new MushtreeMap(this));
 	}
 }

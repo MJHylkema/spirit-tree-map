@@ -1,19 +1,15 @@
 package com.mjhylkema.TeleportMaps.components;
 
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
-import com.mjhylkema.TeleportMaps.definition.HotKeyDefinition;
 import com.mjhylkema.TeleportMaps.definition.MushtreeDefinition;
 import com.mjhylkema.TeleportMaps.ui.Mushtree;
-import com.mjhylkema.TeleportMaps.ui.Tree;
 import com.mjhylkema.TeleportMaps.ui.UIButton;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.runelite.api.FontID;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.JavaScriptCallback;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetTextAlignment;
 import net.runelite.api.widgets.WidgetType;
 import net.runelite.client.config.Keybind;
 
@@ -29,7 +25,11 @@ public class MushtreeMap extends BaseMap
 	private static final int MUSHTREE_SPRITE_ID = -19301;
 	private static final int MUSHTREE_HIGHLIGHTED_SPRITE_ID = -19302;
 	private static final int MUSHTREE_DISABLED_SPRITE_ID = -19303;
-	private static final int HOTKEY_LABEL_SPRITE_ID = -19304;
+	private static final int CLOSE_BUTTON_SPRITE_ID = 537;
+	private static final int CLOSE_BUTTON_WIDTH = 26;
+	private static final int CLOSE_BUTTON_HEIGH = 23;
+	private static final int CLOSE_BUTTON_X = 380;
+	private static final int CLOSE_BUTTON_Y = 15;
 
 	private static final int MUSHTREE_DIALOG_ID = 608;
 	private static final String TRAVEL_ACTION = "Travel";
@@ -66,17 +66,36 @@ public class MushtreeMap extends BaseMap
 	{
 		if (e.getGroupId() == MUSHTREE_DIALOG_ID)
 		{
+			// To avoid the default mushtree dialog list flashing on the screen briefly, always hide it upfront.
+			// These widgets will be un-hidden in the invokeLater if it's not the "Spirit Tree Locations".
+			setWidgetsHidden(MUSHTREE_DIALOG_ID, new int[] {
+				0
+			}, true);
+
 			this.plugin.getClientThread().invokeLater(() ->
 			{
-				Widget mushtreeInterface = this.plugin.getClient().getWidget(MUSHTREE_DIALOG_ID, 0);
+				Widget mushtreeDialog = this.plugin.getClient().getWidget(MUSHTREE_DIALOG_ID, 1);
+				if (mushtreeDialog == null ||
+					mushtreeDialog.getChild(1) == null ||
+					!mushtreeDialog.getChild(1).getText().equals("Mycelium Transportation System"))
+				{
+					setWidgetsHidden(MUSHTREE_DIALOG_ID, new int[] {
+						0
+					}, false);
+				}
 
-				if (mushtreeInterface == null)
+				Widget mushtreeInterfaceContainer = this.plugin.getClient().getWidget(MUSHTREE_DIALOG_ID, 0);
+
+				if (mushtreeInterfaceContainer == null)
 					return;
 
 				this.buildAvailableMushtreeList();
-				this.hideInterfaceChildren(mushtreeInterface);
-				this.createMapWidget(mushtreeInterface);
-				this.createMushtreeWidgets(mushtreeInterface);
+				this.hideInterfaceChildren(mushtreeInterfaceContainer);
+				this.createMapWidget(mushtreeInterfaceContainer);
+				this.createMushtreeWidgets(mushtreeInterfaceContainer);
+				this.createEscapeButton(mushtreeInterfaceContainer);
+
+				setWidgetsHidden(MUSHTREE_DIALOG_ID, new int[]{0}, false);
 			});
 		}
 	}
@@ -85,7 +104,7 @@ public class MushtreeMap extends BaseMap
 	{
 		Widget[] children = mushtreeInterface.getStaticChildren();
 
-		mushtreeInterface.setHeight(311); //todo see if this works using originalHeight
+		mushtreeInterface.setOriginalHeight(20);
 
 		Widget mushtreeDialog = children[0]; //client.getWidget(MUSHTREE_DIALOG_ID, 1);
 		mushtreeDialog.setHidden(true);
@@ -173,7 +192,7 @@ public class MushtreeMap extends BaseMap
 						this.triggerButton(mushtree);
 				});
 
-				this.createHotKeyLabel(mushtreeInterface, mushtree);
+				this.createHotKeyLabel(mushtreeInterface, mushtreeDefinition.getHotkey(), mushtree.getHotkey().toString());
 			}
 			else
 			{
@@ -184,38 +203,25 @@ public class MushtreeMap extends BaseMap
 		}
 	}
 
-	private void createHotKeyLabel(Widget container, Mushtree mushtree)
+	private void createEscapeButton(Widget mushtreeInterface)
 	{
-		HotKeyDefinition hotkeyDefinition = mushtree.getDefinition().getHotkey();
-		boolean displayHotkeys = this.plugin.getConfig().displayHotkeys();
+		Widget closeWidget = mushtreeInterface.createChild(-1, WidgetType.GRAPHIC);
+		UIButton closeButton = new UIButton(closeWidget);
+		closeButton.setPosition(CLOSE_BUTTON_X, CLOSE_BUTTON_Y);
+		closeButton.setSize(CLOSE_BUTTON_WIDTH, CLOSE_BUTTON_HEIGH);
+		closeButton.setSprites(CLOSE_BUTTON_SPRITE_ID, CLOSE_BUTTON_SPRITE_ID);
+		closeButton.addAction("Close", () -> triggerExit());
+		closeWidget.revalidate();
+	}
 
-		Widget hotKeyWidget = this.createSpriteWidget(container,
-			HOTKEY_LABEL_SPRITE_WIDTH,
-			HOTKEY_LABEL_SPRITE_HEIGHT,
-			hotkeyDefinition.getX(),
-			hotkeyDefinition.getY(),
-			HOTKEY_LABEL_SPRITE_ID);
-		hotKeyWidget.setHidden(!displayHotkeys);
-		this.addHotkeyLabel(hotKeyWidget);
-
-		if (displayHotkeys)
-			hotKeyWidget.revalidate();
-
-		Widget hotKeyText = container.createChild(-1, WidgetType.TEXT);
-		hotKeyText.setText(mushtree.getHotkey().toString());
-		hotKeyText.setFontId(FontID.QUILL_8);
-		hotKeyText.setTextColor(HOTKEY_LABEL_COLOR);
-		hotKeyText.setOriginalWidth(HOTKEY_LABEL_SPRITE_WIDTH);
-		hotKeyText.setOriginalHeight(HOTKEY_LABEL_SPRITE_HEIGHT);
-		hotKeyText.setOriginalX(hotkeyDefinition.getX() + 1);
-		hotKeyText.setOriginalY(hotkeyDefinition.getY() + 1);
-		hotKeyText.setXTextAlignment(WidgetTextAlignment.CENTER);
-		hotKeyText.setYTextAlignment(WidgetTextAlignment.CENTER);
-		hotKeyText.setHidden(!displayHotkeys);
-		this.addHotkeyLabel(hotKeyText);
-
-		if (displayHotkeys)
-			hotKeyText.revalidate();
+	private void triggerExit()
+	{
+		this.plugin.getClientThread().invoke(() -> {
+			Widget mushtreeDialog = this.plugin.getClient().getWidget(MUSHTREE_DIALOG_ID, 1);
+			Widget mushtreeExit = mushtreeDialog != null ? mushtreeDialog.getChild(13) : null;
+			if (mushtreeExit != null)
+				this.plugin.getClient().runScript(mushtreeExit.getOnOpListener());
+		});
 	}
 
 	private boolean isMushtreeAvailable(String mushtreeName)
@@ -235,11 +241,5 @@ public class MushtreeMap extends BaseMap
 			listener[1] = mushtree.getHotkey().getKeyCode();
 			this.plugin.getClient().runScript(listener);
 		});
-	}
-
-	@Override
-	public void changeLabelVisibility()
-	{
-
 	}
 }

@@ -1,23 +1,17 @@
 package com.mjhylkema.TeleportMaps.components;
 
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
-import com.mjhylkema.TeleportMaps.definition.HotKeyDefinition;
-import com.mjhylkema.TeleportMaps.definition.SpriteDefinition;
 import com.mjhylkema.TeleportMaps.definition.TreeDefinition;
 import com.mjhylkema.TeleportMaps.ui.Tree;
 import com.mjhylkema.TeleportMaps.ui.UIButton;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.runelite.api.ChatMessageType;
-import net.runelite.api.FontID;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetID;
 import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.api.widgets.WidgetTextAlignment;
 import net.runelite.api.widgets.WidgetType;
 
 public class SpiritTreeMap extends BaseMap
@@ -127,17 +121,9 @@ public class SpiritTreeMap extends BaseMap
 		}
 	}
 
-
 	private void setAdventureLogWidgetsHidden(int[] childIds, boolean hidden)
 	{
-		for(int childId : childIds)
-		{
-			Widget widget = this.plugin.getClient().getWidget(WidgetID.ADVENTURE_LOG_ID, childId);
-			if (widget != null)
-			{
-				widget.setHidden(hidden);
-			}
-		}
+		this.setWidgetsHidden(WidgetID.ADVENTURE_LOG_ID, childIds, hidden);
 	}
 
 	private void hideAdventureLogContainerChildren(Widget adventureLogContainer)
@@ -255,7 +241,7 @@ public class SpiritTreeMap extends BaseMap
 				treeButton.setName(tree.getDisplayedName());
 				treeButton.addAction(TRAVEL_ACTION, () -> this.triggerTeleport(tree));
 
-				this.createHotKeyLabel(container, tree);
+				this.createHotKeyLabel(container, treeDefinition.getHotkey(), tree.getKeyShortcut());
 			}
 			else
 			{
@@ -267,40 +253,6 @@ public class SpiritTreeMap extends BaseMap
 
 			treeWidget.revalidate();
 		}
-	}
-
-	private void createHotKeyLabel(Widget container, Tree tree)
-	{
-		HotKeyDefinition hotkeyDefinition = tree.getDefinition().getHotkey();
-		boolean displayHotkeys = this.plugin.getConfig().displayHotkeys();
-
-		Widget hotKeyWidget = this.createSpriteWidget(container,
-			HOTKEY_LABEL_SPRITE_WIDTH,
-			HOTKEY_LABEL_SPRITE_HEIGHT,
-			hotkeyDefinition.getX(),
-			hotkeyDefinition.getY(),
-			HOTKEY_LABEL_SPRITE_ID);
-		hotKeyWidget.setHidden(!displayHotkeys);
-		this.addHotkeyLabel(hotKeyWidget);
-
-		if (displayHotkeys)
-			hotKeyWidget.revalidate();
-
-		Widget hotKeyText = container.createChild(-1, WidgetType.TEXT);
-		hotKeyText.setText(tree.getKeyShortcut());
-		hotKeyText.setFontId(FontID.QUILL_8);
-		hotKeyText.setTextColor(HOTKEY_LABEL_COLOR);
-		hotKeyText.setOriginalWidth(HOTKEY_LABEL_SPRITE_WIDTH);
-		hotKeyText.setOriginalHeight(HOTKEY_LABEL_SPRITE_HEIGHT);
-		hotKeyText.setOriginalX(hotkeyDefinition.getX() + 1);
-		hotKeyText.setOriginalY(hotkeyDefinition.getY() + 1);
-		hotKeyText.setXTextAlignment(WidgetTextAlignment.CENTER);
-		hotKeyText.setYTextAlignment(WidgetTextAlignment.CENTER);
-		hotKeyText.setHidden(!displayHotkeys);
-		this.addHotkeyLabel(hotKeyText);
-
-		if (displayHotkeys)
-			hotKeyText.revalidate();
 	}
 
 	private boolean isTreeUnlocked(String treeName)
@@ -316,11 +268,5 @@ public class SpiritTreeMap extends BaseMap
 	private void triggerLockedMessage(TreeDefinition treeDefinition)
 	{
 		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("The Spirit Tree at %s is not available.", treeDefinition.getName()), null));
-	}
-
-	@Override
-	public void changeLabelVisibility()
-	{
-
 	}
 }
