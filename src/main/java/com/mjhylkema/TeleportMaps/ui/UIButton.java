@@ -1,6 +1,5 @@
 package com.mjhylkema.TeleportMaps.ui;
 
-import net.runelite.api.ScriptEvent;
 import net.runelite.api.widgets.Widget;
 
 /**
@@ -26,26 +25,6 @@ public class UIButton extends UIComponent
 		this.spriteHover = -1;
 	}
 
-	@Override
-	protected void onMouseHover(ScriptEvent e)
-	{
-		// Call the parent method
-		super.onMouseHover(e);
-
-		// Update the sprite
-		this.getWidget().setSpriteId(this.spriteHover);
-	}
-
-	@Override
-	protected void onMouseLeave(ScriptEvent e)
-	{
-		// Call the parent method
-		super.onMouseLeave(e);
-
-		// Update the sprite
-		this.getWidget().setSpriteId(this.spriteStandard);
-	}
-
 	/**
 	 * Sets the button sprite for both standard and hover
 	 * @param standard the standard sprite id
@@ -58,5 +37,15 @@ public class UIButton extends UIComponent
 
 		// Update the widgets sprite
 		this.getWidget().setSpriteId(this.spriteStandard);
+	}
+
+	public int getSpriteStandard()
+	{
+		return spriteStandard;
+	}
+
+	public int getSpriteHover()
+	{
+		return spriteHover;
 	}
 }

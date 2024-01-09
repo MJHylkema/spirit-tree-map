@@ -3,7 +3,8 @@ package com.mjhylkema.TeleportMaps.components;
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
 import com.mjhylkema.TeleportMaps.definition.TreeDefinition;
 import com.mjhylkema.TeleportMaps.ui.Tree;
-import com.mjhylkema.TeleportMaps.ui.UIButton;
+import com.mjhylkema.TeleportMaps.ui.UIHotkey;
+import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -224,34 +225,38 @@ public class SpiritTreeMap extends BaseMap
 
 	private void createTeleportWidgets(Widget container)
 	{
-		this.clearHotKeyLabels();
+		this.clearTeleports();
 
 		for (TreeDefinition treeDefinition : this.treeDefinitions)
 		{
+			Widget widgetContainer = container.createChild(-1, WidgetType.GRAPHIC);
 			Widget treeWidget = container.createChild(-1, WidgetType.GRAPHIC);
-			UIButton treeButton = new UIButton(treeWidget);
-			treeButton.setPosition(treeDefinition.getX(), treeDefinition.getY());
+
+			UITeleport treeTeleport = new UITeleport(widgetContainer, treeWidget);
+
+			treeTeleport.setPosition(treeDefinition.getX(), treeDefinition.getY());
+			treeTeleport.setTeleportSprites(treeDefinition.getSpriteEnabled(), treeDefinition.getSpriteHover(), DISABLED_TREE_SPRITE_ID);
 
 			if (isTreeUnlocked(treeDefinition.getName()))
 			{
 				Tree tree = this.availableTrees.get(treeDefinition.getName());
 
-				treeButton.setSprites(treeDefinition.getSpriteEnabled(), treeDefinition.getSpriteHover());
-				treeButton.setSize(treeDefinition.getWidth(), treeDefinition.getHeight());
-				treeButton.setName(tree.getDisplayedName());
-				treeButton.addAction(TRAVEL_ACTION, () -> this.triggerTeleport(tree));
+				treeTeleport.setSize(treeDefinition.getWidth(), treeDefinition.getHeight());
+				treeTeleport.setName(tree.getDisplayedName());
+				treeTeleport.addAction(TRAVEL_ACTION, () -> this.triggerTeleport(tree));
 
-				this.createHotKeyLabel(container, treeDefinition.getHotkey(), tree.getKeyShortcut());
+				UIHotkey hotkey = this.createHotKey(container, treeDefinition.getHotkey(), tree.getKeyShortcut());
+				treeTeleport.setHotkey(hotkey);
 			}
 			else
 			{
-				treeButton.setSprites(DISABLED_TREE_SPRITE_ID, DISABLED_TREE_SPRITE_ID);
-				treeButton.setSize(DISABLED_TREE_SPRITE_WIDTH, DISABLED_TREE_SPRITE_HEIGHT);
-				treeButton.setName(treeDefinition.getName());
-				treeButton.addAction(EXAMINE_ACTION, () -> this.triggerLockedMessage(treeDefinition));
+				treeTeleport.setLocked(true);
+				treeTeleport.setSize(DISABLED_TREE_SPRITE_WIDTH, DISABLED_TREE_SPRITE_HEIGHT);
+				treeTeleport.setName(treeDefinition.getName());
+				treeTeleport.addAction(EXAMINE_ACTION, () -> this.triggerLockedMessage(treeDefinition));
 			}
 
-			treeWidget.revalidate();
+			this.addTeleport(treeTeleport);
 		}
 	}
 
