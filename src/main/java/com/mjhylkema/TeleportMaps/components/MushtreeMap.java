@@ -4,6 +4,8 @@ import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
 import com.mjhylkema.TeleportMaps.definition.MushtreeDefinition;
 import com.mjhylkema.TeleportMaps.ui.Mushtree;
 import com.mjhylkema.TeleportMaps.ui.UIButton;
+import com.mjhylkema.TeleportMaps.ui.UIHotkey;
+import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -170,36 +172,40 @@ public class MushtreeMap extends BaseMap
 
 	private void createMushtreeWidgets(Widget mushtreeInterface)
 	{
-		this.clearHotKeyLabels();
+		this.clearTeleports();
 
 		for (MushtreeDefinition mushtreeDefinition : this.mushtreeDefinitions)
 		{
-			Widget mushtreeWidget = mushtreeInterface.createChild(-1, WidgetType.GRAPHIC);
-			UIButton mushtreeButton = new UIButton(mushtreeWidget);
-			mushtreeButton.setPosition(mushtreeDefinition.getX(), mushtreeDefinition.getY());
-			mushtreeButton.setSize(mushtreeDefinition.getWidth(), mushtreeDefinition.getHeight());
-			mushtreeButton.setName(mushtreeDefinition.getName());
+			Widget widgetContainer = mushtreeInterface.createChild(-1, WidgetType.GRAPHIC);
+			Widget treeWidget = mushtreeInterface.createChild(-1, WidgetType.GRAPHIC);
+
+			UITeleport mushtreeTeleport = new UITeleport(widgetContainer, treeWidget);
+
+			mushtreeTeleport.setPosition(mushtreeDefinition.getX(), mushtreeDefinition.getY());
+			mushtreeTeleport.setSize(mushtreeDefinition.getWidth(), mushtreeDefinition.getHeight());
+			mushtreeTeleport.setName(mushtreeDefinition.getName());
+			mushtreeTeleport.setTeleportSprites(MUSHTREE_SPRITE_ID, MUSHTREE_HIGHLIGHTED_SPRITE_ID, MUSHTREE_DISABLED_SPRITE_ID);
 
 			if (isMushtreeAvailable(mushtreeDefinition.getName()))
 			{
 				Mushtree mushtree = this.availableMushtrees.get(mushtreeDefinition.getName());
 
-				mushtreeButton.setSprites(MUSHTREE_SPRITE_ID, MUSHTREE_HIGHLIGHTED_SPRITE_ID);
-				mushtreeButton.addAction(TRAVEL_ACTION, () -> this.triggerButton(mushtree));
-				mushtreeButton.getWidget().setOnKeyListener((JavaScriptCallback) e ->
+				mushtreeTeleport.addAction(TRAVEL_ACTION, () -> this.triggerButton(mushtree));
+				mushtreeTeleport.getWidget().setOnKeyListener((JavaScriptCallback) e ->
 				{
 					if (mushtree.getHotkey().getKeyCode() == e.getTypedKeyChar())
 						this.triggerButton(mushtree);
 				});
 
-				this.createHotKeyLabel(mushtreeInterface, mushtreeDefinition.getHotkey(), mushtree.getHotkey().toString());
+				UIHotkey hotkey = this.createHotKey(mushtreeInterface, mushtreeDefinition.getHotkey(), mushtree.getHotkey().toString());
+				mushtreeTeleport.setHotkey(hotkey);
 			}
 			else
 			{
-				mushtreeButton.setSprites(MUSHTREE_DISABLED_SPRITE_ID, MUSHTREE_DISABLED_SPRITE_ID);
+				mushtreeTeleport.setLocked(true);
 			}
 
-			mushtreeWidget.revalidate();
+			this.addTeleport(mushtreeTeleport);
 		}
 	}
 
