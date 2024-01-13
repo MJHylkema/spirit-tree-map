@@ -106,7 +106,7 @@ public class TeleportMapsPlugin extends Plugin
 	private void updateHotkeyLabels()
 	{
 		boolean visible = config.displayHotkeys();
-		this.mapComponents.forEach((baseMap -> baseMap.changeHotkeyLabelVisibility(visible)));
+		this.mapComponents.forEach((baseMap -> baseMap.changeHotkeyVisibility(visible)));
 	}
 
 	private void populateMaps()

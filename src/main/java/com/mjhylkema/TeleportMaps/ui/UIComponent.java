@@ -136,6 +136,7 @@ public abstract class UIComponent
 	{
 		this.widget.setOriginalWidth(width);
 		this.widget.setOriginalHeight(height);
+		this.widget.revalidate();
 	}
 
 	/**
@@ -190,6 +191,26 @@ public abstract class UIComponent
 		return this.widget.getOriginalY();
 	}
 
+	public int getXTotal()
+	{
+		return this.widget.getOriginalX() + this.widget.getOriginalWidth();
+	}
+
+	public int getYTotal()
+	{
+		return this.widget.getOriginalY() + this.widget.getOriginalHeight();
+	}
+
+	public int getWidth()
+	{
+		return this.widget.getOriginalWidth();
+	}
+
+	public int getHeight()
+	{
+		return this.widget.getOriginalHeight();
+	}
+
 
 	/**
 	 * Sets the visibility of the component
@@ -198,5 +219,6 @@ public abstract class UIComponent
 	public void setVisibility(boolean visible)
 	{
 		this.widget.setHidden(!visible);
+		this.widget.revalidate();
 	}
 }
