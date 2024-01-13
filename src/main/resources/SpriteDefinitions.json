@@ -118,5 +118,21 @@
   {
     "spriteId": -19303,
     "fileName": "/MushtreeMap/MushtreeDisabled.png"
+  },
+  {
+    "spriteId": -19400,
+    "fileName": "/XericsMap/XericsMap.png"
+  },
+  {
+    "spriteId": -19401,
+    "fileName": "/XericsMap/Xerics.png"
+  },
+  {
+    "spriteId": -19402,
+    "fileName": "/XericsMap/XericsOutlined.png"
+  },
+  {
+    "spriteId": -19403,
+    "fileName": "/XericsMap/XericsDisabled.png"
   }
 ]
