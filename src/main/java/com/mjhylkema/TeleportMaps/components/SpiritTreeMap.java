@@ -7,14 +7,18 @@ import com.mjhylkema.TeleportMaps.ui.Tree;
 import com.mjhylkema.TeleportMaps.ui.UIHotkey;
 import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
 import net.runelite.api.ChatMessageType;
-import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.Client;
+import net.runelite.api.widgets.InterfaceID;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetID;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetType;
+import net.runelite.client.callback.ClientThread;
+import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 
 public class SpiritTreeMap extends BaseMap implements IAdventureMap
 {
@@ -46,9 +50,10 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 	private HashMap<String, TreeDefinition> treeDefinitionsLookup;
 	private HashMap<String, Tree> availableTrees;
 
-	public SpiritTreeMap(TeleportMapsPlugin plugin)
+	@Inject
+	public SpiritTreeMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread)
 	{
-		super(plugin, plugin.getConfig().showSpiritTreeMap());
+		super(plugin, config, client, clientThread, config.showSpiritTreeMap());
 		this.loadDefinitions();
 		this.buildTreeDefinitionLookup();
 	}
@@ -68,11 +73,8 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 		}
 	}
 
-	@Override
-	public void onWidgetLoaded(WidgetLoaded e)
+	public void buildInterface(Widget adventureLogContainer)
 	{
-		Widget adventureLogContainer = this.plugin.getClient().getWidget(WidgetInfo.ADVENTURE_LOG);
-
 		this.hideAdventureLogContainerChildren(adventureLogContainer);
 		this.buildAvailableTreeList();
 
@@ -81,11 +83,13 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 		this.createTeleportWidgets(adventureLogContainer);
 	}
 
-	@Override
-	public void setActive(String key, boolean active)
+	@Subscribe
+	public void onConfigChanged(ConfigChanged e)
 	{
-		if (key.equals(TeleportMapsConfig.KEY_SHOW_SPIRIT_TREE_MAP))
-			this.active = active;
+		if (Objects.equals(e.getKey(), TeleportMapsConfig.KEY_SHOW_SPIRIT_TREE_MAP))
+			this.setActive(config.showSpiritTreeMap());
+		else
+			super.onConfigChanged(e);
 	}
 
 	private void hideAdventureLogContainerChildren(Widget adventureLogContainer)
@@ -111,7 +115,7 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 		Pattern labelPattern = Pattern.compile(TREE_LABEL_NAME_PATTERN);
 
 		// Get the parent widgets containing the tree list
-		Widget treeList = this.plugin.getClient().getWidget(WidgetID.ADVENTURE_LOG_ID, 3);
+		Widget treeList = this.plugin.getClient().getWidget(InterfaceID.ADVENTURE_LOG, 3);
 
 		// Fetch all tree label widgets
 		Widget[] labelWidgets = treeList.getDynamicChildren();
@@ -237,8 +241,8 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 	}
 
 	@Override
-	public boolean isActiveWidget(String title)
+	public boolean matchesTitle(String title)
 	{
-		return this.isActive() && title.equals(MENU_TITLE);
+		return title.equals(MENU_TITLE);
 	}
 }

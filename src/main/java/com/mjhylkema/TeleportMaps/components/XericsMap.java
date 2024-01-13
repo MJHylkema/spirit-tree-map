@@ -9,14 +9,18 @@ import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import com.mjhylkema.TeleportMaps.ui.Xerics;
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
 import net.runelite.api.ChatMessageType;
-import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.Client;
+import net.runelite.api.widgets.InterfaceID;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetID;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetType;
+import net.runelite.client.callback.ClientThread;
+import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 
 
 public class XericsMap extends BaseMap implements IAdventureMap
@@ -26,8 +30,8 @@ public class XericsMap extends BaseMap implements IAdventureMap
 
 	/* Sprite IDs, dimensions and positions */
 	private static final int MAP_SPRITE_ID = -19400;
-	private static final int MAP_SPRITE_WIDTH = 509;
-	private static final int MAP_SPRITE_HEIGHT = 317;
+	private static final int MAP_SPRITE_WIDTH = 330;
+	private static final int MAP_SPRITE_HEIGHT = 285;
 	private static final int XERICS_SPRITE_ID = -19401;
 	private static final int XERICS_HIGHLIGHTED_SPRITE_ID = -19402;
 	private static final int XERICS_DISABLED_SPRITE_ID = -19403;
@@ -40,22 +44,23 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	private static final int ADVENTURE_LOG_CONTAINER_TITLE = 1;
 	private static final String MENU_TITLE = "The talisman has .*";
 
-	@Override
-	public boolean isActiveWidget(String title)
+	@Inject
+	public XericsMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread)
 	{
-		return this.isActive() && title.matches(MENU_TITLE);
+		super(plugin, config, client, clientThread, config.showXericsMap());
+		this.loadDefinitions();
+		this.buildTreeDefinitionLookup();
+	}
+
+	@Override
+	public boolean matchesTitle(String title)
+	{
+		return title.matches(MENU_TITLE);
 	}
 
 	private XericsDefinition[] xericsDefinitions;
 	private HashMap<String, XericsDefinition> xericsDefinitionsLookup;
 	private HashMap<String, Xerics> availableTrees;
-
-	public XericsMap(TeleportMapsPlugin plugin)
-	{
-		super(plugin, plugin.getConfig().showXericsMap());
-		this.loadDefinitions();
-		this.buildTreeDefinitionLookup();
-	}
 
 	private void loadDefinitions()
 	{
@@ -72,11 +77,8 @@ public class XericsMap extends BaseMap implements IAdventureMap
 		}
 	}
 
-	@Override
-	public void onWidgetLoaded(WidgetLoaded e)
+	public void buildInterface(Widget adventureLogContainer)
 	{
-		Widget adventureLogContainer = this.plugin.getClient().getWidget(WidgetInfo.ADVENTURE_LOG);
-
 		this.hideAdventureLogContainerChildren(adventureLogContainer);
 		this.buildAvailableTreeList();
 
@@ -84,19 +86,21 @@ public class XericsMap extends BaseMap implements IAdventureMap
 		this.createTeleportWidgets(adventureLogContainer);
 	}
 
-	@Override
-	public void setActive(String key, boolean active)
+	@Subscribe
+	public void onConfigChanged(ConfigChanged e)
 	{
-		if (key.equals(TeleportMapsConfig.KEY_SHOW_XERICS_MAP))
-			this.active = active;
+		if (Objects.equals(e.getKey(), TeleportMapsConfig.KEY_SHOW_XERICS_MAP))
+			this.setActive(config.showXericsMap());
+		else
+			super.onConfigChanged(e);
 	}
 
 	private void hideAdventureLogContainerChildren(Widget adventureLogContainer)
 	{
-		Widget existingBackground = adventureLogContainer.getChild(ADVENTURE_LOG_CONTAINER_BACKGROUND);
+		/*Widget existingBackground = adventureLogContainer.getChild(ADVENTURE_LOG_CONTAINER_BACKGROUND);
 		if (existingBackground != null)
 			existingBackground.setHidden(true);
-
+		*/
 		Widget title = adventureLogContainer.getChild(ADVENTURE_LOG_CONTAINER_TITLE);
 		if (title != null)
 			title.setHidden(true);
@@ -114,7 +118,7 @@ public class XericsMap extends BaseMap implements IAdventureMap
 		Pattern labelPattern = Pattern.compile(XERICS_LABEL_NAME_PATTERN);
 
 		// Get the parent widgets containing the tree list
-		Widget treeList = this.plugin.getClient().getWidget(WidgetID.ADVENTURE_LOG_ID, 3);
+		Widget treeList = this.plugin.getClient().getWidget(InterfaceID.ADVENTURE_LOG, 3);
 
 		// Fetch all tree label widgets
 		Widget[] labelWidgets = treeList.getDynamicChildren();
@@ -161,8 +165,8 @@ public class XericsMap extends BaseMap implements IAdventureMap
 		this.createSpriteWidget(container,
 			MAP_SPRITE_WIDTH,
 			MAP_SPRITE_HEIGHT,
-			0,
-			0,
+			66,
+			43,
 			MAP_SPRITE_ID);
 	}
 
@@ -199,10 +203,9 @@ public class XericsMap extends BaseMap implements IAdventureMap
 			}
 
 
-			Widget labelWidget = container.createChild(-1, WidgetType.TEXT);
-			UILabel xericsLabel = new UILabel(labelWidget);
-			labelWidget.setTextColor(Color.white.getRGB());
-			labelWidget.setTextShadowed(true);
+			UILabel xericsLabel = new UILabel(container.createChild(-1, WidgetType.TEXT));
+			xericsLabel.getWidget().setTextColor(Color.white.getRGB());
+			xericsLabel.getWidget().setTextShadowed(true);
 			xericsLabel.setText(treeDefinition.getLabel().getTitle());
 			xericsLabel.setPosition(treeDefinition.getLabel().getX(), treeDefinition.getLabel().getY());
 			xericsLabel.setSize(treeDefinition.getLabel().getWidth(), treeDefinition.getLabel().getHeight());

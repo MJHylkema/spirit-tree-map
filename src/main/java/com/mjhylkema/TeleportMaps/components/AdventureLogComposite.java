@@ -3,10 +3,14 @@ package com.mjhylkema.TeleportMaps.components;
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
+import net.runelite.api.Client;
 import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.InterfaceID;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetInfo;
+import net.runelite.client.callback.ClientThread;
+import net.runelite.client.eventbus.Subscribe;
 
 public class AdventureLogComposite implements IMap
 {
@@ -21,21 +25,24 @@ public class AdventureLogComposite implements IMap
 		static final int CLOSE_BUTTON = 4;
 	}
 
-	private List<IMap> adventureLogMaps;
-	private TeleportMapsPlugin plugin;
+	final private List<IAdventureMap> adventureLogMaps;
+	final private Client client;
+	final private ClientThread clientThread;
 
-	public AdventureLogComposite(TeleportMapsPlugin plugin)
+	@Inject
+	public AdventureLogComposite(Client client, ClientThread clientThread)
 	{
-		this.plugin = plugin;
+		this.client = client;
+		this.clientThread = clientThread;
 		this.adventureLogMaps = new ArrayList<>();
 	}
 
-	public void addAdventureLogMap(IMap map)
+	public void addAdventureLogMap(IAdventureMap map)
 	{
 		this.adventureLogMaps.add(map);
 	}
 
-	@Override
+	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded e)
 	{
 		if (e.getGroupId() != InterfaceID.ADVENTURE_LOG)
@@ -52,9 +59,9 @@ public class AdventureLogComposite implements IMap
 			AdventureLog.SCROLLBAR
 		}, true);
 
-		this.plugin.getClientThread().invokeLater(() ->
+		this.clientThread.invokeLater(() ->
 		{
-			Widget adventureLogContainer = this.plugin.getClient().getWidget(WidgetInfo.ADVENTURE_LOG);
+			Widget adventureLogContainer = this.client.getWidget(ComponentID.ADVENTURE_LOG_CONTAINER);
 			if (adventureLogContainer == null)
 				return;
 
@@ -63,12 +70,15 @@ public class AdventureLogComposite implements IMap
 				return;
 
 			boolean response = false;
-			for (IMap map: this.adventureLogMaps)
+			for (IAdventureMap map: this.adventureLogMaps)
 			{
-				response = ((IAdventureMap)map).isActiveWidget(title.getText());
+				if (!map.isActive())
+					continue;
+
+				response = map.matchesTitle(title.getText());
 				if (response)
 				{
-					map.onWidgetLoaded(e);
+					map.buildInterface(adventureLogContainer);
 					break;
 				}
 			}
@@ -87,21 +97,9 @@ public class AdventureLogComposite implements IMap
 	}
 
 	@Override
-	public void changeHotkeyVisibility(boolean visible)
-	{
-		this.adventureLogMaps.forEach((map -> map.changeHotkeyVisibility(visible)));
-	}
-
-	@Override
-	public void setActive(String key, boolean active)
-	{
-		this.adventureLogMaps.forEach((map -> map.setActive(key, active)));
-	}
-
-	@Override
 	public boolean isActive()
 	{
-		for (IMap map: this.adventureLogMaps)
+		for (IAdventureMap map : this.adventureLogMaps)
 		{
 			if (map.isActive())
 				return true;
@@ -109,16 +107,11 @@ public class AdventureLogComposite implements IMap
 		return false;
 	}
 
-	private void setAdventureLogWidgetsHidden(int[] childIds, boolean hidden)
-	{
-		this.setWidgetsHidden(InterfaceID.ADVENTURE_LOG, childIds, hidden);
-	}
-
-	protected void setWidgetsHidden(int groupID, int[] childIDs, boolean hidden)
+	protected void setAdventureLogWidgetsHidden(int[] childIDs, boolean hidden)
 	{
 		for(int childId : childIDs)
 		{
-			Widget widget = this.plugin.getClient().getWidget(groupID, childId);
+			Widget widget = this.client.getWidget(InterfaceID.ADVENTURE_LOG, childId);
 			if (widget != null)
 			{
 				widget.setHidden(hidden);

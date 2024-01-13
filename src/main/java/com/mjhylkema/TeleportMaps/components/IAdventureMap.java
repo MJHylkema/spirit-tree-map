@@ -1,6 +1,9 @@
 package com.mjhylkema.TeleportMaps.components;
 
-public interface IAdventureMap
+import net.runelite.api.widgets.Widget;
+
+public interface IAdventureMap extends IMap
 {
-	boolean isActiveWidget(String title);
+	boolean matchesTitle(String title);
+	void buildInterface(Widget adventureLogContainer);
 }
