@@ -1,0 +1,77 @@
+[
+  {
+    "name": "Xeric's Lookout",
+    "x": 259,
+    "y": 221,
+    "hotkey": {
+      "x": 275,
+      "y": 236
+    },
+    "label": {
+      "title": "Lookout",
+      "x": 208,
+      "y": 211,
+      "width": 54
+    }
+  },
+  {
+    "name": "Xeric's Glade",
+    "x": 341,
+    "y": 235,
+    "hotkey": {
+      "x": 327,
+      "y": 250
+    },
+    "label": {
+      "title": "Hosidius",
+      "x": 360,
+      "y": 225,
+      "width": 58
+    }
+  },
+  {
+    "name": "Xeric's Inferno",
+    "x": 236,
+    "y": 102,
+    "hotkey": {
+      "x": 251,
+      "y": 117
+    },
+    "label": {
+      "title": "Lovakenjg",
+      "x": 168,
+      "y": 92,
+      "width": 70
+    }
+  },
+  {
+    "name": "Xeric's Heart",
+    "x": 290,
+    "y": 172,
+    "hotkey": {
+      "x": 276,
+      "y": 187
+    },
+    "label": {
+      "title": "Kourend Castle",
+      "x": 308,
+      "y": 162,
+      "width": 108
+    }
+  },
+  {
+    "name": "Xeric's Honour",
+    "x": 129,
+    "y": 208,
+    "hotkey": {
+      "x": 144,
+      "y": 223
+    },
+    "label": {
+      "title": "Quidamortem",
+      "x": 42,
+      "y": 198,
+      "width": 90
+    }
+  }
+]

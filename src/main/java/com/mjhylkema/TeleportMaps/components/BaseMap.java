@@ -10,24 +10,22 @@ import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetType;
 
-public abstract class BaseMap
+public abstract class BaseMap implements IMap
 {
 	protected static final int HOTKEY_LABEL_SPRITE_ID = -19002;
-	protected static final int HOTKEY_LABEL_SPRITE_WIDTH = 20;
-	protected static final int HOTKEY_LABEL_SPRITE_HEIGHT = 20;
-
-	protected static final int HOTKEY_LABEL_COLOR = 3287045; /*322805*/
 
 	protected TeleportMapsPlugin plugin;
 	private List<UITeleport> activeTeleports;
+	protected boolean active = false;
 
-	BaseMap(TeleportMapsPlugin plugin)
+	BaseMap(TeleportMapsPlugin plugin, boolean active)
 	{
 		this.plugin = plugin;
+		this.active = active;
 		this.activeTeleports = new ArrayList<>();
 	}
 
-	public abstract void widgetLoaded(WidgetLoaded e);
+	public abstract void onWidgetLoaded(WidgetLoaded e);
 
 	public void changeHotkeyVisibility(boolean visible)
 	{
@@ -40,6 +38,13 @@ public abstract class BaseMap
 			});
 		});
 	}
+
+	public boolean isActive()
+	{
+		return active;
+	}
+
+	public abstract void setActive(String key, boolean active);
 
 	protected void addTeleport(UITeleport teleport)
 	{

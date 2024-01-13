@@ -11,6 +11,7 @@ public interface TeleportMapsConfig extends Config
 	String KEY_DISPLAY_HOTKEYS = "displayHotkeys";
 	String KEY_SHOW_SPIRIT_TREE_MAP = "showSpiritTreeMap";
 	String KEY_SHOW_MUSHTREE_MAP = "showMushtreeMap";
+	String KEY_SHOW_XERICS_MAP = "showXericsMap";
 
 	@ConfigSection(
 		name = "Teleport Maps",
@@ -44,6 +45,16 @@ public interface TeleportMapsConfig extends Config
 		section = teleportMaps
 	)
 	default boolean showMushtreeMap()
+	{
+		return true;
+	}
+	@ConfigItem(
+		keyName = KEY_SHOW_XERICS_MAP,
+		name = "Xeric's Talisman Map",
+		description = "Replace Xeric's talisman travel menu with an interactive map",
+		section = teleportMaps
+	)
+	default boolean showXericsMap()
 	{
 		return true;
 	}

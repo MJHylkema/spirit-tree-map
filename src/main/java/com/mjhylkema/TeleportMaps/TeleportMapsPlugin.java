@@ -2,9 +2,11 @@ package com.mjhylkema.TeleportMaps;
 
 import com.google.gson.Gson;
 import com.google.inject.Provides;
-import com.mjhylkema.TeleportMaps.components.BaseMap;
+import com.mjhylkema.TeleportMaps.components.AdventureLogComposite;
+import com.mjhylkema.TeleportMaps.components.IMap;
 import com.mjhylkema.TeleportMaps.components.MushtreeMap;
 import com.mjhylkema.TeleportMaps.components.SpiritTreeMap;
+import com.mjhylkema.TeleportMaps.components.XericsMap;
 import com.mjhylkema.TeleportMaps.definition.SpriteDefinition;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -51,7 +53,7 @@ public class TeleportMapsPlugin extends Plugin
 	@Getter
 	private TeleportMapsConfig config;
 
-	private List<BaseMap> mapComponents;
+	private List<IMap> mapComponents;
 
 	@Override
 	protected void startUp()
@@ -59,9 +61,7 @@ public class TeleportMapsPlugin extends Plugin
 		SpriteDefinition[] spriteDefinitions = this.loadDefinitionResource(SpriteDefinition[].class, DEF_FILE_SPRITES);
 		this.spriteManager.addSpriteOverrides(spriteDefinitions);
 
-		this.mapComponents = new ArrayList<>();
-
-		this.populateMaps();
+		this.createMaps();
 	}
 
 	public  <T> T loadDefinitionResource(Class<T> classType, String resource)
@@ -77,7 +77,9 @@ public class TeleportMapsPlugin extends Plugin
 	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded e)
 	{
-		this.mapComponents.forEach((baseMap -> baseMap.widgetLoaded(e)));
+		this.mapComponents.forEach((mapComponent -> {
+			mapComponent.onWidgetLoaded(e);
+		}));
 	}
 
 	@Provides
@@ -96,7 +98,9 @@ public class TeleportMapsPlugin extends Plugin
 				break;
 			case TeleportMapsConfig.KEY_SHOW_SPIRIT_TREE_MAP:
 			case TeleportMapsConfig.KEY_SHOW_MUSHTREE_MAP:
-				populateMaps();
+			case TeleportMapsConfig.KEY_SHOW_XERICS_MAP:
+				boolean active = Boolean.TRUE.toString().equals(e.getNewValue());
+				toggleActiveMap(e.getKey(), active);
 				break;
 			default:
 				return;
@@ -109,14 +113,20 @@ public class TeleportMapsPlugin extends Plugin
 		this.mapComponents.forEach((baseMap -> baseMap.changeHotkeyVisibility(visible)));
 	}
 
-	private void populateMaps()
+	private void createMaps()
 	{
-		this.mapComponents.clear();
+		this.mapComponents = new ArrayList<>();
 
-		if (this.config.showSpiritTreeMap())
-			this.mapComponents.add(new SpiritTreeMap(this));
+		this.mapComponents.add(new MushtreeMap(this));
 
-		if (this.config.showMushtreeMap())
-			this.mapComponents.add(new MushtreeMap(this));
+		AdventureLogComposite adventureLogComposite = new AdventureLogComposite(this);
+		adventureLogComposite.addAdventureLogMap(new SpiritTreeMap(this));
+		adventureLogComposite.addAdventureLogMap(new XericsMap(this));
+		this.mapComponents.add(adventureLogComposite);
+	}
+
+	private void toggleActiveMap(String key, boolean active)
+	{
+		this.mapComponents.forEach((baseMap -> baseMap.setActive(key, active)));
 	}
 }

@@ -1,5 +1,6 @@
 package com.mjhylkema.TeleportMaps.components;
 
+import com.mjhylkema.TeleportMaps.TeleportMapsConfig;
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
 import com.mjhylkema.TeleportMaps.definition.MushtreeDefinition;
 import com.mjhylkema.TeleportMaps.ui.Mushtree;
@@ -43,7 +44,7 @@ public class MushtreeMap extends BaseMap
 
 	public MushtreeMap(TeleportMapsPlugin plugin)
 	{
-		super(plugin);
+		super(plugin, plugin.getConfig().showMushtreeMap());
 		this.loadDefinitions();
 		this.buildTreeDefinitionLookup();
 	}
@@ -64,8 +65,11 @@ public class MushtreeMap extends BaseMap
 	}
 
 	@Override
-	public void widgetLoaded(WidgetLoaded e)
+	public void onWidgetLoaded(WidgetLoaded e)
 	{
+		if (!this.isActive())
+			return;
+
 		if (e.getGroupId() == MUSHTREE_DIALOG_ID)
 		{
 			// To avoid the default mushtree dialog list flashing on the screen briefly, always hide it upfront.
@@ -84,6 +88,7 @@ public class MushtreeMap extends BaseMap
 					setWidgetsHidden(MUSHTREE_DIALOG_ID, new int[] {
 						0
 					}, false);
+					return;
 				}
 
 				Widget mushtreeInterfaceContainer = this.plugin.getClient().getWidget(MUSHTREE_DIALOG_ID, 0);
@@ -100,6 +105,13 @@ public class MushtreeMap extends BaseMap
 				setWidgetsHidden(MUSHTREE_DIALOG_ID, new int[]{0}, false);
 			});
 		}
+	}
+
+	@Override
+	public void setActive(String key, boolean active)
+	{
+		if (key.equals(TeleportMapsConfig.KEY_SHOW_MUSHTREE_MAP))
+			this.active = active;
 	}
 
 	private void hideInterfaceChildren(Widget mushtreeInterface)
