@@ -8,6 +8,7 @@ import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import net.runelite.api.Client;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetType;
@@ -22,7 +23,7 @@ public abstract class BaseMap implements IMap
 	protected TeleportMapsConfig config;
 	protected Client client;
 	protected ClientThread clientThread;
-	final private List<UITeleport> activeTeleports;
+	final protected List<UITeleport> activeUITeleports;
 	private boolean active;
 
 	BaseMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread, boolean active)
@@ -32,24 +33,22 @@ public abstract class BaseMap implements IMap
 		this.client = client;
 		this.clientThread = clientThread;
 		this.active = active;
-		this.activeTeleports = new ArrayList<>();
+		this.activeUITeleports = new ArrayList<>();
 	}
 
 	public void onConfigChanged(ConfigChanged e)
 	{
 		if (Objects.equals(e.getKey(), TeleportMapsConfig.KEY_DISPLAY_HOTKEYS))
-			this.changeHotkeyVisibility(config.displayHotkeys());
+			this.updateTeleports((teleport) -> teleport.setHotKeyVisibility(config.displayHotkeys()));
 	}
 
-	public void changeHotkeyVisibility(boolean visible)
+	protected void updateTeleports(Consumer<UITeleport> action)
 	{
-		if (this.activeTeleports.size() == 0)
+		if (this.activeUITeleports.size() == 0)
 			return;
 
 		this.clientThread.invokeLater(() -> {
-			this.activeTeleports.forEach((teleport) -> {
-				teleport.setHotKeyVisibility(visible);
-			});
+			this.activeUITeleports.forEach(action);
 		});
 	}
 
@@ -65,12 +64,12 @@ public abstract class BaseMap implements IMap
 
 	protected void addTeleport(UITeleport teleport)
 	{
-		this.activeTeleports.add(teleport);
+		this.activeUITeleports.add(teleport);
 	}
 
 	protected void clearTeleports()
 	{
-		this.activeTeleports.clear();
+		this.activeUITeleports.clear();
 	}
 
 	protected Widget createSpriteWidget(Widget parent, int spriteWidth, int spriteHeight, int originalX, int originalY, int spriteId)

@@ -221,4 +221,9 @@ public abstract class UIComponent
 		this.widget.setHidden(!visible);
 		this.widget.revalidate();
 	}
+
+	public boolean isVisible()
+	{
+		return !this.widget.isHidden();
+	}
 }

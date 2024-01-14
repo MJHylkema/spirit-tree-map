@@ -1,6 +1,5 @@
 package com.mjhylkema.TeleportMaps.components;
 
-import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -14,7 +13,6 @@ import net.runelite.client.eventbus.Subscribe;
 
 public class AdventureLogComposite implements IMap
 {
-	private static final int ADVENTURE_LOG_CONTAINER_BACKGROUND = 0;
 	private static final int ADVENTURE_LOG_CONTAINER_TITLE = 1;
 	static class AdventureLog
 	{

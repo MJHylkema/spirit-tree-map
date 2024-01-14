@@ -9,7 +9,6 @@ import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import com.mjhylkema.TeleportMaps.ui.Xerics;
 import java.awt.Color;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
@@ -44,12 +43,16 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	private static final int ADVENTURE_LOG_CONTAINER_TITLE = 1;
 	private static final String MENU_TITLE = "The talisman has .*";
 
+	private XericsDefinition[] xericsDefinitions;
+	private HashMap<String, XericsDefinition> xericsDefinitionsLookup;
+	private HashMap<String, Xerics> availableLocations;
+
 	@Inject
 	public XericsMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread)
 	{
 		super(plugin, config, client, clientThread, config.showXericsMap());
 		this.loadDefinitions();
-		this.buildTreeDefinitionLookup();
+		this.buildXericsDefinitionLookup();
 	}
 
 	@Override
@@ -58,21 +61,18 @@ public class XericsMap extends BaseMap implements IAdventureMap
 		return title.matches(MENU_TITLE);
 	}
 
-	private XericsDefinition[] xericsDefinitions;
-	private HashMap<String, XericsDefinition> xericsDefinitionsLookup;
-	private HashMap<String, Xerics> availableTrees;
 
 	private void loadDefinitions()
 	{
 		this.xericsDefinitions = this.plugin.loadDefinitionResource(XericsDefinition[].class, DEF_FILE_XERICS);
 	}
 
-	private void buildTreeDefinitionLookup()
+	private void buildXericsDefinitionLookup()
 	{
 		this.xericsDefinitionsLookup = new HashMap<>();
 		for (XericsDefinition xericsDefinition: this.xericsDefinitions)
 		{
-			// Place the tree definition in the lookup table indexed by its name
+			// Place the xerics definition in the lookup table indexed by its name
 			this.xericsDefinitionsLookup.put(xericsDefinition.getName(), xericsDefinition);
 		}
 	}
@@ -80,7 +80,7 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	public void buildInterface(Widget adventureLogContainer)
 	{
 		this.hideAdventureLogContainerChildren(adventureLogContainer);
-		this.buildAvailableTreeList();
+		this.buildAvailableTeleportList();
 
 		this.createMapWidget(adventureLogContainer);
 		this.createTeleportWidgets(adventureLogContainer);
@@ -89,47 +89,52 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	@Subscribe
 	public void onConfigChanged(ConfigChanged e)
 	{
-		if (Objects.equals(e.getKey(), TeleportMapsConfig.KEY_SHOW_XERICS_MAP))
-			this.setActive(config.showXericsMap());
-		else
-			super.onConfigChanged(e);
+		switch (e.getKey())
+		{
+			case TeleportMapsConfig.KEY_SHOW_XERICS_MAP:
+				this.setActive(config.showXericsMap());
+			case TeleportMapsConfig.KEY_SHOW_XERICS_MAP_LABELS:
+			case TeleportMapsConfig.KEY_SHOW_XERICS_MAP_HOTKEY_LABELS:
+			case TeleportMapsConfig.KEY_DISPLAY_HOTKEYS:
+				this.updateTeleports((teleport) -> {
+					teleport.setLabelVisibility(config.showXericsMapLabels());
+					teleport.setHotkeyInLabel(config.displayHotkeys() && config.showXericsMapLabels() && config.showXericsMapHotkeyInLabels());
+					teleport.setHotKeyVisibility(config.displayHotkeys() && !(config.showXericsMapLabels() && config.showXericsMapHotkeyInLabels()));
+				});
+			default:
+				super.onConfigChanged(e);
+		}
 	}
 
 	private void hideAdventureLogContainerChildren(Widget adventureLogContainer)
 	{
-		/*Widget existingBackground = adventureLogContainer.getChild(ADVENTURE_LOG_CONTAINER_BACKGROUND);
-		if (existingBackground != null)
-			existingBackground.setHidden(true);
-		*/
 		Widget title = adventureLogContainer.getChild(ADVENTURE_LOG_CONTAINER_TITLE);
 		if (title != null)
 			title.setHidden(true);
 	}
 
 	/**
-	 * Constructs the list of trees available for the player to use
+	 * Constructs the list of Xeric's teleports available for the player to use
 	 */
-	private void buildAvailableTreeList()
+	private void buildAvailableTeleportList()
 	{
-		this.availableTrees = new HashMap<>();
+		this.availableLocations = new HashMap<>();
 
 		// Compile the pattern that will match the teleport label
 		// and place the hotkey and teleport name into groups
 		Pattern labelPattern = Pattern.compile(XERICS_LABEL_NAME_PATTERN);
 
-		// Get the parent widgets containing the tree list
-		Widget treeList = this.plugin.getClient().getWidget(InterfaceID.ADVENTURE_LOG, 3);
+		// Get the parent widgets containing the teleport locations list
+		Widget teleportList = this.plugin.getClient().getWidget(InterfaceID.ADVENTURE_LOG, 3);
 
-		// Fetch all tree label widgets
-		Widget[] labelWidgets = treeList.getDynamicChildren();
+		// Fetch all teleport label widgets
+		Widget[] labelWidgets = teleportList.getDynamicChildren();
 
 		for (Widget child : labelWidgets)
 		{
 			String shortcutKey;
 			String disabledColor;
-			String treeName;
-
-			String displayedName;
+			String teleportName;
 
 			// Create a pattern matcher with the widgets text content
 			Matcher matcher = labelPattern.matcher(child.getText());
@@ -141,22 +146,19 @@ public class XericsMap extends BaseMap implements IAdventureMap
 			// Extract the pertinent information
 			shortcutKey = matcher.group(1);
 			disabledColor = matcher.group(2);
-			treeName = matcher.group(3);
+			teleportName = matcher.group(3);
 
-			// Don't include unavailable trees in available collection..
+			// Don't include unavailable teleports in available collection..
 			if (disabledColor != null)
 				continue;
 
 
-			XericsDefinition xericsDefinition = this.xericsDefinitionsLookup.get(treeName);
+			XericsDefinition xericsDefinition = this.xericsDefinitionsLookup.get(teleportName);
 
-			// If a tree label by this name cannot be found in the tree definitions lookup,
-			// skip. This likely means a new tree has been added to the Spirit Tree list that
-			// hasn't been updated into the definitions yet
 			if (xericsDefinition == null)
 				continue;
 
-			this.availableTrees.put(treeName, new Xerics(xericsDefinition, child, shortcutKey));
+			this.availableLocations.put(teleportName, new Xerics(xericsDefinition, child, shortcutKey));
 		}
 	}
 
@@ -174,58 +176,63 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	{
 		this.clearTeleports();
 
-		for (XericsDefinition treeDefinition : this.xericsDefinitions)
+		for (XericsDefinition xericsDefinition : this.xericsDefinitions)
 		{
 			Widget widgetContainer = container.createChild(-1, WidgetType.GRAPHIC);
-			Widget treeWidget = container.createChild(-1, WidgetType.GRAPHIC);
+			Widget teleportWidget = container.createChild(-1, WidgetType.GRAPHIC);
 
-			UITeleport treeTeleport = new UITeleport(widgetContainer, treeWidget);
+			UITeleport teleport = new UITeleport(widgetContainer, teleportWidget);
 
-			treeTeleport.setPosition(treeDefinition.getX(), treeDefinition.getY());
-			treeTeleport.setTeleportSprites(XERICS_SPRITE_ID, XERICS_HIGHLIGHTED_SPRITE_ID, XERICS_DISABLED_SPRITE_ID);
-			treeTeleport.setSize(treeDefinition.getWidth(), treeDefinition.getHeight());
-			treeTeleport.setName(treeDefinition.getName());
+			teleport.setPosition(xericsDefinition.getX(), xericsDefinition.getY());
+			teleport.setTeleportSprites(XERICS_SPRITE_ID, XERICS_HIGHLIGHTED_SPRITE_ID, XERICS_DISABLED_SPRITE_ID);
+			teleport.setSize(xericsDefinition.getWidth(), xericsDefinition.getHeight());
+			teleport.setName(xericsDefinition.getName());
 
-			if (isTreeUnlocked(treeDefinition.getName()))
+			UILabel teleportLabel = new UILabel(container.createChild(-1, WidgetType.TEXT));
+			teleportLabel.getWidget().setTextColor(Color.white.getRGB());
+			teleportLabel.getWidget().setTextShadowed(true);
+			teleportLabel.setText(xericsDefinition.getLabel().getTitle());
+			teleportLabel.setPosition(xericsDefinition.getLabel().getX(), xericsDefinition.getLabel().getY());
+			teleportLabel.setSize(xericsDefinition.getLabel().getWidth(), xericsDefinition.getLabel().getHeight());
+			teleportLabel.setVisibility(config.showXericsMapLabels());
+			teleport.attachLabel(teleportLabel);
+
+			if (isLocationUnlocked(xericsDefinition.getName()))
 			{
-				Xerics tree = this.availableTrees.get(treeDefinition.getName());
+				Xerics xerics = this.availableLocations.get(xericsDefinition.getName());
 
-				treeTeleport.setName(treeDefinition.getName());
-				treeTeleport.addAction(TRAVEL_ACTION, () -> this.triggerTeleport(tree));
+				teleport.addAction(TRAVEL_ACTION, () -> this.triggerTeleport(xerics));
 
-				UIHotkey hotkey = this.createHotKey(container, treeDefinition.getHotkey(), tree.getKeyShortcut());
-				treeTeleport.setHotkey(hotkey);
+				UIHotkey hotkey = this.createHotKey(container, xericsDefinition.getHotkey(), xerics.getKeyShortcut());
+				teleportLabel.setHotkey(xerics.getKeyShortcut());
+
+				teleport.attachHotkey(hotkey);
+
+				teleport.setHotkeyInLabel(config.displayHotkeys() && config.showXericsMapLabels() && config.showXericsMapHotkeyInLabels());
+				teleport.setHotKeyVisibility(config.displayHotkeys() && !(config.showXericsMapLabels() && config.showXericsMapHotkeyInLabels()));
 			}
 			else
 			{
-				treeTeleport.setLocked(true);
-				treeTeleport.addAction(EXAMINE_ACTION, () -> this.triggerLockedMessage(treeDefinition));
+				teleport.setLocked(true);
+				teleport.addAction(EXAMINE_ACTION, () -> this.triggerLockedMessage(xericsDefinition));
 			}
 
-
-			UILabel xericsLabel = new UILabel(container.createChild(-1, WidgetType.TEXT));
-			xericsLabel.getWidget().setTextColor(Color.white.getRGB());
-			xericsLabel.getWidget().setTextShadowed(true);
-			xericsLabel.setText(treeDefinition.getLabel().getTitle());
-			xericsLabel.setPosition(treeDefinition.getLabel().getX(), treeDefinition.getLabel().getY());
-			xericsLabel.setSize(treeDefinition.getLabel().getWidth(), treeDefinition.getLabel().getHeight());
-
-			this.addTeleport(treeTeleport);
+			this.addTeleport(teleport);
 		}
 	}
 
-	private boolean isTreeUnlocked(String treeName)
+	private boolean isLocationUnlocked(String teleportName)
 	{
-		return this.availableTrees.containsKey(treeName);
+		return this.availableLocations.containsKey(teleportName);
 	}
 
-	private void triggerTeleport(Xerics tree)
+	private void triggerTeleport(Xerics xerics)
 	{
-		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().runScript(SCRIPT_TRIGGER_KEY, this.plugin.getClient().getWidget(0xBB0003).getId(), tree.getWidget().getIndex()));
+		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().runScript(SCRIPT_TRIGGER_KEY, this.plugin.getClient().getWidget(0xBB0003).getId(), xerics.getWidget().getIndex()));
 	}
 
-	private void triggerLockedMessage(XericsDefinition treeDefinition)
+	private void triggerLockedMessage(XericsDefinition xericsDefinition)
 	{
-		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("The talisman does not have the power to take you to %s yet.", treeDefinition.getName()), null));
+		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("The talisman does not have the power to take you to %s yet.", xericsDefinition.getName()), null));
 	}
 }

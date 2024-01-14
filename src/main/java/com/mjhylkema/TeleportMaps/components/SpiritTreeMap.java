@@ -211,7 +211,7 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 				treeTeleport.addAction(TRAVEL_ACTION, () -> this.triggerTeleport(tree));
 
 				UIHotkey hotkey = this.createHotKey(container, treeDefinition.getHotkey(), tree.getKeyShortcut());
-				treeTeleport.setHotkey(hotkey);
+				treeTeleport.attachHotkey(hotkey);
 			}
 			else
 			{

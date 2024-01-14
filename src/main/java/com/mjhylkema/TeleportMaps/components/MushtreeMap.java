@@ -219,7 +219,7 @@ public class MushtreeMap extends BaseMap
 				});
 
 				UIHotkey hotkey = this.createHotKey(mushtreeInterface, mushtreeDefinition.getHotkey(), mushtree.getHotkey().toString());
-				mushtreeTeleport.setHotkey(hotkey);
+				mushtreeTeleport.attachHotkey(hotkey);
 			}
 			else
 			{

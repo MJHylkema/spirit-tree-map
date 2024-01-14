@@ -12,6 +12,8 @@ public interface TeleportMapsConfig extends Config
 	String KEY_SHOW_SPIRIT_TREE_MAP = "showSpiritTreeMap";
 	String KEY_SHOW_MUSHTREE_MAP = "showMushtreeMap";
 	String KEY_SHOW_XERICS_MAP = "showXericsMap";
+	String KEY_SHOW_XERICS_MAP_LABELS = "showXericsMapLabels";
+	String KEY_SHOW_XERICS_MAP_HOTKEY_LABELS = "showXericsMapHotkeyInLabels";
 
 	@ConfigSection(
 		name = "Teleport Maps",
@@ -19,6 +21,13 @@ public interface TeleportMapsConfig extends Config
 		position = 0
 	)
 	String teleportMaps = "teleportMaps";
+
+	@ConfigSection(
+		name = "Xeric's Map Settings",
+		description = "Settings related to Xeric's Talisman Map",
+		position = 0
+	)
+	String xericsMap = "xericsMap";
 
 	@ConfigSection(
 		name = "General Settings",
@@ -55,6 +64,30 @@ public interface TeleportMapsConfig extends Config
 		section = teleportMaps
 	)
 	default boolean showXericsMap()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = KEY_SHOW_XERICS_MAP_LABELS,
+		name = "Display labels",
+		description = "Show named labels above each of the Xeric's Talisman teleport locations",
+		section = xericsMap,
+		position = 1
+	)
+	default boolean showXericsMapLabels()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = KEY_SHOW_XERICS_MAP_HOTKEY_LABELS,
+		name = "Show hotkey in labels",
+		description = "Display the teleport hotkeys as part of the label, rather than hotkey icons",
+		section = xericsMap,
+		position = 2
+	)
+	default boolean showXericsMapHotkeyInLabels()
 	{
 		return true;
 	}
