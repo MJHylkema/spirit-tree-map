@@ -25,14 +25,14 @@ public interface TeleportMapsConfig extends Config
 	@ConfigSection(
 		name = "Xeric's Map Settings",
 		description = "Settings related to Xeric's Talisman Map",
-		position = 0
+		position = 1
 	)
 	String xericsMap = "xericsMap";
 
 	@ConfigSection(
 		name = "General Settings",
 		description = "Settings that apply to all maps",
-		position = 1
+		position = 2
 	)
 	String generalSettings = "generalSettings";
 
