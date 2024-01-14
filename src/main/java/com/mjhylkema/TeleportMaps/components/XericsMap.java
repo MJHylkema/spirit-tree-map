@@ -42,6 +42,7 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	private static final int ADVENTURE_LOG_CONTAINER_BACKGROUND = 0;
 	private static final int ADVENTURE_LOG_CONTAINER_TITLE = 1;
 	private static final String MENU_TITLE = "The talisman has .*";
+	private static final String MENU_TITLE_MOUNTED = "Xeric's Talisman teleports";
 
 	private XericsDefinition[] xericsDefinitions;
 	private HashMap<String, XericsDefinition> xericsDefinitionsLookup;
@@ -58,7 +59,7 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	@Override
 	public boolean matchesTitle(String title)
 	{
-		return title.matches(MENU_TITLE);
+		return title.matches(MENU_TITLE) || title.matches(MENU_TITLE_MOUNTED);
 	}
 
 
