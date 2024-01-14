@@ -12,6 +12,7 @@ public interface TeleportMapsConfig extends Config
 	String KEY_SHOW_SPIRIT_TREE_MAP = "showSpiritTreeMap";
 	String KEY_SHOW_MUSHTREE_MAP = "showMushtreeMap";
 	String KEY_SHOW_XERICS_MAP = "showXericsMap";
+	String KEY_SHOW_MINECART_MAP = "showMinecartMap";
 	String KEY_SHOW_XERICS_MAP_LABELS = "showXericsMapLabels";
 	String KEY_SHOW_XERICS_MAP_HOTKEY_LABELS = "showXericsMapHotkeyInLabels";
 
@@ -57,6 +58,7 @@ public interface TeleportMapsConfig extends Config
 	{
 		return true;
 	}
+
 	@ConfigItem(
 		keyName = KEY_SHOW_XERICS_MAP,
 		name = "Xeric's Talisman Map",
@@ -64,6 +66,17 @@ public interface TeleportMapsConfig extends Config
 		section = teleportMaps
 	)
 	default boolean showXericsMap()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = KEY_SHOW_MINECART_MAP,
+		name = "Lovakengj Minecart Map",
+		description = "Replace the minecart travel menu with an interactive map",
+		section = teleportMaps
+	)
+	default boolean showMinecartMap()
 	{
 		return true;
 	}

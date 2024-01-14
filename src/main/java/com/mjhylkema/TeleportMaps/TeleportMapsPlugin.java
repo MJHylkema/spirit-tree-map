@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.inject.Provides;
 import com.mjhylkema.TeleportMaps.components.AdventureLogComposite;
 import com.mjhylkema.TeleportMaps.components.IMap;
+import com.mjhylkema.TeleportMaps.components.MinecartMap;
 import com.mjhylkema.TeleportMaps.components.MushtreeMap;
 import com.mjhylkema.TeleportMaps.components.SpiritTreeMap;
 import com.mjhylkema.TeleportMaps.components.XericsMap;
@@ -57,6 +58,8 @@ public class TeleportMapsPlugin extends Plugin
 	@Inject
 	private XericsMap xericsMap;
 	@Inject
+	private MinecartMap minecartMap;
+	@Inject
 	AdventureLogComposite adventureLogComposite;
 
 
@@ -72,6 +75,7 @@ public class TeleportMapsPlugin extends Plugin
 
 		this.adventureLogComposite.addAdventureLogMap(spiritTreeMap);
 		this.adventureLogComposite.addAdventureLogMap(xericsMap);
+		this.adventureLogComposite.addAdventureLogMap(minecartMap);
 
 		this.mapComponents.forEach((mapComponent -> {
 			eventBus.register(mapComponent);

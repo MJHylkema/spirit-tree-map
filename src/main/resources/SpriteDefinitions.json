@@ -134,5 +134,17 @@
   {
     "spriteId": -19403,
     "fileName": "/XericsMap/XericsDisabled.png"
+  },
+  {
+    "spriteId": -19501,
+    "fileName": "/MinecartMap/minecart.png"
+  },
+  {
+    "spriteId": -19502,
+    "fileName": "/MinecartMap/minecartOutlined.png"
+  },
+  {
+    "spriteId": -19503,
+    "fileName": "/MinecartMap/minecartDisabled.png"
   }
 ]

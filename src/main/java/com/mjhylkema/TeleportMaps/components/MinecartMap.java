@@ -2,12 +2,10 @@ package com.mjhylkema.TeleportMaps.components;
 
 import com.mjhylkema.TeleportMaps.TeleportMapsConfig;
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
-import com.mjhylkema.TeleportMaps.definition.XericsDefinition;
-import com.mjhylkema.TeleportMaps.ui.UIHotkey;
-import com.mjhylkema.TeleportMaps.ui.UILabel;
-import com.mjhylkema.TeleportMaps.ui.UITeleport;
+import com.mjhylkema.TeleportMaps.definition.MinecartDefinition;
 import com.mjhylkema.TeleportMaps.ui.AdventureLogEntry;
-import java.awt.Color;
+import com.mjhylkema.TeleportMaps.ui.UIHotkey;
+import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,18 +20,18 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 
 
-public class XericsMap extends BaseMap implements IAdventureMap
+public class MinecartMap extends BaseMap implements IAdventureMap
 {
 	/* Definition JSON files */
-	private static final String DEF_FILE_XERICS = "/XericsMap/XericsDefinitions.json";
+	private static final String DEF_FILE_MINECART = "/MinecartMap/MinecartDefinitions.json";
 
 	/* Sprite IDs, dimensions and positions */
 	private static final int MAP_SPRITE_ID = -19400;
 	private static final int MAP_SPRITE_WIDTH = 330;
 	private static final int MAP_SPRITE_HEIGHT = 285;
-	private static final int XERICS_SPRITE_ID = -19401;
-	private static final int XERICS_HIGHLIGHTED_SPRITE_ID = -19402;
-	private static final int XERICS_DISABLED_SPRITE_ID = -19403;
+	private static final int MINECART_SPRITE_ID = -19501;
+	private static final int MINECART_HIGHLIGHTED_SPRITE_ID = -19502;
+	private static final int MINECART_DISABLED_SPRITE_ID = -19503;
 
 	private static final int SCRIPT_TRIGGER_KEY = 1437;
 	private static final String XERICS_LABEL_NAME_PATTERN = "<col=735a28>(.+)</col>: (<col=5f5f5f>)?(.+)";
@@ -41,40 +39,39 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	private static final String EXAMINE_ACTION = "Examine";
 	private static final int ADVENTURE_LOG_CONTAINER_BACKGROUND = 0;
 	private static final int ADVENTURE_LOG_CONTAINER_TITLE = 1;
-	private static final String MENU_TITLE = "The talisman has .*";
-	private static final String MENU_TITLE_MOUNTED = "Xeric's Talisman teleports";
+	private static final String MENU_TITLE = "Minecart rides: .*";
 
-	private XericsDefinition[] xericsDefinitions;
-	private HashMap<String, XericsDefinition> xericsDefinitionsLookup;
+	private MinecartDefinition[] minecartDefinitions;
+	private HashMap<String, MinecartDefinition> minecartDefinitionLookup;
 	private HashMap<String, AdventureLogEntry> availableLocations;
 
 	@Inject
-	public XericsMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread)
+	public MinecartMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread)
 	{
 		super(plugin, config, client, clientThread, config.showXericsMap());
 		this.loadDefinitions();
-		this.buildXericsDefinitionLookup();
+		this.buildMinecartDefinitionLookup();
 	}
 
 	@Override
 	public boolean matchesTitle(String title)
 	{
-		return title.matches(MENU_TITLE) || title.matches(MENU_TITLE_MOUNTED);
+		return title.matches(MENU_TITLE);
 	}
 
 
 	private void loadDefinitions()
 	{
-		this.xericsDefinitions = this.plugin.loadDefinitionResource(XericsDefinition[].class, DEF_FILE_XERICS);
+		this.minecartDefinitions = this.plugin.loadDefinitionResource(MinecartDefinition[].class, DEF_FILE_MINECART);
 	}
 
-	private void buildXericsDefinitionLookup()
+	private void buildMinecartDefinitionLookup()
 	{
-		this.xericsDefinitionsLookup = new HashMap<>();
-		for (XericsDefinition xericsDefinition: this.xericsDefinitions)
+		this.minecartDefinitionLookup = new HashMap<>();
+		for (MinecartDefinition minecartDefinition: this.minecartDefinitions)
 		{
 			// Place the xerics definition in the lookup table indexed by its name
-			this.xericsDefinitionsLookup.put(xericsDefinition.getName(), xericsDefinition);
+			this.minecartDefinitionLookup.put(minecartDefinition.getName(), minecartDefinition);
 		}
 	}
 
@@ -92,16 +89,8 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	{
 		switch (e.getKey())
 		{
-			case TeleportMapsConfig.KEY_SHOW_XERICS_MAP:
-				this.setActive(config.showXericsMap());
-			case TeleportMapsConfig.KEY_SHOW_XERICS_MAP_LABELS:
-			case TeleportMapsConfig.KEY_SHOW_XERICS_MAP_HOTKEY_LABELS:
-			case TeleportMapsConfig.KEY_DISPLAY_HOTKEYS:
-				this.updateTeleports((teleport) -> {
-					teleport.setLabelVisibility(config.showXericsMapLabels());
-					teleport.setHotkeyInLabel(config.displayHotkeys() && config.showXericsMapLabels() && config.showXericsMapHotkeyInLabels());
-					teleport.setHotKeyVisibility(config.displayHotkeys() && !(config.showXericsMapLabels() && config.showXericsMapHotkeyInLabels()));
-				});
+			case TeleportMapsConfig.KEY_SHOW_MINECART_MAP:
+				this.setActive(config.showMinecartMap());
 			default:
 				super.onConfigChanged(e);
 		}
@@ -154,12 +143,12 @@ public class XericsMap extends BaseMap implements IAdventureMap
 				continue;
 
 
-			XericsDefinition xericsDefinition = this.xericsDefinitionsLookup.get(teleportName);
+			MinecartDefinition minecartDefinition = this.minecartDefinitionLookup.get(teleportName);
 
-			if (xericsDefinition == null)
+			if (minecartDefinition == null)
 				continue;
 
-			this.availableLocations.put(teleportName, new AdventureLogEntry(xericsDefinition, child, shortcutKey));
+			this.availableLocations.put(teleportName, new AdventureLogEntry(minecartDefinition, child, shortcutKey));
 		}
 	}
 
@@ -177,45 +166,31 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	{
 		this.clearTeleports();
 
-		for (XericsDefinition xericsDefinition : this.xericsDefinitions)
+		for (MinecartDefinition minecartDefinition : this.minecartDefinitions)
 		{
 			Widget widgetContainer = container.createChild(-1, WidgetType.GRAPHIC);
 			Widget teleportWidget = container.createChild(-1, WidgetType.GRAPHIC);
 
 			UITeleport teleport = new UITeleport(widgetContainer, teleportWidget);
 
-			teleport.setPosition(xericsDefinition.getX(), xericsDefinition.getY());
-			teleport.setTeleportSprites(XERICS_SPRITE_ID, XERICS_HIGHLIGHTED_SPRITE_ID, XERICS_DISABLED_SPRITE_ID);
-			teleport.setSize(xericsDefinition.getWidth(), xericsDefinition.getHeight());
-			teleport.setName(xericsDefinition.getName());
+			teleport.setPosition(minecartDefinition.getX(), minecartDefinition.getY());
+			teleport.setTeleportSprites(MINECART_SPRITE_ID, MINECART_HIGHLIGHTED_SPRITE_ID, MINECART_DISABLED_SPRITE_ID);
+			teleport.setSize(minecartDefinition.getWidth(), minecartDefinition.getHeight());
+			teleport.setName(minecartDefinition.getName());
 
-			UILabel teleportLabel = new UILabel(container.createChild(-1, WidgetType.TEXT));
-			teleportLabel.getWidget().setTextColor(Color.white.getRGB());
-			teleportLabel.getWidget().setTextShadowed(true);
-			teleportLabel.setText(xericsDefinition.getLabel().getTitle());
-			teleportLabel.setPosition(xericsDefinition.getLabel().getX(), xericsDefinition.getLabel().getY());
-			teleportLabel.setSize(xericsDefinition.getLabel().getWidth(), xericsDefinition.getLabel().getHeight());
-			teleportLabel.setVisibility(config.showXericsMapLabels());
-			teleport.attachLabel(teleportLabel);
-
-			if (isLocationUnlocked(xericsDefinition.getName()))
+			if (isLocationUnlocked(minecartDefinition.getName()))
 			{
-				AdventureLogEntry adventureLogEntry = this.availableLocations.get(xericsDefinition.getName());
+				AdventureLogEntry adventureLogEntry = this.availableLocations.get(minecartDefinition.getName());
 
 				teleport.addAction(TRAVEL_ACTION, () -> this.triggerTeleport(adventureLogEntry));
 
-				UIHotkey hotkey = this.createHotKey(container, xericsDefinition.getHotkey(), adventureLogEntry.getKeyShortcut());
-				teleportLabel.setHotkey(adventureLogEntry.getKeyShortcut());
-
+				UIHotkey hotkey = this.createHotKey(container, minecartDefinition.getHotkey(), adventureLogEntry.getKeyShortcut());
 				teleport.attachHotkey(hotkey);
-
-				teleport.setHotkeyInLabel(config.displayHotkeys() && config.showXericsMapLabels() && config.showXericsMapHotkeyInLabels());
-				teleport.setHotKeyVisibility(config.displayHotkeys() && !(config.showXericsMapLabels() && config.showXericsMapHotkeyInLabels()));
 			}
 			else
 			{
 				teleport.setLocked(true);
-				teleport.addAction(EXAMINE_ACTION, () -> this.triggerLockedMessage(xericsDefinition));
+				teleport.addAction(EXAMINE_ACTION, () -> this.triggerLockedMessage(minecartDefinition));
 			}
 
 			this.addTeleport(teleport);
@@ -232,8 +207,8 @@ public class XericsMap extends BaseMap implements IAdventureMap
 		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().runScript(SCRIPT_TRIGGER_KEY, this.plugin.getClient().getWidget(0xBB0003).getId(), adventureLogEntry.getWidget().getIndex()));
 	}
 
-	private void triggerLockedMessage(XericsDefinition xericsDefinition)
+	private void triggerLockedMessage(MinecartDefinition minecartDefinition)
 	{
-		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("The talisman does not have the power to take you to %s yet.", xericsDefinition.getName()), null));
+		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("You are unable to travel to %s.", minecartDefinition.getName()), null));
 	}
 }
