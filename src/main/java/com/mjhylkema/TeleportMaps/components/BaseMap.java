@@ -1,54 +1,75 @@
 package com.mjhylkema.TeleportMaps.components;
 
+import com.mjhylkema.TeleportMaps.TeleportMapsConfig;
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
 import com.mjhylkema.TeleportMaps.definition.HotKeyDefinition;
 import com.mjhylkema.TeleportMaps.ui.UIHotkey;
 import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import java.util.ArrayList;
 import java.util.List;
-import net.runelite.api.events.WidgetLoaded;
+import java.util.Objects;
+import java.util.function.Consumer;
+import net.runelite.api.Client;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetType;
+import net.runelite.client.callback.ClientThread;
+import net.runelite.client.events.ConfigChanged;
 
-public abstract class BaseMap
+public abstract class BaseMap implements IMap
 {
 	protected static final int HOTKEY_LABEL_SPRITE_ID = -19002;
-	protected static final int HOTKEY_LABEL_SPRITE_WIDTH = 20;
-	protected static final int HOTKEY_LABEL_SPRITE_HEIGHT = 20;
-
-	protected static final int HOTKEY_LABEL_COLOR = 3287045; /*322805*/
 
 	protected TeleportMapsPlugin plugin;
-	private List<UITeleport> activeTeleports;
+	protected TeleportMapsConfig config;
+	protected Client client;
+	protected ClientThread clientThread;
+	final protected List<UITeleport> activeUITeleports;
+	private boolean active;
 
-	BaseMap(TeleportMapsPlugin plugin)
+	BaseMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread, boolean active)
 	{
 		this.plugin = plugin;
-		this.activeTeleports = new ArrayList<>();
+		this.config = config;
+		this.client = client;
+		this.clientThread = clientThread;
+		this.active = active;
+		this.activeUITeleports = new ArrayList<>();
 	}
 
-	public abstract void widgetLoaded(WidgetLoaded e);
-
-	public void changeHotkeyVisibility(boolean visible)
+	public void onConfigChanged(ConfigChanged e)
 	{
-		if (this.activeTeleports.size() == 0)
+		if (Objects.equals(e.getKey(), TeleportMapsConfig.KEY_DISPLAY_HOTKEYS))
+			this.updateTeleports((teleport) -> teleport.setHotKeyVisibility(config.displayHotkeys()));
+	}
+
+	protected void updateTeleports(Consumer<UITeleport> action)
+	{
+		if (this.activeUITeleports.size() == 0)
 			return;
 
-		this.plugin.getClientThread().invokeLater(() -> {
-			this.activeTeleports.forEach((teleport) -> {
-				teleport.setHotKeyVisibility(visible);
-			});
+		this.clientThread.invokeLater(() -> {
+			this.activeUITeleports.forEach(action);
 		});
+	}
+
+	public boolean isActive()
+	{
+		return this.active;
+	}
+
+	protected void setActive(boolean active)
+	{
+		this.active = active;
 	}
 
 	protected void addTeleport(UITeleport teleport)
 	{
-		this.activeTeleports.add(teleport);
+		this.activeUITeleports.add(teleport);
 	}
 
 	protected void clearTeleports()
 	{
-		this.activeTeleports.clear();
+		this.activeUITeleports.clear();
 	}
 
 	protected Widget createSpriteWidget(Widget parent, int spriteWidth, int spriteHeight, int originalX, int originalY, int spriteId)
@@ -72,7 +93,7 @@ public abstract class BaseMap
 
 		UIHotkey hotkey = new UIHotkey(icon, text);
 
-		boolean displayHotkeys = this.plugin.getConfig().displayHotkeys();
+		boolean displayHotkeys = this.config.displayHotkeys();
 
 		hotkey.setSize(hotKeyDefinition.getWidth(), hotKeyDefinition.getHeight());
 		hotkey.setPosition(hotKeyDefinition.getX(), hotKeyDefinition.getY());
@@ -86,7 +107,7 @@ public abstract class BaseMap
 	{
 		for(int childId : childIDs)
 		{
-			Widget widget = this.plugin.getClient().getWidget(groupID, childId);
+			Widget widget = this.client.getWidget(groupID, childId);
 			if (widget != null)
 			{
 				widget.setHidden(hidden);

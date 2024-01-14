@@ -14,6 +14,7 @@ public class UITeleport extends UIComponent
 
 	private UIButton teleportButton;
 	private UIHotkey hotkeyButton;
+	private UILabel label;
 
 	public UITeleport(Widget groupWidget, Widget teleport)
 	{
@@ -22,13 +23,6 @@ public class UITeleport extends UIComponent
 		this.setOnLeaveListener(this::onLeave);
 
 		this.teleportButton = new UIButton(teleport);
-	}
-
-	public void setHotkey(UIHotkey hotkeyButton)
-	{
-		this.hotkeyButton = hotkeyButton;
-		this.revalidatePosition();
-		this.revalidateSize();
 	}
 
 	@Override
@@ -43,6 +37,62 @@ public class UITeleport extends UIComponent
 	{
 		this.teleportButton.setSize(width, height);
 		this.revalidateSize();
+	}
+
+	protected void onHover(UIComponent src)
+	{
+		this.teleportButton.getWidget().setSpriteId(this.teleportButton.getSpriteHover());
+		this.teleportButton.getWidget().revalidate();
+	}
+
+	protected void onLeave(UIComponent src)
+	{
+		this.teleportButton.getWidget().setSpriteId(this.teleportButton.getSpriteStandard());
+		this.teleportButton.getWidget().revalidate();
+	}
+
+	public void setLocked(boolean locked)
+	{
+		this.locked = locked;
+
+		if (locked)
+			this.teleportButton.setSprites(this.spriteDisabled, this.spriteDisabled);
+		else
+			this.teleportButton.setSprites(this.spriteStandard, this.spriteHover);
+	}
+
+	public void attachHotkey(UIHotkey hotkeyButton)
+	{
+		this.hotkeyButton = hotkeyButton;
+		this.revalidatePosition();
+		this.revalidateSize();
+	}
+
+	public void attachLabel(UILabel label)
+	{
+		this.label = label;
+	}
+
+	public void setLabelVisibility(boolean visible)
+	{
+		if (this.label != null)
+			this.label.setVisibility(visible);
+	}
+
+	public void setHotkeyInLabel(boolean value)
+	{
+		if (this.label != null)
+			this.label.setShowHotkey(value);
+	}
+
+	public void setHotKeyVisibility(boolean visible)
+	{
+		if (this.hotkeyButton != null)
+		{
+			this.hotkeyButton.setVisibility(visible);
+			this.revalidatePosition();
+			this.revalidateSize();
+		}
 	}
 
 	public void setTeleportSprites(int standard, int hover, int disabled)
@@ -94,37 +144,5 @@ public class UITeleport extends UIComponent
 		}
 
 		this.getWidget().revalidate();
-	}
-
-	public void setLocked(boolean locked)
-	{
-		this.locked = locked;
-
-		if (locked)
-			this.teleportButton.setSprites(this.spriteDisabled, this.spriteDisabled);
-		else
-			this.teleportButton.setSprites(this.spriteStandard, this.spriteHover);
-	}
-
-	protected void onHover(UIComponent src)
-	{
-		this.teleportButton.getWidget().setSpriteId(this.teleportButton.getSpriteHover());
-		this.teleportButton.getWidget().revalidate();
-	}
-
-	protected void onLeave(UIComponent src)
-	{
-		this.teleportButton.getWidget().setSpriteId(this.teleportButton.getSpriteStandard());
-		this.teleportButton.getWidget().revalidate();
-	}
-
-	public void setHotKeyVisibility(boolean visible)
-	{
-		if (this.hotkeyButton != null)
-		{
-			this.hotkeyButton.setVisibility(visible);
-			this.revalidatePosition();
-			this.revalidateSize();
-		}
 	}
 }

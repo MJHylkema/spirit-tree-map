@@ -1,5 +1,6 @@
 package com.mjhylkema.TeleportMaps.components;
 
+import com.mjhylkema.TeleportMaps.TeleportMapsConfig;
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
 import com.mjhylkema.TeleportMaps.definition.MushtreeDefinition;
 import com.mjhylkema.TeleportMaps.ui.Mushtree;
@@ -7,13 +8,19 @@ import com.mjhylkema.TeleportMaps.ui.UIButton;
 import com.mjhylkema.TeleportMaps.ui.UIHotkey;
 import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
+import net.runelite.api.Client;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.JavaScriptCallback;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetType;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.Keybind;
+import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 
 public class MushtreeMap extends BaseMap
 {
@@ -41,9 +48,10 @@ public class MushtreeMap extends BaseMap
 	private HashMap<String, MushtreeDefinition> mushtreeDefinitionsLookup;
 	private HashMap<String, Mushtree> availableMushtrees;
 
-	public MushtreeMap(TeleportMapsPlugin plugin)
+	@Inject
+	public MushtreeMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread)
 	{
-		super(plugin);
+		super(plugin, config, client, clientThread, config.showMushtreeMap());
 		this.loadDefinitions();
 		this.buildTreeDefinitionLookup();
 	}
@@ -63,9 +71,12 @@ public class MushtreeMap extends BaseMap
 		}
 	}
 
-	@Override
-	public void widgetLoaded(WidgetLoaded e)
+	@Subscribe
+	public void onWidgetLoaded(WidgetLoaded e)
 	{
+		if (!this.isActive())
+			return;
+
 		if (e.getGroupId() == MUSHTREE_DIALOG_ID)
 		{
 			// To avoid the default mushtree dialog list flashing on the screen briefly, always hide it upfront.
@@ -74,9 +85,9 @@ public class MushtreeMap extends BaseMap
 				0
 			}, true);
 
-			this.plugin.getClientThread().invokeLater(() ->
+			this.clientThread.invokeLater(() ->
 			{
-				Widget mushtreeDialog = this.plugin.getClient().getWidget(MUSHTREE_DIALOG_ID, 1);
+				Widget mushtreeDialog = this.client.getWidget(MUSHTREE_DIALOG_ID, 1);
 				if (mushtreeDialog == null ||
 					mushtreeDialog.getChild(1) == null ||
 					!mushtreeDialog.getChild(1).getText().equals("Mycelium Transportation System"))
@@ -84,6 +95,7 @@ public class MushtreeMap extends BaseMap
 					setWidgetsHidden(MUSHTREE_DIALOG_ID, new int[] {
 						0
 					}, false);
+					return;
 				}
 
 				Widget mushtreeInterfaceContainer = this.plugin.getClient().getWidget(MUSHTREE_DIALOG_ID, 0);
@@ -100,6 +112,15 @@ public class MushtreeMap extends BaseMap
 				setWidgetsHidden(MUSHTREE_DIALOG_ID, new int[]{0}, false);
 			});
 		}
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged e)
+	{
+		if (Objects.equals(e.getKey(), TeleportMapsConfig.KEY_SHOW_MUSHTREE_MAP))
+			this.setActive(config.showMushtreeMap());
+		else
+			super.onConfigChanged(e);
 	}
 
 	private void hideInterfaceChildren(Widget mushtreeInterface)
@@ -129,7 +150,7 @@ public class MushtreeMap extends BaseMap
 		Pattern labelPattern = Pattern.compile(MUSHTREE_LABEL_NAME_PATTERN);
 
 		// Get the parent widgets containing the tree list
-		Widget mushtreeList = this.plugin.getClient().getWidget(MUSHTREE_DIALOG_ID, 2);
+		Widget mushtreeList = this.client.getWidget(MUSHTREE_DIALOG_ID, 2);
 
 		// Fetch all tree label widgets
 		Widget[] mushtreeButtons = mushtreeList.getStaticChildren();
@@ -198,7 +219,7 @@ public class MushtreeMap extends BaseMap
 				});
 
 				UIHotkey hotkey = this.createHotKey(mushtreeInterface, mushtreeDefinition.getHotkey(), mushtree.getHotkey().toString());
-				mushtreeTeleport.setHotkey(hotkey);
+				mushtreeTeleport.attachHotkey(hotkey);
 			}
 			else
 			{
@@ -222,8 +243,8 @@ public class MushtreeMap extends BaseMap
 
 	private void triggerExit()
 	{
-		this.plugin.getClientThread().invoke(() -> {
-			Widget mushtreeDialog = this.plugin.getClient().getWidget(MUSHTREE_DIALOG_ID, 1);
+		this.clientThread.invoke(() -> {
+			Widget mushtreeDialog = this.client.getWidget(MUSHTREE_DIALOG_ID, 1);
 			Widget mushtreeExit = mushtreeDialog != null ? mushtreeDialog.getChild(13) : null;
 			if (mushtreeExit != null)
 				this.plugin.getClient().runScript(mushtreeExit.getOnOpListener());
@@ -237,7 +258,7 @@ public class MushtreeMap extends BaseMap
 
 	private void triggerButton(Mushtree mushtree)
 	{
-		this.plugin.getClientThread().invokeLater(() -> {
+		this.clientThread.invokeLater(() -> {
 			Widget mushtreeWidget = mushtree.getWidget();
 			Object[] listener = mushtreeWidget.getOnKeyListener();
 
@@ -245,7 +266,7 @@ public class MushtreeMap extends BaseMap
 				return;
 
 			listener[1] = mushtree.getHotkey().getKeyCode();
-			this.plugin.getClient().runScript(listener);
+			this.client.runScript(listener);
 		});
 	}
 }
