@@ -7,7 +7,6 @@ import com.mjhylkema.TeleportMaps.ui.Tree;
 import com.mjhylkema.TeleportMaps.ui.UIHotkey;
 import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
@@ -86,10 +85,13 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 	@Subscribe
 	public void onConfigChanged(ConfigChanged e)
 	{
-		if (Objects.equals(e.getKey(), TeleportMapsConfig.KEY_SHOW_SPIRIT_TREE_MAP))
-			this.setActive(config.showSpiritTreeMap());
-		else
-			super.onConfigChanged(e);
+		switch (e.getKey())
+		{
+			case TeleportMapsConfig.KEY_SHOW_SPIRIT_TREE_MAP:
+				this.setActive(config.showSpiritTreeMap());
+			default:
+				super.onConfigChanged(e);
+		}
 	}
 
 	private void hideAdventureLogContainerChildren(Widget adventureLogContainer)
@@ -232,12 +234,12 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 
 	private void triggerTeleport(Tree tree)
 	{
-		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().runScript(SCRIPT_TRIGGER_KEY, this.plugin.getClient().getWidget(0xBB0003).getId(), tree.getWidget().getIndex()));
+		this.clientThread.invokeLater(() -> this.client.runScript(SCRIPT_TRIGGER_KEY, this.client.getWidget(0xBB0003).getId(), tree.getWidget().getIndex()));
 	}
 
 	private void triggerLockedMessage(TreeDefinition treeDefinition)
 	{
-		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("The Spirit Tree at %s is not available.", treeDefinition.getName()), null));
+		this.clientThread.invokeLater(() -> this.client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("The Spirit Tree at %s is not available.", treeDefinition.getName()), null));
 	}
 
 	@Override

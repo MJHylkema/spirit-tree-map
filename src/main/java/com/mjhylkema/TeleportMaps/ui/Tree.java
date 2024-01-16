@@ -5,18 +5,13 @@ import lombok.Getter;
 import net.runelite.api.widgets.Widget;
 
 @Getter
-public class Tree
+public class Tree extends AdventureLogEntry
 {
-	private Widget widget;
-	private TreeDefinition definition;
-	private String keyShortcut;
 	private String displayedName;
 
 	public Tree(TreeDefinition definition, Widget widget, String shortcut, String displayedName)
 	{
-		this.definition = definition;
-		this.widget = widget;
-		this.keyShortcut = shortcut;
+		super(definition, widget, shortcut);
 		this.displayedName = displayedName;
 	}
 }

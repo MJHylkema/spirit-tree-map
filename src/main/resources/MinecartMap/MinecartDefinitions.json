@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Arceuus",
+    "x": 308,
+    "y": 109,
+    "hotkey": {
+      "x": 329,
+      "y": 109
+    }
+  },
+  {
+    "name": "Farming Guild",
+    "x": 139,
+    "y": 157,
+    "hotkey": {
+      "x": 160,
+      "y": 157
+    }
+  },
+  {
+    "name": "Hosidius South",
+    "x": 337,
+    "y": 261,
+    "hotkey": {
+      "x": 358,
+      "y": 261
+    }
+  },
+  {
+    "name": "Hosidius West",
+    "x": 279,
+    "y": 233,
+    "hotkey": {
+      "x": 300,
+      "y": 233
+    }
+  },
+  {
+    "name": "Kingstown",
+    "x": 293,
+    "y": 183,
+    "hotkey": {
+      "x": 314,
+      "y": 183
+    }
+  },
+  {
+    "name": "Kourend Woodland",
+    "x": 256,
+    "y": 266,
+    "hotkey": {
+      "x": 277,
+      "y": 266
+    }
+  },
+  {
+    "name": "Lovakengj",
+    "x": 245,
+    "y": 145,
+    "hotkey": {
+      "x": 266,
+      "y": 145
+    }
+  },
+  {
+    "name": "Mount Quidamortem",
+    "x": 137,
+    "y": 223,
+    "hotkey": {
+      "x": 158,
+      "y": 223
+    }
+  },
+  {
+    "name": "Northern Tundras",
+    "x": 296,
+    "y": 73,
+    "hotkey": {
+      "x": 317,
+      "y": 73
+    }
+  },
+  {
+    "name": "Port Piscarilius",
+    "x": 335,
+    "y": 169,
+    "hotkey": {
+      "x": 356,
+      "y": 169
+    }
+  },
+  {
+    "name": "Shayzien East",
+    "x": 258,
+    "y": 211,
+    "hotkey": {
+      "x": 279,
+      "y": 211
+    }
+  },
+  {
+    "name": "Shayzien West",
+    "x": 202,
+    "y": 211,
+    "hotkey": {
+      "x": 223,
+      "y": 211
+    }
+  }
+]
