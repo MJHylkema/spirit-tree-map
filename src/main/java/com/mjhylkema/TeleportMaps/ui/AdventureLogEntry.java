@@ -5,13 +5,13 @@ import lombok.Getter;
 import net.runelite.api.widgets.Widget;
 
 @Getter
-public class AdventureLogEntry
+public class AdventureLogEntry<T extends AdventureLogEntryDefinition>
 {
 	private Widget widget;
-	private AdventureLogEntryDefinition definition;
+	private T definition;
 	private String keyShortcut;
 
-	public AdventureLogEntry(AdventureLogEntryDefinition definition, Widget widget, String shortcut)
+	public AdventureLogEntry(T definition, Widget widget, String shortcut)
 	{
 		this.definition = definition;
 		this.widget = widget;

@@ -34,7 +34,7 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 	private static final int MINECART_DISABLED_SPRITE_ID = -19503;
 
 	private static final int SCRIPT_TRIGGER_KEY = 1437;
-	private static final String XERICS_LABEL_NAME_PATTERN = "<col=735a28>(.+)</col>: (<col=5f5f5f>)?(.+)";
+	private static final String LABEL_NAME_PATTERN = "<col=735a28>(.+)</col>: (<col=5f5f5f>)?(.+)";
 	private static final String TRAVEL_ACTION = "Travel";
 	private static final String EXAMINE_ACTION = "Examine";
 	private static final int ADVENTURE_LOG_CONTAINER_BACKGROUND = 0;
@@ -43,12 +43,12 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 
 	private MinecartDefinition[] minecartDefinitions;
 	private HashMap<String, MinecartDefinition> minecartDefinitionLookup;
-	private HashMap<String, AdventureLogEntry> availableLocations;
+	private HashMap<String, AdventureLogEntry<MinecartDefinition>> availableLocations;
 
 	@Inject
 	public MinecartMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread)
 	{
-		super(plugin, config, client, clientThread, config.showXericsMap());
+		super(plugin, config, client, clientThread, config.showMinecartMap());
 		this.loadDefinitions();
 		this.buildMinecartDefinitionLookup();
 	}
@@ -70,7 +70,7 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 		this.minecartDefinitionLookup = new HashMap<>();
 		for (MinecartDefinition minecartDefinition: this.minecartDefinitions)
 		{
-			// Place the xerics definition in the lookup table indexed by its name
+			// Place the minecart definition in the lookup table indexed by its name
 			this.minecartDefinitionLookup.put(minecartDefinition.getName(), minecartDefinition);
 		}
 	}
@@ -104,7 +104,7 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 	}
 
 	/**
-	 * Constructs the list of Xeric's teleports available for the player to use
+	 * Constructs the list of Minecart teleports available for the player to use
 	 */
 	private void buildAvailableTeleportList()
 	{
@@ -112,10 +112,10 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 
 		// Compile the pattern that will match the teleport label
 		// and place the hotkey and teleport name into groups
-		Pattern labelPattern = Pattern.compile(XERICS_LABEL_NAME_PATTERN);
+		Pattern labelPattern = Pattern.compile(LABEL_NAME_PATTERN);
 
 		// Get the parent widgets containing the teleport locations list
-		Widget teleportList = this.plugin.getClient().getWidget(InterfaceID.ADVENTURE_LOG, 3);
+		Widget teleportList = this.client.getWidget(InterfaceID.ADVENTURE_LOG, 3);
 
 		// Fetch all teleport label widgets
 		Widget[] labelWidgets = teleportList.getDynamicChildren();
@@ -148,7 +148,7 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 			if (minecartDefinition == null)
 				continue;
 
-			this.availableLocations.put(teleportName, new AdventureLogEntry(minecartDefinition, child, shortcutKey));
+			this.availableLocations.put(teleportName, new AdventureLogEntry<>(minecartDefinition, child, shortcutKey));
 		}
 	}
 
@@ -180,7 +180,7 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 
 			if (isLocationUnlocked(minecartDefinition.getName()))
 			{
-				AdventureLogEntry adventureLogEntry = this.availableLocations.get(minecartDefinition.getName());
+				AdventureLogEntry<MinecartDefinition> adventureLogEntry = this.availableLocations.get(minecartDefinition.getName());
 
 				teleport.addAction(TRAVEL_ACTION, () -> this.triggerTeleport(adventureLogEntry));
 
@@ -202,13 +202,13 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 		return this.availableLocations.containsKey(teleportName);
 	}
 
-	private void triggerTeleport(AdventureLogEntry adventureLogEntry)
+	private void triggerTeleport(AdventureLogEntry<MinecartDefinition> adventureLogEntry)
 	{
-		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().runScript(SCRIPT_TRIGGER_KEY, this.plugin.getClient().getWidget(0xBB0003).getId(), adventureLogEntry.getWidget().getIndex()));
+		this.clientThread.invokeLater(() -> this.client.runScript(SCRIPT_TRIGGER_KEY, this.client.getWidget(0xBB0003).getId(), adventureLogEntry.getWidget().getIndex()));
 	}
 
 	private void triggerLockedMessage(MinecartDefinition minecartDefinition)
 	{
-		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("You are unable to travel to %s.", minecartDefinition.getName()), null));
+		this.clientThread.invokeLater(() -> this.client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("You are unable to travel to %s.", minecartDefinition.getName()), null));
 	}
 }

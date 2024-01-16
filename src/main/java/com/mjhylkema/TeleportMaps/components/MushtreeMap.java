@@ -8,7 +8,6 @@ import com.mjhylkema.TeleportMaps.ui.UIButton;
 import com.mjhylkema.TeleportMaps.ui.UIHotkey;
 import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
@@ -117,10 +116,13 @@ public class MushtreeMap extends BaseMap
 	@Subscribe
 	public void onConfigChanged(ConfigChanged e)
 	{
-		if (Objects.equals(e.getKey(), TeleportMapsConfig.KEY_SHOW_MUSHTREE_MAP))
-			this.setActive(config.showMushtreeMap());
-		else
-			super.onConfigChanged(e);
+		switch (e.getKey())
+		{
+			case TeleportMapsConfig.KEY_SHOW_MUSHTREE_MAP:
+				this.setActive(config.showMushtreeMap());
+			default:
+				super.onConfigChanged(e);
+		}
 	}
 
 	private void hideInterfaceChildren(Widget mushtreeInterface)
@@ -237,7 +239,7 @@ public class MushtreeMap extends BaseMap
 		closeButton.setPosition(CLOSE_BUTTON_X, CLOSE_BUTTON_Y);
 		closeButton.setSize(CLOSE_BUTTON_WIDTH, CLOSE_BUTTON_HEIGH);
 		closeButton.setSprites(CLOSE_BUTTON_SPRITE_ID, CLOSE_BUTTON_SPRITE_ID);
-		closeButton.addAction("Close", () -> triggerExit());
+		closeButton.addAction("Close", this::triggerExit);
 		closeWidget.revalidate();
 	}
 

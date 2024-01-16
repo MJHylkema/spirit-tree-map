@@ -7,7 +7,6 @@ import com.mjhylkema.TeleportMaps.ui.UIHotkey;
 import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 import net.runelite.api.Client;
 import net.runelite.api.widgets.Widget;
@@ -38,8 +37,13 @@ public abstract class BaseMap implements IMap
 
 	public void onConfigChanged(ConfigChanged e)
 	{
-		if (Objects.equals(e.getKey(), TeleportMapsConfig.KEY_DISPLAY_HOTKEYS))
-			this.updateTeleports((teleport) -> teleport.setHotKeyVisibility(config.displayHotkeys()));
+		switch (e.getKey())
+		{
+			case TeleportMapsConfig.KEY_DISPLAY_HOTKEYS:
+				this.updateTeleports((teleport) -> teleport.setHotKeyVisibility(config.displayHotkeys()));
+			default:
+				return;
+		}
 	}
 
 	protected void updateTeleports(Consumer<UITeleport> action)
@@ -47,9 +51,7 @@ public abstract class BaseMap implements IMap
 		if (this.activeUITeleports.size() == 0)
 			return;
 
-		this.clientThread.invokeLater(() -> {
-			this.activeUITeleports.forEach(action);
-		});
+		this.clientThread.invokeLater(() -> this.activeUITeleports.forEach(action));
 	}
 
 	public boolean isActive()

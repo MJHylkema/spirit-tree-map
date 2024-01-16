@@ -3,10 +3,10 @@ package com.mjhylkema.TeleportMaps.components;
 import com.mjhylkema.TeleportMaps.TeleportMapsConfig;
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
 import com.mjhylkema.TeleportMaps.definition.XericsDefinition;
+import com.mjhylkema.TeleportMaps.ui.AdventureLogEntry;
 import com.mjhylkema.TeleportMaps.ui.UIHotkey;
 import com.mjhylkema.TeleportMaps.ui.UILabel;
 import com.mjhylkema.TeleportMaps.ui.UITeleport;
-import com.mjhylkema.TeleportMaps.ui.AdventureLogEntry;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -46,7 +46,7 @@ public class XericsMap extends BaseMap implements IAdventureMap
 
 	private XericsDefinition[] xericsDefinitions;
 	private HashMap<String, XericsDefinition> xericsDefinitionsLookup;
-	private HashMap<String, AdventureLogEntry> availableLocations;
+	private HashMap<String, AdventureLogEntry<XericsDefinition>> availableLocations;
 
 	@Inject
 	public XericsMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread)
@@ -159,7 +159,7 @@ public class XericsMap extends BaseMap implements IAdventureMap
 			if (xericsDefinition == null)
 				continue;
 
-			this.availableLocations.put(teleportName, new AdventureLogEntry(xericsDefinition, child, shortcutKey));
+			this.availableLocations.put(teleportName, new AdventureLogEntry<>(xericsDefinition, child, shortcutKey));
 		}
 	}
 
@@ -200,7 +200,7 @@ public class XericsMap extends BaseMap implements IAdventureMap
 
 			if (isLocationUnlocked(xericsDefinition.getName()))
 			{
-				AdventureLogEntry adventureLogEntry = this.availableLocations.get(xericsDefinition.getName());
+				AdventureLogEntry<XericsDefinition> adventureLogEntry = this.availableLocations.get(xericsDefinition.getName());
 
 				teleport.addAction(TRAVEL_ACTION, () -> this.triggerTeleport(adventureLogEntry));
 
@@ -227,13 +227,13 @@ public class XericsMap extends BaseMap implements IAdventureMap
 		return this.availableLocations.containsKey(teleportName);
 	}
 
-	private void triggerTeleport(AdventureLogEntry adventureLogEntry)
+	private void triggerTeleport(AdventureLogEntry<XericsDefinition> adventureLogEntry)
 	{
-		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().runScript(SCRIPT_TRIGGER_KEY, this.plugin.getClient().getWidget(0xBB0003).getId(), adventureLogEntry.getWidget().getIndex()));
+		this.clientThread.invokeLater(() -> this.client.runScript(SCRIPT_TRIGGER_KEY, this.plugin.getClient().getWidget(0xBB0003).getId(), adventureLogEntry.getWidget().getIndex()));
 	}
 
 	private void triggerLockedMessage(XericsDefinition xericsDefinition)
 	{
-		this.plugin.getClientThread().invokeLater(() -> this.plugin.getClient().addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("The talisman does not have the power to take you to %s yet.", xericsDefinition.getName()), null));
+		this.clientThread.invokeLater(() -> this.client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", String.format("The talisman does not have the power to take you to %s yet.", xericsDefinition.getName()), null));
 	}
 }
