@@ -146,5 +146,9 @@
   {
     "spriteId": -19503,
     "fileName": "/MinecartMap/minecartDisabled.png"
+  },
+  {
+    "spriteId": -19504,
+    "fileName": "/MinecartMap/minecartSelected.png"
   }
 ]
