@@ -164,6 +164,10 @@
     "fileName": "/MushtreeMap/MushtreeDisabled.png"
   },
   {
+    "spriteId": -19304,
+    "fileName": "/MushtreeMap/MushtreeSelected.png"
+  },
+  {
     "spriteId": -19400,
     "fileName": "/XericsMap/XericsMap.png"
   },

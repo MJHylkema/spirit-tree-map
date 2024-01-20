@@ -1,5 +1,7 @@
 package com.mjhylkema.TeleportMaps.components;
 
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import com.mjhylkema.TeleportMaps.TeleportMapsConfig;
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
 import com.mjhylkema.TeleportMaps.definition.MushtreeDefinition;
@@ -7,11 +9,15 @@ import com.mjhylkema.TeleportMaps.ui.Mushtree;
 import com.mjhylkema.TeleportMaps.ui.UIButton;
 import com.mjhylkema.TeleportMaps.ui.UIHotkey;
 import com.mjhylkema.TeleportMaps.ui.UITeleport;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.JavaScriptCallback;
 import net.runelite.api.widgets.Widget;
@@ -21,6 +27,7 @@ import net.runelite.client.config.Keybind;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 
+@Slf4j
 public class MushtreeMap extends BaseMap
 {
 	/* Definition JSON files */
@@ -33,6 +40,7 @@ public class MushtreeMap extends BaseMap
 	private static final int MUSHTREE_SPRITE_ID = -19301;
 	private static final int MUSHTREE_HIGHLIGHTED_SPRITE_ID = -19302;
 	private static final int MUSHTREE_DISABLED_SPRITE_ID = -19303;
+	private static final int MUSHTREE_SELECTED_SPRITE_ID = -19304;
 	private static final int CLOSE_BUTTON_SPRITE_ID = 537;
 	private static final int CLOSE_BUTTON_WIDTH = 26;
 	private static final int CLOSE_BUTTON_HEIGH = 23;
@@ -46,6 +54,8 @@ public class MushtreeMap extends BaseMap
 	private MushtreeDefinition[] mushtreeDefinitions;
 	private HashMap<String, MushtreeDefinition> mushtreeDefinitionsLookup;
 	private HashMap<String, Mushtree> availableMushtrees;
+	private Multimap<Integer, MushtreeDefinition> mushtreeObjectIdLookup = LinkedHashMultimap.create();
+	private MushtreeDefinition latestMushtree;
 
 	@Inject
 	public MushtreeMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread)
@@ -67,6 +77,7 @@ public class MushtreeMap extends BaseMap
 		{
 			// Place the tree definition in the lookup table indexed by its name
 			this.mushtreeDefinitionsLookup.put(treeDefinition.getName(), treeDefinition);
+			this.mushtreeObjectIdLookup.put(treeDefinition.getMushtreeObject().getObjectId(), treeDefinition);
 		}
 	}
 
@@ -122,6 +133,26 @@ public class MushtreeMap extends BaseMap
 				this.setActive(config.showMushtreeMap());
 			default:
 				super.onConfigChanged(e);
+		}
+	}
+
+	@Subscribe
+	public void onGameObjectSpawned(GameObjectSpawned e)
+	{
+		final int gameObjectId = e.getGameObject().getId();
+		if (mushtreeObjectIdLookup.containsKey(gameObjectId))
+		{
+			final WorldPoint worldPoint = e.getTile().getWorldLocation();
+
+			Collection<MushtreeDefinition> definitions = mushtreeObjectIdLookup.get(gameObjectId);
+
+			latestMushtree = definitions.stream().filter(def -> {
+				return def.getName().equals("Your house")
+					|| (def.getMushtreeObject().getWorldPointX() == worldPoint.getX()
+					&& def.getMushtreeObject().getWorldPointY() == worldPoint.getY());
+			}).findFirst().orElse(null);
+
+			log.debug("Latest Mushtree: {}", latestMushtree.getName());
 		}
 	}
 
@@ -204,10 +235,14 @@ public class MushtreeMap extends BaseMap
 
 			UITeleport mushtreeTeleport = new UITeleport(widgetContainer, treeWidget);
 
+			if (latestMushtree != null && latestMushtree == mushtreeDefinition)
+				mushtreeTeleport.setTeleportSprites(MUSHTREE_SELECTED_SPRITE_ID, MUSHTREE_HIGHLIGHTED_SPRITE_ID, MUSHTREE_DISABLED_SPRITE_ID);
+			else
+				mushtreeTeleport.setTeleportSprites(MUSHTREE_SPRITE_ID, MUSHTREE_HIGHLIGHTED_SPRITE_ID, MUSHTREE_DISABLED_SPRITE_ID);
+
 			mushtreeTeleport.setPosition(mushtreeDefinition.getX(), mushtreeDefinition.getY());
 			mushtreeTeleport.setSize(mushtreeDefinition.getWidth(), mushtreeDefinition.getHeight());
 			mushtreeTeleport.setName(mushtreeDefinition.getName());
-			mushtreeTeleport.setTeleportSprites(MUSHTREE_SPRITE_ID, MUSHTREE_HIGHLIGHTED_SPRITE_ID, MUSHTREE_DISABLED_SPRITE_ID);
 
 			if (isMushtreeAvailable(mushtreeDefinition.getName()))
 			{

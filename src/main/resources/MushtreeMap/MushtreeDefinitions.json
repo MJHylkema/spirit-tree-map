@@ -3,6 +3,11 @@
     "name": "House on the Hill",
     "x": 266,
     "y": 43,
+    "mushtreeObject" : {
+      "objectId": 30920,
+      "worldPointX": 3764,
+      "worldPointY": 3880
+    },
     "hotkey": {
       "key": "1",
       "keyCode": 49,
@@ -14,6 +19,11 @@
     "name": "Verdant Valley",
     "x": 254,
     "y": 183,
+    "mushtreeObject" : {
+      "objectId": 30924,
+      "worldPointX": 3758,
+      "worldPointY": 3756
+    },
     "hotkey": {
       "key": "2",
       "keyCode": 50,
@@ -25,6 +35,11 @@
     "name": "Sticky Swamp",
     "x": 161,
     "y": 181,
+    "mushtreeObject" : {
+      "objectId": 30924,
+      "worldPointX": 3677,
+      "worldPointY": 3755
+    },
     "hotkey": {
       "key": "3",
       "keyCode": 51,
@@ -36,6 +51,11 @@
     "name": "Mushroom Meadow",
     "x": 154,
     "y": 52,
+    "mushtreeObject" : {
+      "objectId": 30924,
+      "worldPointX": 3674,
+      "worldPointY": 3871
+    },
     "hotkey": {
       "key": "4",
       "keyCode": 52,
