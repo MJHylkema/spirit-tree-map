@@ -1,7 +1,8 @@
-package com.mjhylkema.TeleportMaps.components;
+package com.mjhylkema.TeleportMaps.components.adventureLog;
 
 import com.mjhylkema.TeleportMaps.TeleportMapsConfig;
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
+import com.mjhylkema.TeleportMaps.components.BaseMap;
 import com.mjhylkema.TeleportMaps.definition.XericsDefinition;
 import com.mjhylkema.TeleportMaps.ui.AdventureLogEntry;
 import com.mjhylkema.TeleportMaps.ui.UIHotkey;
@@ -61,7 +62,6 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	{
 		return title.matches(MENU_TITLE) || title.matches(MENU_TITLE_MOUNTED);
 	}
-
 
 	private void loadDefinitions()
 	{

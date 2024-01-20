@@ -2,12 +2,12 @@ package com.mjhylkema.TeleportMaps;
 
 import com.google.gson.Gson;
 import com.google.inject.Provides;
-import com.mjhylkema.TeleportMaps.components.AdventureLogComposite;
+import com.mjhylkema.TeleportMaps.components.adventureLog.AdventureLogComposite;
 import com.mjhylkema.TeleportMaps.components.IMap;
-import com.mjhylkema.TeleportMaps.components.MinecartMap;
+import com.mjhylkema.TeleportMaps.components.adventureLog.MinecartMap;
 import com.mjhylkema.TeleportMaps.components.MushtreeMap;
-import com.mjhylkema.TeleportMaps.components.SpiritTreeMap;
-import com.mjhylkema.TeleportMaps.components.XericsMap;
+import com.mjhylkema.TeleportMaps.components.adventureLog.SpiritTreeMap;
+import com.mjhylkema.TeleportMaps.components.adventureLog.XericsMap;
 import com.mjhylkema.TeleportMaps.definition.SpriteDefinition;
 import java.io.InputStream;
 import java.io.InputStreamReader;

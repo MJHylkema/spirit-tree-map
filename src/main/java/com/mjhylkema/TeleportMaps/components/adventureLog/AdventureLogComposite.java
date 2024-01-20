@@ -1,5 +1,6 @@
-package com.mjhylkema.TeleportMaps.components;
+package com.mjhylkema.TeleportMaps.components.adventureLog;
 
+import com.mjhylkema.TeleportMaps.components.IMap;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;

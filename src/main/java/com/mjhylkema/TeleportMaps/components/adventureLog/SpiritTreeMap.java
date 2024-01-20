@@ -1,7 +1,8 @@
-package com.mjhylkema.TeleportMaps.components;
+package com.mjhylkema.TeleportMaps.components.adventureLog;
 
 import com.mjhylkema.TeleportMaps.TeleportMapsConfig;
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
+import com.mjhylkema.TeleportMaps.components.BaseMap;
 import com.mjhylkema.TeleportMaps.definition.TreeDefinition;
 import com.mjhylkema.TeleportMaps.ui.Tree;
 import com.mjhylkema.TeleportMaps.ui.UIHotkey;

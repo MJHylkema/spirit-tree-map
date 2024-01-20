@@ -25,7 +25,7 @@ public abstract class BaseMap implements IMap
 	final protected List<UITeleport> activeUITeleports;
 	private boolean active;
 
-	BaseMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread, boolean active)
+	public BaseMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread, boolean active)
 	{
 		this.plugin = plugin;
 		this.config = config;
