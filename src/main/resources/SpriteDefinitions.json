@@ -24,12 +24,20 @@
     "fileName": "/SpiritTreeMap/DefaultDisabled.png"
   },
   {
+    "spriteId": -19103,
+    "fileName": "/SpiritTreeMap/DefaultSelected.png"
+  },
+  {
     "spriteId": -19110,
     "fileName": "/SpiritTreeMap/FarmingGuild.png"
   },
   {
     "spriteId": -19111,
     "fileName": "/SpiritTreeMap/FarmingGuildOutlined.png"
+  },
+  {
+    "spriteId": -19112,
+    "fileName": "/SpiritTreeMap/FarmingGuildSelected.png"
   },
   {
     "spriteId": -19120,
@@ -40,12 +48,20 @@
     "fileName": "/SpiritTreeMap/HosidiusOutlined.png"
   },
   {
+    "spriteId": -19122,
+    "fileName": "/SpiritTreeMap/HosidiusSelected.png"
+  },
+  {
     "spriteId": -19130,
     "fileName": "/SpiritTreeMap/Prifddinas.png"
   },
   {
     "spriteId": -19131,
     "fileName": "/SpiritTreeMap/PrifddinasOutlined.png"
+  },
+  {
+    "spriteId": -19132,
+    "fileName": "/SpiritTreeMap/PrifddinasSelected.png"
   },
   {
     "spriteId": -19140,
@@ -56,12 +72,20 @@
     "fileName": "/SpiritTreeMap/TreeGnomeStrongholdOutlined.png"
   },
   {
+    "spriteId": -19142,
+    "fileName": "/SpiritTreeMap/TreeGnomeStrongholdSelected.png"
+  },
+  {
     "spriteId": -19150,
     "fileName": "/SpiritTreeMap/KhazardBattlefield.png"
   },
   {
     "spriteId": -19151,
     "fileName": "/SpiritTreeMap/KhazardBattlefieldOutlined.png"
+  },
+  {
+    "spriteId": -19152,
+    "fileName": "/SpiritTreeMap/KhazardBattlefieldSelected.png"
   },
   {
     "spriteId": -19160,
@@ -72,12 +96,20 @@
     "fileName": "/SpiritTreeMap/PoisonWasteOutlined.png"
   },
   {
+    "spriteId": -19162,
+    "fileName": "/SpiritTreeMap/PoisonWasteSelected.png"
+  },
+  {
     "spriteId": -19170,
     "fileName": "/SpiritTreeMap/TreeGnomeVillage.png"
   },
   {
     "spriteId": -19171,
     "fileName": "/SpiritTreeMap/TreeGnomeVillageOutlined.png"
+  },
+  {
+    "spriteId": -19172,
+    "fileName": "/SpiritTreeMap/TreeGnomeVillageSelected.png"
   },
   {
     "spriteId": -19180,
@@ -88,6 +120,10 @@
     "fileName": "/SpiritTreeMap/EtceteriaOutlined.png"
   },
   {
+    "spriteId": -19182,
+    "fileName": "/SpiritTreeMap/EtceteriaSelected.png"
+  },
+  {
     "spriteId": -19190,
     "fileName": "/SpiritTreeMap/Brimhaven.png"
   },
@@ -96,12 +132,20 @@
     "fileName": "/SpiritTreeMap/BrimhavenOutlined.png"
   },
   {
+    "spriteId": -19192,
+    "fileName": "/SpiritTreeMap/BrimhavenSelected.png"
+  },
+  {
     "spriteId": -19200,
     "fileName": "/SpiritTreeMap/PortSarim.png"
   },
   {
     "spriteId": -19201,
     "fileName": "/SpiritTreeMap/PortSarimOutlined.png"
+  },
+  {
+    "spriteId": -19202,
+    "fileName": "/SpiritTreeMap/PortSarimSelected.png"
   },
   {
     "spriteId": -19300,
@@ -118,6 +162,10 @@
   {
     "spriteId": -19303,
     "fileName": "/MushtreeMap/MushtreeDisabled.png"
+  },
+  {
+    "spriteId": -19304,
+    "fileName": "/MushtreeMap/MushtreeSelected.png"
   },
   {
     "spriteId": -19400,
@@ -146,5 +194,9 @@
   {
     "spriteId": -19503,
     "fileName": "/MinecartMap/minecartDisabled.png"
+  },
+  {
+    "spriteId": -19504,
+    "fileName": "/MinecartMap/minecartSelected.png"
   }
 ]

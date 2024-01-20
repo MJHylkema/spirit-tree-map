@@ -8,6 +8,12 @@
     "height": 31,
     "spriteEnabled": -19170,
     "spriteHover": -19171,
+    "spriteSelected": -19172,
+    "treeObject" : {
+      "objectId": 1293,
+      "worldPointX": 2543,
+      "worldPointY": 3168
+    },
     "hotkey": {
       "x": 320,
       "y": 201
@@ -22,6 +28,12 @@
     "height": 31,
     "spriteEnabled": -19140,
     "spriteHover": -19141,
+    "spriteSelected": -19142,
+    "treeObject" : {
+      "objectId": 1294,
+      "worldPointX": 2460,
+      "worldPointY": 3445
+    },
     "hotkey": {
       "x": 303,
       "y": 144
@@ -36,6 +48,12 @@
     "height": 26,
     "spriteEnabled": -19150,
     "spriteHover": -19151,
+    "spriteSelected": -19152,
+    "treeObject" : {
+      "objectId": 1295,
+      "worldPointX": 2555,
+      "worldPointY": 3260
+    },
     "hotkey": {
       "x": 293,
       "y": 176
@@ -50,6 +68,12 @@
     "height": 27,
     "spriteEnabled": -19100,
     "spriteHover": -19101,
+    "spriteSelected": -19103,
+    "treeObject" : {
+      "objectId": 1295,
+      "worldPointX": 3184,
+      "worldPointY": 3509
+    },
     "hotkey": {
       "x": 460,
       "y": 120
@@ -64,6 +88,12 @@
     "height": 27,
     "spriteEnabled": -19100,
     "spriteHover": -19101,
+    "spriteSelected": -19103,
+    "treeObject" : {
+      "objectId": 1295,
+      "worldPointX": 2486,
+      "worldPointY": 2850
+    },
     "hotkey": {
       "x": 321,
       "y": 269
@@ -78,6 +108,12 @@
     "height": 30,
     "spriteEnabled": -19130,
     "spriteHover": -19131,
+    "spriteSelected": -19132,
+    "treeObject" : {
+      "objectId": 37329,
+      "worldPointX": 3274,
+      "worldPointY": 6124
+    },
     "hotkey": {
       "x": 259,
       "y": 162
@@ -92,6 +128,12 @@
     "height": 31,
     "spriteEnabled": -19200,
     "spriteHover": -19201,
+    "spriteSelected": -19202,
+    "treeObject" : {
+      "objectId": 8338,
+      "worldPointX": 3059,
+      "worldPointY": 3257
+    },
     "hotkey": {
       "x": 424,
       "y": 174
@@ -106,6 +148,12 @@
     "height": 30,
     "spriteEnabled": -19180,
     "spriteHover": -19181,
+    "spriteSelected": -19182,
+    "treeObject" : {
+      "objectId": 8382,
+      "worldPointX": 2612,
+      "worldPointY": 3857
+    },
     "hotkey": {
       "x": 338,
       "y": 38
@@ -120,6 +168,12 @@
     "height": 27,
     "spriteEnabled": -19190,
     "spriteHover": -19191,
+    "spriteSelected": -19192,
+    "treeObject" : {
+      "objectId": 8383,
+      "worldPointX": 2801,
+      "worldPointY": 3202
+    },
     "hotkey": {
       "x": 379,
       "y": 201
@@ -134,6 +188,12 @@
     "height": 27,
     "spriteEnabled": -19120,
     "spriteHover": -19121,
+    "spriteSelected": -19122,
+    "treeObject" : {
+      "objectId": 27116,
+      "worldPointX": 1692,
+      "worldPointY": 3541
+    },
     "hotkey": {
       "x": 156,
       "y": 115
@@ -148,6 +208,12 @@
     "height": 27,
     "spriteEnabled": -19110,
     "spriteHover": -19111,
+    "spriteSelected": -19112,
+    "treeObject" : {
+      "objectId": 33733,
+      "worldPointX": 1252,
+      "worldPointY": 3749
+    },
     "hotkey": {
       "x": 78,
       "y": 72
@@ -162,6 +228,12 @@
     "height": 27,
     "spriteEnabled": -19100,
     "spriteHover": -19101,
+    "spriteSelected": -19103,
+    "treeObject" : {
+      "objectId": 29227,
+      "worldPointX": 0,
+      "worldPointY": 0
+    },
     "hotkey": {
       "x": 52,
       "y": 240
@@ -176,6 +248,12 @@
     "height": 27,
     "spriteEnabled": -19160,
     "spriteHover": -19161,
+    "spriteSelected": -19162,
+    "treeObject" : {
+      "objectId": 49598,
+      "worldPointX": 2338,
+      "worldPointY": 3110
+    },
     "hotkey": {
       "x": 289,
       "y": 223

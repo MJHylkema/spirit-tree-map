@@ -1,17 +1,24 @@
-package com.mjhylkema.TeleportMaps.components;
+package com.mjhylkema.TeleportMaps.components.adventureLog;
 
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import com.mjhylkema.TeleportMaps.TeleportMapsConfig;
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
+import com.mjhylkema.TeleportMaps.components.BaseMap;
 import com.mjhylkema.TeleportMaps.definition.TreeDefinition;
 import com.mjhylkema.TeleportMaps.ui.Tree;
 import com.mjhylkema.TeleportMaps.ui.UIHotkey;
 import com.mjhylkema.TeleportMaps.ui.UITeleport;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
+import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.widgets.InterfaceID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetType;
@@ -19,6 +26,7 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 
+@Slf4j
 public class SpiritTreeMap extends BaseMap implements IAdventureMap
 {
 	/* Definition JSON files */
@@ -48,6 +56,8 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 	private TreeDefinition[] treeDefinitions;
 	private HashMap<String, TreeDefinition> treeDefinitionsLookup;
 	private HashMap<String, Tree> availableTrees;
+	private Multimap<Integer, TreeDefinition> treeObjectIdLookup = LinkedHashMultimap.create();
+	private TreeDefinition latestTree;
 
 	@Inject
 	public SpiritTreeMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread)
@@ -69,6 +79,7 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 		{
 			// Place the tree definition in the lookup table indexed by its name
 			this.treeDefinitionsLookup.put(treeDefinition.getName(), treeDefinition);
+			this.treeObjectIdLookup.put(treeDefinition.getTreeObject().getObjectId(), treeDefinition);
 		}
 	}
 
@@ -91,6 +102,26 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 				this.setActive(config.showSpiritTreeMap());
 			default:
 				super.onConfigChanged(e);
+		}
+	}
+
+	@Subscribe
+	public void onGameObjectSpawned(GameObjectSpawned e)
+	{
+		final int gameObjectId = e.getGameObject().getId();
+		if (treeObjectIdLookup.containsKey(gameObjectId))
+		{
+			final WorldPoint worldPoint = e.getTile().getWorldLocation();
+
+			Collection<TreeDefinition> definitions = treeObjectIdLookup.get(gameObjectId);
+
+			latestTree = definitions.stream().filter(def -> {
+				return def.getName().equals("Your house")
+					|| (def.getTreeObject().getWorldPointX() == worldPoint.getX()
+					&& def.getTreeObject().getWorldPointY() == worldPoint.getY());
+			}).findFirst().orElse(null);
+
+			log.debug("Latest Spirit Tree: {}", latestTree.getName());
 		}
 	}
 
@@ -202,7 +233,10 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 			UITeleport treeTeleport = new UITeleport(widgetContainer, treeWidget);
 
 			treeTeleport.setPosition(treeDefinition.getX(), treeDefinition.getY());
-			treeTeleport.setTeleportSprites(treeDefinition.getSpriteEnabled(), treeDefinition.getSpriteHover(), DISABLED_TREE_SPRITE_ID);
+			if (latestTree != null && latestTree == treeDefinition)
+				treeTeleport.setTeleportSprites(treeDefinition.getSpriteSelected(), treeDefinition.getSpriteHover(), DISABLED_TREE_SPRITE_ID);
+			else
+				treeTeleport.setTeleportSprites(treeDefinition.getSpriteEnabled(), treeDefinition.getSpriteHover(), DISABLED_TREE_SPRITE_ID);
 
 			if (isTreeUnlocked(treeDefinition.getName()))
 			{

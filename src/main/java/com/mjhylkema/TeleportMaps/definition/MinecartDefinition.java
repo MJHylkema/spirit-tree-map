@@ -9,4 +9,5 @@ public class MinecartDefinition extends AdventureLogEntryDefinition
 	static private int width = 20;
 	@Getter
 	static private int height = 20;
+	private int npcId;
 }

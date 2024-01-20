@@ -14,4 +14,5 @@ public class MushtreeDefinition
 	private int x;
 	private int y;
 	private HotKeyDefinition hotkey;
+	private GameObjectDefinition mushtreeObject;
 }

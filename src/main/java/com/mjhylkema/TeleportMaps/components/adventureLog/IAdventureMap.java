@@ -1,5 +1,6 @@
-package com.mjhylkema.TeleportMaps.components;
+package com.mjhylkema.TeleportMaps.components.adventureLog;
 
+import com.mjhylkema.TeleportMaps.components.IMap;
 import net.runelite.api.widgets.Widget;
 
 public interface IAdventureMap extends IMap

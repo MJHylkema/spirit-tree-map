@@ -1,17 +1,21 @@
-package com.mjhylkema.TeleportMaps.components;
+package com.mjhylkema.TeleportMaps.components.adventureLog;
 
 import com.mjhylkema.TeleportMaps.TeleportMapsConfig;
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
+import com.mjhylkema.TeleportMaps.components.BaseMap;
 import com.mjhylkema.TeleportMaps.definition.MinecartDefinition;
 import com.mjhylkema.TeleportMaps.ui.AdventureLogEntry;
 import com.mjhylkema.TeleportMaps.ui.UIHotkey;
 import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
+import net.runelite.api.events.NpcSpawned;
 import net.runelite.api.widgets.InterfaceID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetType;
@@ -19,7 +23,7 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 
-
+@Slf4j
 public class MinecartMap extends BaseMap implements IAdventureMap
 {
 	/* Definition JSON files */
@@ -32,6 +36,7 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 	private static final int MINECART_SPRITE_ID = -19501;
 	private static final int MINECART_HIGHLIGHTED_SPRITE_ID = -19502;
 	private static final int MINECART_DISABLED_SPRITE_ID = -19503;
+	private static final int MINECART_SELECTED_SPRITE_ID = -19504;
 
 	private static final int SCRIPT_TRIGGER_KEY = 1437;
 	private static final String LABEL_NAME_PATTERN = "<col=735a28>(.+)</col>: (<col=5f5f5f>)?(.+)";
@@ -44,6 +49,8 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 	private MinecartDefinition[] minecartDefinitions;
 	private HashMap<String, MinecartDefinition> minecartDefinitionLookup;
 	private HashMap<String, AdventureLogEntry<MinecartDefinition>> availableLocations;
+	private HashSet<Integer> minecartNpcLookup;
+	private int latestNpc;
 
 	@Inject
 	public MinecartMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread)
@@ -68,10 +75,12 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 	private void buildMinecartDefinitionLookup()
 	{
 		this.minecartDefinitionLookup = new HashMap<>();
+		this.minecartNpcLookup = new HashSet<>();
 		for (MinecartDefinition minecartDefinition: this.minecartDefinitions)
 		{
 			// Place the minecart definition in the lookup table indexed by its name
 			this.minecartDefinitionLookup.put(minecartDefinition.getName(), minecartDefinition);
+			this.minecartNpcLookup.add(minecartDefinition.getNpcId());
 		}
 	}
 
@@ -93,6 +102,17 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 				this.setActive(config.showMinecartMap());
 			default:
 				super.onConfigChanged(e);
+		}
+	}
+
+	@Subscribe
+	public void onNpcSpawned(NpcSpawned e)
+	{
+		if (this.minecartNpcLookup.contains(e.getNpc().getId()))
+		{
+			latestNpc = e.getNpc().getId();
+
+			log.debug("Latest Minecart NPC: {}", e.getNpc().getName());
 		}
 	}
 
@@ -173,8 +193,12 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 
 			UITeleport teleport = new UITeleport(widgetContainer, teleportWidget);
 
+			if (this.latestNpc != 0 && this.latestNpc == minecartDefinition.getNpcId())
+				teleport.setTeleportSprites(MINECART_SELECTED_SPRITE_ID, MINECART_HIGHLIGHTED_SPRITE_ID, MINECART_DISABLED_SPRITE_ID);
+			else
+				teleport.setTeleportSprites(MINECART_SPRITE_ID, MINECART_HIGHLIGHTED_SPRITE_ID, MINECART_DISABLED_SPRITE_ID);
+
 			teleport.setPosition(minecartDefinition.getX(), minecartDefinition.getY());
-			teleport.setTeleportSprites(MINECART_SPRITE_ID, MINECART_HIGHLIGHTED_SPRITE_ID, MINECART_DISABLED_SPRITE_ID);
 			teleport.setSize(minecartDefinition.getWidth(), minecartDefinition.getHeight());
 			teleport.setName(minecartDefinition.getName());
 
