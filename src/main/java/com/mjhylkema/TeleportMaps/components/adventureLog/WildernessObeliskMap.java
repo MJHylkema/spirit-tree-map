@@ -38,7 +38,7 @@ public class WildernessObeliskMap extends BaseMap implements IAdventureMap
 
 	private static final int SCRIPT_TRIGGER_KEY = 1437;
 	private static final String LABEL_NAME_PATTERN = "<col=735a28>(.+)</col>: (<col=5f5f5f>)?(.+)";
-	private static final String DESTINATION_ACTION = "Destination";
+	private static final String SET_ACTION = "Set";
 	private static final String EXAMINE_ACTION = "Examine";
 	private static final int ADVENTURE_LOG_CONTAINER_BACKGROUND = 0;
 	private static final int ADVENTURE_LOG_CONTAINER_TITLE = 1;
@@ -222,7 +222,7 @@ public class WildernessObeliskMap extends BaseMap implements IAdventureMap
 			{
 				AdventureLogEntry<ObeliskDefinition> adventureLogEntry = this.availableLocations.get(obeliskDefinition.getName());
 
-				teleport.addAction(DESTINATION_ACTION, () -> this.triggerTeleport(adventureLogEntry));
+				teleport.addAction(SET_ACTION, () -> this.triggerTeleport(adventureLogEntry));
 
 				UIHotkey hotkey = this.createHotKey(container, obeliskDefinition.getHotkey(), adventureLogEntry.getKeyShortcut());
 				teleportLabel.setHotkey(adventureLogEntry.getKeyShortcut());
