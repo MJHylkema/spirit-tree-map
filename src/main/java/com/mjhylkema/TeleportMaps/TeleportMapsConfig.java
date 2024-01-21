@@ -11,10 +11,13 @@ public interface TeleportMapsConfig extends Config
 	String KEY_DISPLAY_HOTKEYS = "displayHotkeys";
 	String KEY_SHOW_SPIRIT_TREE_MAP = "showSpiritTreeMap";
 	String KEY_SHOW_MUSHTREE_MAP = "showMushtreeMap";
-	String KEY_SHOW_XERICS_MAP = "showXericsMap";
 	String KEY_SHOW_MINECART_MAP = "showMinecartMap";
+	String KEY_SHOW_XERICS_MAP = "showXericsMap";
 	String KEY_SHOW_XERICS_MAP_LABELS = "showXericsMapLabels";
 	String KEY_SHOW_XERICS_MAP_HOTKEY_LABELS = "showXericsMapHotkeyInLabels";
+	String KEY_SHOW_OBELISK_MAP = "showObeliskMap";
+	String KEY_SHOW_OBELISK_MAP_LABELS = "showObeliskMapLabels";
+	String KEY_SHOW_OBELISK_MAP_HOTKEY_LABELS = "showObeliskMapHotkeyInLabels";
 
 	@ConfigSection(
 		name = "Teleport Maps",
@@ -31,9 +34,16 @@ public interface TeleportMapsConfig extends Config
 	String xericsMap = "xericsMap";
 
 	@ConfigSection(
+		name = "Obelisk Map Settings",
+		description = "Settings related to the Wilderness Obelisk Map",
+		position = 2
+	)
+	String obeliskMap = "obeliskMap";
+
+	@ConfigSection(
 		name = "General Settings",
 		description = "Settings that apply to all maps",
-		position = 2
+		position = 3
 	)
 	String generalSettings = "generalSettings";
 
@@ -60,6 +70,17 @@ public interface TeleportMapsConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = KEY_SHOW_MINECART_MAP,
+		name = "Lovakengj Minecart Map",
+		description = "Replace the minecart travel menu with an interactive map",
+		section = teleportMaps
+	)
+	default boolean showMinecartMap()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = KEY_SHOW_XERICS_MAP,
 		name = "Xeric's Talisman Map",
 		description = "Replace Xeric's talisman travel menu with an interactive map",
@@ -71,12 +92,12 @@ public interface TeleportMapsConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = KEY_SHOW_MINECART_MAP,
-		name = "Lovakengj Minecart Map",
-		description = "Replace the minecart travel menu with an interactive map",
+		keyName = KEY_SHOW_OBELISK_MAP,
+		name = "Wilderness Obelisk Map",
+		description = "Replace the Wilderness obelisk set destination menu with an interactive map",
 		section = teleportMaps
 	)
-	default boolean showMinecartMap()
+	default boolean showObeliskMap()
 	{
 		return true;
 	}
@@ -103,6 +124,30 @@ public interface TeleportMapsConfig extends Config
 	default boolean showXericsMapHotkeyInLabels()
 	{
 		return true;
+	}
+
+	@ConfigItem(
+		keyName = KEY_SHOW_OBELISK_MAP_LABELS,
+		name = "Display labels",
+		description = "Show named labels above each of the Wilderness Obelisk teleport locations",
+		section = obeliskMap,
+		position = 1
+	)
+	default boolean showObeliskMapLabels()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = KEY_SHOW_OBELISK_MAP_HOTKEY_LABELS,
+		name = "Show hotkey in labels",
+		description = "Display the teleport hotkeys as part of the label, rather than hotkey icons",
+		section = obeliskMap,
+		position = 2
+	)
+	default boolean showObeliskMapHotkeyInLabels()
+	{
+		return false;
 	}
 
 	@ConfigItem(
