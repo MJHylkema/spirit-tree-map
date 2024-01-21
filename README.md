@@ -14,3 +14,6 @@ Provides interactive maps to replace traditional text based teleport interfaces.
 
 ### Lovakengj Minecart Map
 ![MinecartMap](https://github.com/MJHylkema/spirit-tree-map/assets/20365453/c5cdfb05-e92c-4e97-a676-c70f4530ad28)
+
+### Wilderness Obelisk Map
+![image](https://github.com/MJHylkema/spirit-tree-map/assets/20365453/cc883ce8-f633-4fad-ba0d-1301449d024a)
