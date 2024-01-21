@@ -52,6 +52,8 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 	private static final int ADVENTURE_LOG_CONTAINER_BACKGROUND = 0;
 	private static final int ADVENTURE_LOG_CONTAINER_TITLE = 1;
 	private static final String MENU_TITLE = "Spirit Tree Locations";
+	private static final String YOUR_HOUSE_STRING = "Your house";
+	private static final int SPIRITUAL_FAIRY_RING_ID = 29229;
 
 	private TreeDefinition[] treeDefinitions;
 	private HashMap<String, TreeDefinition> treeDefinitionsLookup;
@@ -80,6 +82,9 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 			// Place the tree definition in the lookup table indexed by its name
 			this.treeDefinitionsLookup.put(treeDefinition.getName(), treeDefinition);
 			this.treeObjectIdLookup.put(treeDefinition.getTreeObject().getObjectId(), treeDefinition);
+
+			if (treeDefinition.getName().equals(YOUR_HOUSE_STRING))
+				this.treeObjectIdLookup.put(SPIRITUAL_FAIRY_RING_ID, treeDefinition); // Spiritual Fairy ring..
 		}
 	}
 
@@ -116,7 +121,7 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 			Collection<TreeDefinition> definitions = treeObjectIdLookup.get(gameObjectId);
 
 			latestTree = definitions.stream().filter(def -> {
-				return def.getName().equals("Your house")
+				return def.getName().equals(YOUR_HOUSE_STRING)
 					|| (def.getTreeObject().getWorldPointX() == worldPoint.getX()
 					&& def.getTreeObject().getWorldPointY() == worldPoint.getY());
 			}).findFirst().orElse(null);

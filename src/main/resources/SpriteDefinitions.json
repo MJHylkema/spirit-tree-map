@@ -198,5 +198,85 @@
   {
     "spriteId": -19504,
     "fileName": "/MinecartMap/minecartSelected.png"
+  },
+  {
+    "spriteId": -19600,
+    "fileName": "/WildernessObeliskMap/WildernessMap.png"
+  },
+  {
+    "spriteId": -19601,
+    "fileName": "/WildernessObeliskMap/ObeliskDisabled.png"
+  },
+  {
+    "spriteId": -19610,
+    "fileName": "/WildernessObeliskMap/level13.png"
+  },
+  {
+    "spriteId": -19611,
+    "fileName": "/WildernessObeliskMap/level13Outlined.png"
+  },
+  {
+    "spriteId": -19612,
+    "fileName": "/WildernessObeliskMap/level13Selected.png"
+  },
+  {
+    "spriteId": -19620,
+    "fileName": "/WildernessObeliskMap/level19.png"
+  },
+  {
+    "spriteId": -19621,
+    "fileName": "/WildernessObeliskMap/level19Outlined.png"
+  },
+  {
+    "spriteId": -19622,
+    "fileName": "/WildernessObeliskMap/level19Selected.png"
+  },
+  {
+    "spriteId": -19630,
+    "fileName": "/WildernessObeliskMap/level27.png"
+  },
+  {
+    "spriteId": -19631,
+    "fileName": "/WildernessObeliskMap/level27Outlined.png"
+  },
+  {
+    "spriteId": -19632,
+    "fileName": "/WildernessObeliskMap/level27Selected.png"
+  },
+  {
+    "spriteId": -19640,
+    "fileName": "/WildernessObeliskMap/level35.png"
+  },
+  {
+    "spriteId": -19641,
+    "fileName": "/WildernessObeliskMap/level35Outlined.png"
+  },
+  {
+    "spriteId": -19642,
+    "fileName": "/WildernessObeliskMap/level35Selected.png"
+  },
+  {
+    "spriteId": -19650,
+    "fileName": "/WildernessObeliskMap/level44.png"
+  },
+  {
+    "spriteId": -19651,
+    "fileName": "/WildernessObeliskMap/level44Outlined.png"
+  },
+  {
+    "spriteId": -19652,
+    "fileName": "/WildernessObeliskMap/level44Selected.png"
+  },
+  {
+    "spriteId": -19660,
+    "fileName": "/WildernessObeliskMap/level50.png"
+  },
+  {
+    "spriteId": -19661,
+    "fileName": "/WildernessObeliskMap/level50Outlined.png"
+  },
+  {
+    "spriteId": -19662,
+    "fileName": "/WildernessObeliskMap/level50Selected.png"
   }
 ]

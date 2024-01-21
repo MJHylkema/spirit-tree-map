@@ -153,7 +153,6 @@ public class XericsMap extends BaseMap implements IAdventureMap
 			if (disabledColor != null)
 				continue;
 
-
 			XericsDefinition xericsDefinition = this.xericsDefinitionsLookup.get(teleportName);
 
 			if (xericsDefinition == null)

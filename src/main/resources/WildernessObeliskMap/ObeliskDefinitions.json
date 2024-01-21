@@ -1,0 +1,116 @@
+[
+  {
+    "name": "Level 13 Wilderness",
+    "x": 245,
+    "y": 232,
+    "spriteEnabled": -19610,
+    "spriteHover": -19611,
+    "spriteSelected": -19612,
+    "obeliskObjectId": 14829,
+    "hotkey": {
+      "x": 264,
+      "y": 245
+    },
+    "label": {
+      "title": "Level 13",
+      "x": 205,
+      "y": 275,
+      "width": 100
+    }
+  },
+  {
+    "name": "Level 19 Wilderness",
+    "x": 283,
+    "y": 183,
+    "spriteEnabled": -19620,
+    "spriteHover": -19621,
+    "spriteSelected": -19622,
+    "obeliskObjectId": 14830,
+    "hotkey": {
+      "x": 302,
+      "y": 196
+    },
+    "label": {
+      "title": "Level 19",
+      "x": 250,
+      "y": 226,
+      "width": 100
+    }
+  },
+  {
+    "name": "Level 27 Wilderness",
+    "x": 160,
+    "y": 148,
+    "spriteEnabled": -19630,
+    "spriteHover": -19631,
+    "spriteSelected": -19632,
+    "obeliskObjectId": 14827,
+    "hotkey": {
+      "x": 179,
+      "y": 161
+    },
+    "label": {
+      "title": "Level 27",
+      "x": 120,
+      "y": 191,
+      "width": 100
+    }
+  },
+  {
+    "name": "Level 35 Wilderness",
+    "x": 208,
+    "y": 93,
+    "spriteEnabled": -19640,
+    "spriteHover": -19641,
+    "spriteSelected": -19642,
+    "obeliskObjectId": 14828,
+    "hotkey": {
+      "x": 227,
+      "y": 106
+    },
+    "label": {
+      "title": "Level 35",
+      "x": 168,
+      "y": 136,
+      "width": 100
+    }
+  },
+  {
+    "name": "Level 44 Wilderness",
+    "x": 119,
+    "y": 65,
+    "spriteEnabled": -19650,
+    "spriteHover": -19651,
+    "spriteSelected": -19652,
+    "obeliskObjectId": 14826,
+    "hotkey": {
+      "x": 138,
+      "y": 78
+    },
+    "label": {
+      "title": "Level 44",
+      "x": 79,
+      "y": 108,
+      "width": 100
+    }
+  },
+  {
+    "name": "Level 50 Wilderness",
+    "x": 351,
+    "y": 38,
+    "spriteEnabled": -19660,
+    "spriteHover": -19661,
+    "spriteSelected": -19662,
+    "obeliskObjectId": 14831,
+    "hotkey": {
+      "x": 370,
+      "y": 51
+    },
+    "label": {
+      "title": "Level 50",
+      "x": 311,
+      "y": 81,
+      "width": 100
+    }
+  }
+]
