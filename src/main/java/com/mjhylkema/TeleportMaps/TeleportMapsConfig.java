@@ -135,7 +135,7 @@ public interface TeleportMapsConfig extends Config
 	)
 	default boolean showObeliskMapLabels()
 	{
-		return true;
+		return false;
 	}
 
 	@ConfigItem(
