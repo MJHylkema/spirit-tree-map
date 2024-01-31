@@ -1,5 +1,6 @@
 [
   {
+    "index": 0,
     "name": "Xeric's Lookout",
     "x": 261,
     "y": 234,
@@ -15,6 +16,7 @@
     }
   },
   {
+    "index": 1,
     "name": "Xeric's Glade",
     "x": 343,
     "y": 248,
@@ -30,6 +32,7 @@
     }
   },
   {
+    "index": 2,
     "name": "Xeric's Inferno",
     "x": 238,
     "y": 114,
@@ -45,6 +48,7 @@
     }
   },
   {
+    "index": 3,
     "name": "Xeric's Heart",
     "x": 292,
     "y": 185,
@@ -60,6 +64,7 @@
     }
   },
   {
+    "index": 4,
     "name": "Xeric's Honour",
     "x": 131,
     "y": 221,

@@ -8,6 +8,7 @@ import com.mjhylkema.TeleportMaps.ui.AdventureLogEntry;
 import com.mjhylkema.TeleportMaps.ui.UIHotkey;
 import com.mjhylkema.TeleportMaps.ui.UILabel;
 import com.mjhylkema.TeleportMaps.ui.UITeleport;
+import com.mjhylkema.TeleportMaps.ui.Xerics;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -46,8 +47,8 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	private static final String MENU_TITLE_MOUNTED = "Xeric's Talisman teleports";
 
 	private XericsDefinition[] xericsDefinitions;
-	private HashMap<String, XericsDefinition> xericsDefinitionsLookup;
-	private HashMap<String, AdventureLogEntry<XericsDefinition>> availableLocations;
+	private HashMap<Integer, XericsDefinition> xericsDefinitionsLookup;
+	private HashMap<String, Xerics> availableLocations;
 
 	@Inject
 	public XericsMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread)
@@ -74,7 +75,7 @@ public class XericsMap extends BaseMap implements IAdventureMap
 		for (XericsDefinition xericsDefinition: this.xericsDefinitions)
 		{
 			// Place the xerics definition in the lookup table indexed by its name
-			this.xericsDefinitionsLookup.put(xericsDefinition.getName(), xericsDefinition);
+			this.xericsDefinitionsLookup.put(xericsDefinition.getIndex(), xericsDefinition);
 		}
 	}
 
@@ -153,12 +154,12 @@ public class XericsMap extends BaseMap implements IAdventureMap
 			if (disabledColor != null)
 				continue;
 
-			XericsDefinition xericsDefinition = this.xericsDefinitionsLookup.get(teleportName);
+			XericsDefinition xericsDefinition = this.xericsDefinitionsLookup.get(child.getIndex());
 
 			if (xericsDefinition == null)
 				continue;
 
-			this.availableLocations.put(teleportName, new AdventureLogEntry<>(xericsDefinition, child, shortcutKey));
+			this.availableLocations.put(xericsDefinition.getName(), new Xerics(xericsDefinition, child, shortcutKey, teleportName));
 		}
 	}
 
@@ -186,7 +187,6 @@ public class XericsMap extends BaseMap implements IAdventureMap
 			teleport.setPosition(xericsDefinition.getX(), xericsDefinition.getY());
 			teleport.setTeleportSprites(XERICS_SPRITE_ID, XERICS_HIGHLIGHTED_SPRITE_ID, XERICS_DISABLED_SPRITE_ID);
 			teleport.setSize(xericsDefinition.getWidth(), xericsDefinition.getHeight());
-			teleport.setName(xericsDefinition.getName());
 
 			UILabel teleportLabel = new UILabel(container.createChild(-1, WidgetType.TEXT));
 			teleportLabel.getWidget().setTextColor(Color.white.getRGB());
@@ -199,12 +199,18 @@ public class XericsMap extends BaseMap implements IAdventureMap
 
 			if (isLocationUnlocked(xericsDefinition.getName()))
 			{
-				AdventureLogEntry<XericsDefinition> adventureLogEntry = this.availableLocations.get(xericsDefinition.getName());
+				Xerics xericsEntry = this.availableLocations.get(xericsDefinition.getName());
 
-				teleport.addAction(TRAVEL_ACTION, () -> this.triggerTeleport(adventureLogEntry));
+				teleport.setName(xericsEntry.getDisplayedName());
+				teleport.addAction(TRAVEL_ACTION, () -> this.triggerTeleport(xericsEntry));
 
-				UIHotkey hotkey = this.createHotKey(container, xericsDefinition.getHotkey(), adventureLogEntry.getKeyShortcut());
-				teleportLabel.setHotkey(adventureLogEntry.getKeyShortcut());
+				UIHotkey hotkey = this.createHotKey(container, xericsDefinition.getHotkey(), xericsEntry.getKeyShortcut());
+				teleportLabel.setHotkey(xericsEntry.getKeyShortcut());
+
+				// If the button displayed name differs from the original,
+				// use this for the label instead of our default label name
+				if (!xericsEntry.getDisplayedName().equals(xericsDefinition.getName()))
+					teleportLabel.setText(xericsEntry.getDisplayedName());
 
 				teleport.attachHotkey(hotkey);
 
@@ -213,6 +219,7 @@ public class XericsMap extends BaseMap implements IAdventureMap
 			}
 			else
 			{
+				teleport.setName(xericsDefinition.getName());
 				teleport.setLocked(true);
 				teleport.addAction(EXAMINE_ACTION, () -> this.triggerLockedMessage(xericsDefinition));
 			}
