@@ -10,5 +10,6 @@ public class XericsDefinition extends AdventureLogEntryDefinition
 	@Getter
 	static private int height = 23;
 
+	private int index;
 	private LabelDefinition label;
 }
