@@ -1,4 +1,4 @@
-# Teleport Maps Plugin [![Plugin Rank](http://img.shields.io/endpoint?url=https://i.pluginhub.info/shields/rank/plugin/spirit-tree-map](https://runelite.net/plugin-hub) 
+# Teleport Maps Plugin [![Plugin Rank](http://img.shields.io/endpoint?url=https://i.pluginhub.info/shields/rank/plugin/spirit-tree-map)](https://runelite.net/plugin-hub) 
 
 Provides interactive maps to replace traditional text based teleport interfaces.
 
