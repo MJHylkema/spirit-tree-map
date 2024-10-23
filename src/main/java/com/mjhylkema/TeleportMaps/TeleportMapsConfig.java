@@ -18,6 +18,7 @@ public interface TeleportMapsConfig extends Config
 	String KEY_SHOW_OBELISK_MAP = "showObeliskMap";
 	String KEY_SHOW_OBELISK_MAP_LABELS = "showObeliskMapLabels";
 	String KEY_SHOW_OBELISK_MAP_HOTKEY_LABELS = "showObeliskMapHotkeyInLabels";
+	String KEY_SHOW_SKILLS_NECKLACE_MAP = "showSkillsNecklaceMap";
 
 	@ConfigSection(
 		name = "Teleport Maps",
@@ -98,6 +99,17 @@ public interface TeleportMapsConfig extends Config
 		section = teleportMaps
 	)
 	default boolean showObeliskMap()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = KEY_SHOW_SKILLS_NECKLACE_MAP,
+		name = "Skills Necklace Map",
+		description = "Replace the Skills Necklace teleport menu with an interactive map",
+		section = teleportMaps
+	)
+	default boolean showSkillsNecklaceMap()
 	{
 		return true;
 	}

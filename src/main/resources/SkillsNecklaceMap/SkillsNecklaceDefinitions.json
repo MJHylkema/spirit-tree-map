@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "name": "Fishing Guild",
+    "x": 323,
+    "y": 152,
+    "width": 32,
+    "height": 31,
+    "spriteEnabled": -19730,
+    "spriteHover": -19731,
+    "spriteDisabled": -19730,
+    "hotkey": {
+      "x": 356,
+      "y": 159
+    }
+  },
+  {
+    "id": 2,
+    "name": "Mining Guild",
+    "x": 412,
+    "y": 157,
+    "width": 31,
+    "height": 31,
+    "spriteEnabled": -19740,
+    "spriteHover": -19741,
+    "spriteDisabled": -19740,
+    "hotkey": {
+      "x": 444,
+      "y": 163
+    }
+  },
+  {
+    "id": 3,
+    "name": "Crafting Guild",
+    "x": 383,
+    "y": 188,
+    "width": 31,
+    "height": 31,
+    "spriteEnabled": -19750,
+    "spriteHover": -19751,
+    "spriteDisabled": -19750,
+    "hotkey": {
+      "x": 412,
+      "y": 196
+    }
+  },
+  {
+    "id": 4,
+    "name": "Cooking Guild",
+    "x": 439,
+    "y": 128,
+    "width": 27,
+    "height": 29,
+    "spriteEnabled": -19760,
+    "spriteHover": -19761,
+    "spriteDisabled": -19760,
+    "hotkey": {
+      "x": 467,
+      "y": 133
+    }
+  },
+  {
+    "id": 5,
+    "name": "Woodcutting Guild",
+    "x": 122,
+    "y": 134,
+    "width": 26,
+    "height": 30,
+    "spriteEnabled": -19710,
+    "spriteHover": -19711,
+    "spriteDisabled": -19712,
+    "hotkey": {
+      "x": 149,
+      "y": 139
+    }
+  },
+  {
+    "id": 6,
+    "name": "Farming Guild",
+    "x": 46,
+    "y": 80,
+    "width": 33,
+    "height": 31,
+    "spriteEnabled": -19720,
+    "spriteHover": -19721,
+    "spriteDisabled": -19722,
+    "hotkey": {
+      "x": 80,
+      "y": 87
+    }
+  }
+]
