@@ -28,7 +28,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 
 @Slf4j
 @PluginDescriptor(
-	name = "Smelemort Maps",
+	name = "Teleport Maps",
 	configName = "SpiritTreeMapPlugin", // Original plugin name
 	enabledByDefault = true
 )
