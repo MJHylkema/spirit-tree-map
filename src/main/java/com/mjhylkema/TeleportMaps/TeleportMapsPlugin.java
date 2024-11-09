@@ -6,6 +6,7 @@ import com.mjhylkema.TeleportMaps.components.adventureLog.AdventureLogComposite;
 import com.mjhylkema.TeleportMaps.components.IMap;
 import com.mjhylkema.TeleportMaps.components.adventureLog.MinecartMap;
 import com.mjhylkema.TeleportMaps.components.MushtreeMap;
+import com.mjhylkema.TeleportMaps.components.adventureLog.SkillsNecklaceMap;
 import com.mjhylkema.TeleportMaps.components.adventureLog.SpiritTreeMap;
 import com.mjhylkema.TeleportMaps.components.adventureLog.WildernessObeliskMap;
 import com.mjhylkema.TeleportMaps.components.adventureLog.XericsMap;
@@ -63,8 +64,9 @@ public class TeleportMapsPlugin extends Plugin
 	@Inject
 	private WildernessObeliskMap obeliskMap;
 	@Inject
+	private SkillsNecklaceMap skillsNecklaceMap;
+	@Inject
 	AdventureLogComposite adventureLogComposite;
-
 
 	private List<IMap> mapComponents;
 
@@ -74,12 +76,13 @@ public class TeleportMapsPlugin extends Plugin
 		SpriteDefinition[] spriteDefinitions = this.loadDefinitionResource(SpriteDefinition[].class, DEF_FILE_SPRITES);
 		this.spriteManager.addSpriteOverrides(spriteDefinitions);
 
-		this.mapComponents = Arrays.asList(mushtreeMap, adventureLogComposite, spiritTreeMap, xericsMap, minecartMap, obeliskMap);
+		this.mapComponents = Arrays.asList(mushtreeMap, adventureLogComposite, spiritTreeMap, xericsMap, minecartMap, obeliskMap, skillsNecklaceMap);
 
 		this.adventureLogComposite.addAdventureLogMap(spiritTreeMap);
 		this.adventureLogComposite.addAdventureLogMap(xericsMap);
 		this.adventureLogComposite.addAdventureLogMap(minecartMap);
 		this.adventureLogComposite.addAdventureLogMap(obeliskMap);
+		this.adventureLogComposite.addAdventureLogMap(skillsNecklaceMap);
 
 		this.mapComponents.forEach(mapComponent -> eventBus.register(mapComponent));
 	}

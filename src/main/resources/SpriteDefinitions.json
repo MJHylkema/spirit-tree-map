@@ -278,5 +278,65 @@
   {
     "spriteId": -19662,
     "fileName": "/WildernessObeliskMap/level50Selected.png"
+  },
+  {
+    "spriteId": -19700,
+    "fileName": "/SkillsNecklaceMap/SkillsNecklaceMap.png"
+  },
+  {
+    "spriteId": -19710,
+    "fileName": "/SkillsNecklaceMap/WoodcuttingGuild.png"
+  },
+  {
+    "spriteId": -19711,
+    "fileName": "/SkillsNecklaceMap/WoodcuttingGuildOutlined.png"
+  },
+  {
+    "spriteId": -19712,
+    "fileName": "/SkillsNecklaceMap/WoodcuttingGuildDisabled.png"
+  },
+  {
+    "spriteId": -19720,
+    "fileName": "/SkillsNecklaceMap/FarmingGuild.png"
+  },
+  {
+    "spriteId": -19721,
+    "fileName": "/SkillsNecklaceMap/FarmingGuildOutlined.png"
+  },
+  {
+    "spriteId": -19722,
+    "fileName": "/SkillsNecklaceMap/FarmingGuildDisabled.png"
+  },
+  {
+    "spriteId": -19730,
+    "fileName": "/SkillsNecklaceMap/FishingGuild.png"
+  },
+  {
+    "spriteId": -19731,
+    "fileName": "/SkillsNecklaceMap/FishingGuildOutlined.png"
+  },
+  {
+    "spriteId": -19740,
+    "fileName": "/SkillsNecklaceMap/MiningGuild.png"
+  },
+  {
+    "spriteId": -19741,
+    "fileName": "/SkillsNecklaceMap/MiningGuildOutlined.png"
+  },
+  {
+    "spriteId": -19750,
+    "fileName": "/SkillsNecklaceMap/CraftingGuild.png"
+  },
+  {
+    "spriteId": -19751,
+    "fileName": "/SkillsNecklaceMap/CraftingGuildOutlined.png"
+  },
+  {
+    "spriteId": -19760,
+    "fileName": "/SkillsNecklaceMap/CookingGuild.png"
+  },
+  {
+    "spriteId": -19761,
+    "fileName": "/SkillsNecklaceMap/CookingGuildOutlined.png"
   }
 ]
