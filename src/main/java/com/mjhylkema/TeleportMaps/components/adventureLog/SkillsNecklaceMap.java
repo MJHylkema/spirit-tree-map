@@ -78,10 +78,6 @@ public class SkillsNecklaceMap extends BaseMap implements IAdventureMap {
     {
       case TeleportMapsConfig.KEY_SHOW_SKILLS_NECKLACE_MAP:
         this.setActive(config.showSkillsNecklaceMap());
-      case TeleportMapsConfig.KEY_DISPLAY_HOTKEYS:
-        this.updateTeleports((teleport) -> {
-          teleport.setHotKeyVisibility(config.displayHotkeys());
-        });
       default:
         super.onConfigChanged(e);
     }
