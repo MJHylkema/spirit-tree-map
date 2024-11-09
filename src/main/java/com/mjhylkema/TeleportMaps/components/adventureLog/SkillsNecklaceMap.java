@@ -48,7 +48,7 @@ public class SkillsNecklaceMap extends BaseMap implements IAdventureMap {
 
   @Inject
   public SkillsNecklaceMap(TeleportMapsPlugin plugin, TeleportMapsConfig config, Client client, ClientThread clientThread) {
-    super(plugin, config, client, clientThread, true);
+    super(plugin, config, client, clientThread, config.showSkillsNecklaceMap());
 
     this.loadDefinitions();
     this.buildSkillsNecklaceDefinitionLookup();
