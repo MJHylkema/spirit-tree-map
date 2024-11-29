@@ -4,17 +4,19 @@ import com.mjhylkema.TeleportMaps.components.IMap;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
-import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.events.ScriptPreFired;
 import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.InterfaceID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 
+@Slf4j
 public class AdventureLogComposite implements IMap
 {
-	private static final int ADVENTURE_LOG_CONTAINER_TITLE = 1;
+	final private int MENU_SETUP_SCRIPT_ID = 219;
 	static class AdventureLog
 	{
 		static final int CONTAINER = 0;
@@ -42,57 +44,50 @@ public class AdventureLogComposite implements IMap
 	}
 
 	@Subscribe
-	public void onWidgetLoaded(WidgetLoaded e)
+	private void onScriptPreFired(ScriptPreFired ev)
 	{
-		if (e.getGroupId() != InterfaceID.ADVENTURE_LOG)
-			return;
-
-		if (!this.isActive())
-			return;
-
-		// To avoid the default adventure log list flashing on the screen briefly, always hide it upfront.
-		// These widgets will be un-hidden in the invokeLater if it's not the "Spirit Tree Locations".
-		setAdventureLogWidgetsHidden(new int[] {
-			AdventureLog.CONTAINER,
-			AdventureLog.LIST,
-			AdventureLog.SCROLLBAR
-		}, true);
-
-		this.clientThread.invokeLater(() ->
+		switch (ev.getScriptId())
 		{
-			Widget adventureLogContainer = this.client.getWidget(ComponentID.ADVENTURE_LOG_CONTAINER);
-			if (adventureLogContainer == null)
-				return;
-
-			Widget title = adventureLogContainer.getChild(ADVENTURE_LOG_CONTAINER_TITLE);
-			if (title == null)
-				return;
-
-			boolean response = false;
-			for (IAdventureMap map: this.adventureLogMaps)
+			case MENU_SETUP_SCRIPT_ID:
 			{
-				if (!map.isActive())
-					continue;
+				String title = client.getStringStack()[client.getStringStackSize() - 1];
 
-				response = map.matchesTitle(title.getText());
-				if (response)
+				for (IAdventureMap map: this.adventureLogMaps)
 				{
-					map.buildInterface(adventureLogContainer);
-					break;
-				}
-			}
+					if (!map.isActive())
+						continue;
 
-			if (!response)
-				setAdventureLogWidgetsHidden(new int[] {
-					AdventureLog.CONTAINER,
-					AdventureLog.LIST,
-					AdventureLog.SCROLLBAR
-				}, false);
-			else
-				setAdventureLogWidgetsHidden(new int[] {
-					AdventureLog.CONTAINER
-				}, false);
-		});
+					boolean response = map.matchesTitle(title);
+
+					if (response)
+					{
+						// To avoid the default adventure log list flashing on the screen briefly, always hide it upfront.
+						setAdventureLogWidgetsHidden(new int[] {
+							AdventureLog.CONTAINER,
+							AdventureLog.LIST,
+							AdventureLog.SCROLLBAR
+						}, true);
+
+						this.clientThread.invokeLater(() ->
+						{
+							Widget adventureLogContainer = this.client.getWidget(ComponentID.ADVENTURE_LOG_CONTAINER);
+							if (adventureLogContainer == null)
+								return;
+
+							setAdventureLogWidgetsHidden(new int[] {
+								AdventureLog.CONTAINER
+							}, false);
+
+							map.buildInterface(adventureLogContainer);
+						});
+						break;
+					}
+				}
+				break;
+			}
+			default:
+				return;
+		}
 	}
 
 	@Override
