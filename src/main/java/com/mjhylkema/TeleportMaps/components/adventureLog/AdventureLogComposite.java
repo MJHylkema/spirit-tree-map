@@ -50,7 +50,7 @@ public class AdventureLogComposite implements IMap
 		{
 			case MENU_SETUP_SCRIPT_ID:
 			{
-				String title = client.getStringStack()[client.getStringStackSize() - 1];
+				String title = (String) client.getObjectStack()[client.getObjectStackSize() - 1];
 
 				for (IAdventureMap map: this.adventureLogMaps)
 				{
