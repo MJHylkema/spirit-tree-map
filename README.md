@@ -4,7 +4,7 @@ Provides interactive maps to replace traditional text based teleport interfaces.
 
 
 ### Spirit Tree Map
-![SpiritTreeMap](https://github.com/MJHylkema/spirit-tree-map/assets/20365453/019b247a-ffb6-4c2b-a1aa-31f8259b4583)
+<img width="633" height="440" alt="image" src="https://github.com/user-attachments/assets/b11a160e-6d49-41ae-928b-3f2a6b7793f5" />
 
 ### Fossil Island Mushtree Map
 ![FossilIslandMushtreeMap](https://github.com/MJHylkema/spirit-tree-map/assets/20365453/e0c09212-56e4-4a07-a0d9-903278198db6)
