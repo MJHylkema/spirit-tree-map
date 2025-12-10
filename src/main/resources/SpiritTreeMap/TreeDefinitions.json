@@ -2,8 +2,8 @@
   {
     "id": 0,
     "name": "Tree Gnome Village",
-    "x": 298,
-    "y": 194,
+    "x": 255,
+    "y": 158,
     "width": 25,
     "height": 31,
     "spriteEnabled": -19170,
@@ -15,15 +15,15 @@
       "worldPointY": 3168
     },
     "hotkey": {
-      "x": 320,
-      "y": 201
+      "x": 277,
+      "y": 165
     }
   },
   {
     "id": 1,
     "name": "Gnome Stronghold",
-    "x": 280,
-    "y": 137,
+    "x": 231,
+    "y": 94,
     "width": 25,
     "height": 31,
     "spriteEnabled": -19140,
@@ -35,15 +35,15 @@
       "worldPointY": 3445
     },
     "hotkey": {
-      "x": 303,
-      "y": 144
+      "x": 254,
+      "y": 103
     }
   },
   {
     "id": 2,
     "name": "Battlefield of Khazard",
-    "x": 279,
-    "y": 169,
+    "x": 244,
+    "y": 130,
     "width": 18,
     "height": 26,
     "spriteEnabled": -19150,
@@ -55,35 +55,35 @@
       "worldPointY": 3260
     },
     "hotkey": {
-      "x": 293,
-      "y": 176
+      "x": 261,
+      "y": 134
     }
   },
   {
     "id": 3,
     "name": "Grand Exchange",
-    "x": 444,
-    "y": 113,
+    "x": 350,
+    "y": 84,
     "width": 19,
     "height": 27,
-    "spriteEnabled": -19100,
-    "spriteHover": -19101,
-    "spriteSelected": -19103,
+    "spriteEnabled": -19210,
+    "spriteHover": -19211,
+    "spriteSelected": -19212,
     "treeObject" : {
       "objectId": 1295,
       "worldPointX": 3184,
       "worldPointY": 3509
     },
     "hotkey": {
-      "x": 460,
-      "y": 120
+      "x": 370,
+      "y": 90
     }
   },
   {
     "id": 4,
     "name": "Feldip Hills",
-    "x": 305,
-    "y": 262,
+    "x": 253,
+    "y": 201,
     "width": 19,
     "height": 27,
     "spriteEnabled": -19100,
@@ -95,15 +95,15 @@
       "worldPointY": 2850
     },
     "hotkey": {
-      "x": 321,
-      "y": 269
+      "x": 271,
+      "y": 207
     }
   },
   {
     "id": 5,
     "name": "Prifddinas",
-    "x": 243,
-    "y": 152,
+    "x": 208,
+    "y": 114,
     "width": 19,
     "height": 30,
     "spriteEnabled": -19130,
@@ -115,15 +115,15 @@
       "worldPointY": 6124
     },
     "hotkey": {
-      "x": 259,
-      "y": 162
+      "x": 193,
+      "y": 125
     }
   },
   {
     "id": 6,
     "name": "Port Sarim",
-    "x": 408,
-    "y": 163,
+    "x": 332,
+    "y": 134,
     "width": 19,
     "height": 31,
     "spriteEnabled": -19200,
@@ -135,15 +135,15 @@
       "worldPointY": 3257
     },
     "hotkey": {
-      "x": 424,
-      "y": 174
+      "x": 349,
+      "y": 145
     }
   },
   {
     "id": 7,
     "name": "Etceteria",
-    "x": 322,
-    "y": 28,
+    "x": 256,
+    "y": 39,
     "width": 19,
     "height": 30,
     "spriteEnabled": -19180,
@@ -155,15 +155,15 @@
       "worldPointY": 3857
     },
     "hotkey": {
-      "x": 338,
-      "y": 38
+      "x": 276,
+      "y": 45
     }
   },
   {
     "id": 8,
     "name": "Brimhaven",
-    "x": 364,
-    "y": 193,
+    "x": 294,
+    "y": 144,
     "width": 19,
     "height": 27,
     "spriteEnabled": -19190,
@@ -175,17 +175,17 @@
       "worldPointY": 3202
     },
     "hotkey": {
-      "x": 379,
-      "y": 201
+      "x": 311,
+      "y": 152
     }
   },
   {
     "id": 9,
     "name": "Hosidius",
-    "x": 140,
-    "y": 108,
+    "x": 162,
+    "y": 91,
     "width": 19,
-    "height": 27,
+    "height": 28,
     "spriteEnabled": -19120,
     "spriteHover": -19121,
     "spriteSelected": -19122,
@@ -195,15 +195,15 @@
       "worldPointY": 3541
     },
     "hotkey": {
-      "x": 156,
-      "y": 115
+      "x": 179,
+      "y": 99
     }
   },
   {
     "id": 10,
     "name": "Farming Guild",
-    "x": 62,
-    "y": 65,
+    "x": 103,
+    "y": 72,
     "width": 19,
     "height": 27,
     "spriteEnabled": -19110,
@@ -215,35 +215,35 @@
       "worldPointY": 3749
     },
     "hotkey": {
-      "x": 78,
-      "y": 72
+      "x": 120,
+      "y": 77
     }
   },
   {
     "id": 11,
     "name": "Your house",
-    "x": 53,
-    "y": 258,
-    "width": 19,
-    "height": 27,
-    "spriteEnabled": -19100,
-    "spriteHover": -19101,
-    "spriteSelected": -19103,
+    "x": 97,
+    "y": 243,
+    "width": 49,
+    "height": 67,
+    "spriteEnabled": -19001,
+    "spriteHover": -19003,
+    "spriteSelected": -19004,
     "treeObject" : {
       "objectId": 29227,
       "worldPointX": 0,
       "worldPointY": 0
     },
     "hotkey": {
-      "x": 52,
-      "y": 240
+      "x": 130,
+      "y": 282
     }
   },
   {
     "id": 12,
     "name": "Poison Waste",
-    "x": 274,
-    "y": 216,
+    "x": 228,
+    "y": 163,
     "width": 18,
     "height": 27,
     "spriteEnabled": -19160,
@@ -255,8 +255,28 @@
       "worldPointY": 3110
     },
     "hotkey": {
-      "x": 289,
-      "y": 223
+      "x": 212,
+      "y": 170
+    }
+  },
+  {
+    "id": 13,
+    "name": "Laguna Aurorae",
+    "x": 65,
+    "y": 204,
+    "width": 19,
+    "height": 27,
+    "spriteEnabled": -19220,
+    "spriteHover": -19221,
+    "spriteSelected": -19222,
+    "treeObject" : {
+      "objectId": 49598,
+      "worldPointX": 1201,
+      "worldPointY": 2785
+    },
+    "hotkey": {
+      "x": 85,
+      "y": 210
     }
   }
 ]

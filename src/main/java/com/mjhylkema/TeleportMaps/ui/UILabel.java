@@ -16,7 +16,7 @@ public class UILabel extends UIComponent
 		super(labelWidget);
 
 		// Set default font and text colour
-		this.setFont(FontID.QUILL_8);
+		this.setFont(FontID.PLAIN_11);
 		this.setColour(HOTKEY_LABEL_COLOR);
 
 		// Set the alignment to centre and enable text shadowing

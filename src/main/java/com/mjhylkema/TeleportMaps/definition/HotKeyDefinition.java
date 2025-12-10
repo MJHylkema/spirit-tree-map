@@ -6,9 +6,9 @@ import lombok.Getter;
 public class HotKeyDefinition
 {
 	@Getter
-	static private int width = 20;
+	static private final int width = 17;
 	@Getter
-	static private int height = 20;
+	static private final int height = 17;
 	private int x;
 	private int y;
 }

@@ -12,6 +12,14 @@
     "fileName": "/HotKeyCircle.png"
   },
   {
+    "spriteId": -19003,
+    "fileName": "/SpiritTreeMap/HouseOutlined.png"
+  },
+  {
+    "spriteId": -19004,
+    "fileName": "/SpiritTreeMap/HouseSelected.png"
+  },
+  {
     "spriteId": -19100,
     "fileName": "/SpiritTreeMap/Default.png"
   },
@@ -146,6 +154,30 @@
   {
     "spriteId": -19202,
     "fileName": "/SpiritTreeMap/PortSarimSelected.png"
+  },
+  {
+    "spriteId": -19210,
+    "fileName": "/SpiritTreeMap/GrandExchange.png"
+  },
+  {
+    "spriteId": -19211,
+    "fileName": "/SpiritTreeMap/GrandExchangeOutlined.png"
+  },
+  {
+    "spriteId": -19212,
+    "fileName": "/SpiritTreeMap/GrandExchangeSelected.png"
+  },
+  {
+    "spriteId": -19220,
+    "fileName": "/SpiritTreeMap/LagunaAurorae.png"
+  },
+  {
+    "spriteId": -19221,
+    "fileName": "/SpiritTreeMap/LagunaAuroraeOutlined.png"
+  },
+  {
+    "spriteId": -19222,
+    "fileName": "/SpiritTreeMap/LagunaAuroraeSelected.png"
   },
   {
     "spriteId": -19300,

@@ -34,13 +34,8 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 
 	/* Sprite IDs, dimensions and positions */
 	private static final int MAP_SPRITE_ID = -19000;
-	private static final int MAP_SPRITE_WIDTH = 508;
-	private static final int MAP_SPRITE_HEIGHT = 319;
-	private static final int HOUSE_SPRITE_ID = -19001;
-	private static final int HOUSE_SPRITE_WIDTH = 53;
-	private static final int HOUSE_SPRITE_HEIGHT = 49;
-	private static final int HOUSE_WIDGET_X = 36;
-	private static final int HOUSE_WIDGET_Y = 241;
+	private static final int MAP_SPRITE_WIDTH = 512;
+	private static final int MAP_SPRITE_HEIGHT = 334;
 	private static final int DISABLED_TREE_SPRITE_ID = -19102;
 	private static final int DISABLED_TREE_SPRITE_WIDTH = 19;
 	private static final int DISABLED_TREE_SPRITE_HEIGHT = 27;
@@ -58,7 +53,7 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 	private TreeDefinition[] treeDefinitions;
 	private HashMap<String, TreeDefinition> treeDefinitionsLookup;
 	private HashMap<String, Tree> availableTrees;
-	private Multimap<Integer, TreeDefinition> treeObjectIdLookup = LinkedHashMultimap.create();
+	private final Multimap<Integer, TreeDefinition> treeObjectIdLookup = LinkedHashMultimap.create();
 	private TreeDefinition latestTree;
 
 	@Inject
@@ -92,9 +87,8 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 	{
 		this.hideAdventureLogContainerChildren(adventureLogContainer);
 		this.buildAvailableTreeList();
-
+		this.moveExitWidget();
 		this.createMapWidget(adventureLogContainer);
-		this.createHouseWidget(adventureLogContainer);
 		this.createTeleportWidgets(adventureLogContainer);
 	}
 
@@ -216,14 +210,15 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 			MAP_SPRITE_ID);
 	}
 
-	private void createHouseWidget(Widget container)
+	private void moveExitWidget()
 	{
-		this.createSpriteWidget(container,
-			HOUSE_SPRITE_WIDTH,
-			HOUSE_SPRITE_HEIGHT,
-			HOUSE_WIDGET_X,
-			HOUSE_WIDGET_Y,
-			HOUSE_SPRITE_ID);
+		Widget exitWidget = this.client.getWidget(InterfaceID.ADVENTURE_LOG, AdventureLogComposite.AdventureLog.CLOSE_BUTTON);
+		if (exitWidget != null)
+		{
+			exitWidget.setOriginalX(428);
+			exitWidget.setOriginalY(22);
+			exitWidget.revalidate();
+		}
 	}
 
 	private void createTeleportWidgets(Widget container)
