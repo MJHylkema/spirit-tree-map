@@ -1,0 +1,154 @@
+[
+  {
+    "name": "Shantay Pass",
+    "x": 91,
+    "y": 82,
+    "worldPointX": 3308,
+    "worldPointY": 3110,
+    "hotkey": {
+      "x": 105,
+      "y": 86
+    },
+    "travelOptions": [
+      {
+        "option": "I want to travel to Uzer.",
+        "destination": "Uzer"
+      },
+      {
+        "option": "I want to travel to the Bedabin Camp.",
+        "destination": "Bedabin Camp"
+      },
+      {
+        "option": "I want to travel to Pollnivneach.",
+        "destination": "North Pollnivneach"
+      }
+    ]
+  },
+  {
+    "name": "Uzer",
+    "x": 165,
+    "y": 89,
+    "worldPointX": 3469,
+    "worldPointY": 3113,
+    "hotkey": {
+      "x": 179,
+      "y": 93
+    },
+    "travelOptions": [
+      {
+        "option": "That sounds good, take me there.",
+        "destination": "Shantay Pass"
+      }
+    ]
+  },
+  {
+    "name": "Bedabin Camp",
+    "x": 39,
+    "y": 112,
+    "worldPointX": 3181,
+    "worldPointY": 3043,
+    "hotkey": {
+      "x": 53,
+      "y": 116
+    },
+    "travelOptions": [
+      {
+        "option": "Take me there.",
+        "destination": "Shantay Pass"
+      }
+    ]
+  },
+  {
+    "name": "North Pollnivneach",
+    "x": 110,
+    "y": 130,
+    "worldPointX": 3349,
+    "worldPointY": 3003,
+    "hotkey": {
+      "x": 124,
+      "y": 134
+    },
+    "travelOptions": [
+      {
+        "option": "Take me to the Pass then.",
+        "destination": "Shantay Pass"
+      }
+    ]
+  },
+  {
+    "name": "South Pollnivneach",
+    "x": 111,
+    "y": 156,
+    "worldPointX": 3351,
+    "worldPointY": 2941,
+    "hotkey": {
+      "x": 125,
+      "y": 160
+    },
+    "travelOptions": [
+      {
+        "option": "I want to travel to Nardah.",
+        "destination": "Nardah"
+      },
+      {
+        "option": "I want to travel to Menaphos.",
+        "destination": "Menaphos"
+      },
+      {
+        "option": "I want to travel to Sophanem.",
+        "destination": "Sophanem"
+      }
+    ]
+  },
+  {
+    "name": "Nardah",
+    "x": 132,
+    "y": 166,
+    "worldPointX": 3401,
+    "worldPointY": 2916,
+    "hotkey": {
+      "x": 146,
+      "y": 170
+    },
+    "travelOptions": [
+      {
+        "option": "Let's go then.",
+        "destination": "South Pollnivneach"
+      }
+    ]
+  },
+  {
+    "name": "Sophanem",
+    "x": 83,
+    "y": 227,
+    "worldPointX": 3285,
+    "worldPointY": 2770,
+    "hotkey": {
+      "x": 97,
+      "y": 231
+    },
+    "travelOptions": [
+      {
+        "option": "Pollnivneach will do.",
+        "destination": "South Pollnivneach"
+      }
+    ]
+  },
+  {
+    "name": "Menaphos",
+    "x": 66,
+    "y": 215,
+    "worldPointX": 3245,
+    "worldPointY": 2813,
+    "hotkey": {
+      "x": 80,
+      "y": 219
+    },
+    "travelOptions": [
+      {
+        "option": "Let's go then.",
+        "destination": "South Pollnivneach"
+      }
+    ]
+  }
+]

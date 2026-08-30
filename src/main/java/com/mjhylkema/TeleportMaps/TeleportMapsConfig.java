@@ -19,6 +19,7 @@ public interface TeleportMapsConfig extends Config
 	String KEY_SHOW_OBELISK_MAP_LABELS = "showObeliskMapLabels";
 	String KEY_SHOW_OBELISK_MAP_HOTKEY_LABELS = "showObeliskMapHotkeyInLabels";
 	String KEY_SHOW_SKILLS_NECKLACE_MAP = "showSkillsNecklaceMap";
+	String KEY_SHOW_MAGIC_CARPET_MAP = "showMagicCarpetMap";
 
 	@ConfigSection(
 		name = "Teleport Maps",
@@ -110,6 +111,17 @@ public interface TeleportMapsConfig extends Config
 		section = teleportMaps
 	)
 	default boolean showSkillsNecklaceMap()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = KEY_SHOW_MAGIC_CARPET_MAP,
+		name = "Magic Carpet Map",
+		description = "Replace the rug merchant travel menu with an interactive map",
+		section = teleportMaps
+	)
+	default boolean showMagicCarpetMap()
 	{
 		return true;
 	}
