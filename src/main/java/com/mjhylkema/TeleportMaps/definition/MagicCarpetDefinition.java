@@ -8,7 +8,7 @@ public class MagicCarpetDefinition
 	@Getter
 	static private final int width = 15;
 	@Getter
-	static private final int height = 28;
+	static private final int height = 24;
 
 	private String name;
 	private int x;

@@ -374,21 +374,5 @@
   {
     "spriteId": -19800,
     "fileName": "/MagicCarpetMap/DesertMap.png"
-  },
-  {
-    "spriteId": -19801,
-    "fileName": "/MagicCarpetMap/Carpet.png"
-  },
-  {
-    "spriteId": -19802,
-    "fileName": "/MagicCarpetMap/CarpetOutlined.png"
-  },
-  {
-    "spriteId": -19803,
-    "fileName": "/MagicCarpetMap/CarpetSelected.png"
-  },
-  {
-    "spriteId": -19804,
-    "fileName": "/MagicCarpetMap/CarpetDisabled.png"
   }
 ]
