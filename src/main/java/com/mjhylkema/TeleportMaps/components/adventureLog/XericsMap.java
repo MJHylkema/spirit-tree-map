@@ -11,6 +11,7 @@ import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import com.mjhylkema.TeleportMaps.ui.Xerics;
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
@@ -44,9 +45,11 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	private static final int ADVENTURE_LOG_CONTAINER_TITLE = 1;
 	private static final String MENU_TITLE = "The talisman has .*";
 	private static final String MENU_TITLE_MOUNTED = "Xeric's Talisman teleports";
+	private static final int MIN_MATCHING_ENTRIES = 2;
 
 	private XericsDefinition[] xericsDefinitions;
 	private HashMap<Integer, XericsDefinition> xericsDefinitionsLookup;
+	private HashMap<String, XericsDefinition> xericsDefinitionsNameLookup;
 	private HashMap<String, Xerics> availableLocations;
 
 	@Inject
@@ -63,6 +66,18 @@ public class XericsMap extends BaseMap implements IAdventureMap
 		return title.matches(MENU_TITLE) || title.matches(MENU_TITLE_MOUNTED);
 	}
 
+	@Override
+	public boolean matchesEntries(List<String> entryNames)
+	{
+		int matches = 0;
+		for (String entryName : entryNames)
+		{
+			if (this.xericsDefinitionsNameLookup.containsKey(entryName))
+				matches++;
+		}
+		return matches >= MIN_MATCHING_ENTRIES;
+	}
+
 	private void loadDefinitions()
 	{
 		this.xericsDefinitions = this.plugin.loadDefinitionResource(XericsDefinition[].class, DEF_FILE_XERICS);
@@ -71,10 +86,12 @@ public class XericsMap extends BaseMap implements IAdventureMap
 	private void buildXericsDefinitionLookup()
 	{
 		this.xericsDefinitionsLookup = new HashMap<>();
+		this.xericsDefinitionsNameLookup = new HashMap<>();
 		for (XericsDefinition xericsDefinition: this.xericsDefinitions)
 		{
-			// Place the xerics definition in the lookup table indexed by its name
+			// Place the xerics definition in the lookup tables indexed by its entry index and name
 			this.xericsDefinitionsLookup.put(xericsDefinition.getIndex(), xericsDefinition);
+			this.xericsDefinitionsNameLookup.put(xericsDefinition.getName(), xericsDefinition);
 		}
 	}
 
@@ -154,7 +171,12 @@ public class XericsMap extends BaseMap implements IAdventureMap
 			if (disabledColor != null)
 				continue;
 
-			XericsDefinition xericsDefinition = this.xericsDefinitionsLookup.get(child.getIndex());
+			// Match by name first, as the mounted talisman's entries may not share
+			// the talisman's order. Fall back to the entry's index for plugins
+			// such as "Easy Teleports" that rename the entries.
+			XericsDefinition xericsDefinition = this.xericsDefinitionsNameLookup.get(teleportName);
+			if (xericsDefinition == null)
+				xericsDefinition = this.xericsDefinitionsLookup.get(child.getIndex());
 
 			if (xericsDefinition == null)
 				continue;

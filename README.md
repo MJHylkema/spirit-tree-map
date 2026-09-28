@@ -22,6 +22,13 @@ Provides interactive maps to replace traditional text based teleport interfaces.
 ###### Thanks [Blubmin](https://github.com/Blubmin)!
 ![image](https://github.com/user-attachments/assets/03ff8f1b-95c7-428c-96ec-fe42ea827657)
 
+### POH Jewellery Box
+Replaces the house jewellery box with a world map showing every destination at once, each marked with its jewellery's icon. Hover a marker to see the destination and its hotkey. Destinations your box can't reach yet are greyed out.
+
+Set the layout to "Tabs" to get one tab per jewellery type instead, each with a scroll map zoomed to that jewellery's destinations and labelled like the Xeric's Talisman map. The Skills tab uses the Skills Necklace map.
+
+The mounted Xeric's Talisman and the house Wilderness Obelisk use the Xeric's Talisman and Wilderness Obelisk maps.
+
 ### Magic Carpets
 ###### Thanks [pairofcros](https://github.com/pairofcrocs)!
 ![image](https://github.com/user-attachments/assets/bbe5ca16-fb6d-4691-835f-9e55ffd46944)

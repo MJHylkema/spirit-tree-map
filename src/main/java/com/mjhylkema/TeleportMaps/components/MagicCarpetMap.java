@@ -272,28 +272,6 @@ public class MagicCarpetMap extends BaseMap
 		this.createCloseButton(screen, options, mapX, mapY);
 	}
 
-	/**
-	 * Finds the "mainmodal" layer for the current display mode: the layer
-	 * over the game view that the game opens screen-level modals into
-	 */
-	private Widget getScreenContainer()
-	{
-		int[][] containers = {
-			{161, 16}, // toplevel_osrs_stretch:mainmodal (resizable classic)
-			{164, 16}, // toplevel_pre_eoc:mainmodal (resizable modern)
-			{548, 41}, // toplevel:mainmodal (fixed)
-		};
-
-		for (int[] componentId : containers)
-		{
-			Widget screen = this.client.getWidget(componentId[0], componentId[1]);
-			if (screen != null)
-				return screen;
-		}
-
-		return null;
-	}
-
 	private void trackScreenWidget(Widget widget)
 	{
 		this.screenWidgets.add(widget);

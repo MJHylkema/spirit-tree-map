@@ -4,9 +4,12 @@ import com.mjhylkema.TeleportMaps.components.IMap;
 import com.mjhylkema.TeleportMaps.ui.UIButton;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.events.ScriptPreFired;
 import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.InterfaceID;
@@ -14,6 +17,7 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetType;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.util.Text;
 
 @Slf4j
 public class AdventureLogComposite implements IMap
@@ -29,6 +33,7 @@ public class AdventureLogComposite implements IMap
 	/* Matches an entry label on either menu, e.g. "<col=735a28>1</col>: Varrock";
 	   group 2 marks the classic menu's locked entries */
 	public static final String ENTRY_LABEL_PATTERN = "<col=(?:735a28|ffffff)>(.+)</col>: (<col=5f5f5f>)?(.+)";
+	private static final Pattern ENTRY_LABEL_PATTERN_COMPILED = Pattern.compile(ENTRY_LABEL_PATTERN);
 
 	static class AdventureLog
 	{
@@ -66,6 +71,9 @@ public class AdventureLogComposite implements IMap
 	final private Client client;
 	final private ClientThread clientThread;
 
+	/* A menu setup script no map recognised by title, to match by entries once it has run */
+	private int pendingEntryMatchScriptId = -1;
+
 	@Inject
 	public AdventureLogComposite(Client client, ClientThread clientThread)
 	{
@@ -87,101 +95,185 @@ public class AdventureLogComposite implements IMap
 			case MENU_SETUP_SCRIPT_ID:
 			{
 				String title = (String) client.getObjectStack()[client.getObjectStackSize() - 1];
+				log.debug("Menu opened with title '{}'", title);
 
-				for (IAdventureMap map: this.adventureLogMaps)
+				IAdventureMap map = this.findMapByTitle(title);
+				if (map == null)
 				{
-					if (!map.isActive())
-						continue;
-
-					boolean response = map.matchesTitle(title);
-
-					if (response)
-					{
-						// To avoid the default adventure log list flashing on the screen briefly, always hide it upfront.
-						setAdventureLogWidgetsHidden(new int[] {
-							AdventureLog.CONTAINER,
-							AdventureLog.LIST,
-							AdventureLog.SCROLLBAR
-						}, true);
-
-						this.clientThread.invokeLater(() ->
-						{
-							Widget adventureLogContainer = this.client.getWidget(ComponentID.ADVENTURE_LOG_CONTAINER);
-							Widget entryList = this.client.getWidget(InterfaceID.ADVENTURE_LOG, AdventureLog.LIST);
-							if (adventureLogContainer == null || entryList == null)
-								return;
-
-							setAdventureLogWidgetsHidden(new int[] {
-								AdventureLog.CONTAINER
-							}, false);
-
-							map.buildInterface(adventureLogContainer, entryList);
-						});
-						break;
-					}
+					this.pendingEntryMatchScriptId = MENU_SETUP_SCRIPT_ID;
+					return;
 				}
+
+				// To avoid the default adventure log list flashing on the screen briefly, always hide it upfront.
+				setAdventureLogWidgetsHidden(new int[] {
+					AdventureLog.CONTAINER,
+					AdventureLog.LIST,
+					AdventureLog.SCROLLBAR
+				}, true);
+
+				this.clientThread.invokeLater(() -> this.showClassicMenuMap(map));
 				break;
 			}
 			case NEW_MENU_SETUP_SCRIPT_ID:
 			{
 				String title = this.getNewMenuTitle(ev);
+				log.debug("Modern menu opened with title '{}'", title);
 				if (title == null)
 					return;
 
-				for (IAdventureMap map: this.adventureLogMaps)
+				IAdventureMap map = this.findMapByTitle(title);
+				if (map == null)
 				{
-					if (!map.isActive())
-						continue;
-
-					if (map.matchesTitle(title))
-					{
-						// Hide the menu upfront so it can't flash on screen
-						setNewMenuWidgetsHidden(new int[] {
-							NewMenu.UNIVERSE
-						}, true);
-
-						this.clientThread.invokeLater(() ->
-						{
-							Widget root = this.client.getWidget(MENU_NEW, NewMenu.INFINITE);
-							Widget entryList = this.client.getWidget(MENU_NEW, NewMenu.TEXT);
-							if (root == null || entryList == null)
-							{
-								// Restore the native menu rather than leaving it hidden
-								setNewMenuWidgetsHidden(new int[] {
-									NewMenu.UNIVERSE
-								}, false);
-								return;
-							}
-
-							// Hide the menu's visuals but keep the layers holding
-							// the entry key listeners shown, as the native hotkeys
-							// only work while they're visible
-							setNewMenuWidgetsHidden(new int[] {
-								NewMenu.FRAME,
-								NewMenu.TITLE,
-								NewMenu.CONTENT_SCROLL,
-								NewMenu.SCROLLBAR
-							}, true);
-							this.hideContentFrameBorder();
-
-							// The setup script may re-run in an already open menu
-							root.deleteAllChildren();
-
-							map.buildInterface(root, entryList);
-							this.createNewMenuCloseButton(root);
-
-							setNewMenuWidgetsHidden(new int[] {
-								NewMenu.UNIVERSE
-							}, false);
-						});
-						break;
-					}
+					this.pendingEntryMatchScriptId = NEW_MENU_SETUP_SCRIPT_ID;
+					return;
 				}
+
+				// Hide the menu upfront so it can't flash on screen
+				setNewMenuWidgetsHidden(new int[] {
+					NewMenu.UNIVERSE
+				}, true);
+
+				this.clientThread.invokeLater(() -> this.showNewMenuMap(map));
 				break;
 			}
 			default:
 				return;
 		}
+	}
+
+	/**
+	 * Menus no map recognised by title get a second chance once their entries
+	 * are populated: the POH versions of some teleports (e.g. the mounted
+	 * Xeric's talisman and the house obelisk) share their entries with the
+	 * original but not necessarily its title.
+	 */
+	@Subscribe
+	private void onScriptPostFired(ScriptPostFired ev)
+	{
+		if (ev.getScriptId() != this.pendingEntryMatchScriptId)
+			return;
+
+		final int scriptId = this.pendingEntryMatchScriptId;
+		this.pendingEntryMatchScriptId = -1;
+
+		this.clientThread.invokeLater(() ->
+		{
+			Widget entryList = scriptId == MENU_SETUP_SCRIPT_ID
+				? this.client.getWidget(InterfaceID.ADVENTURE_LOG, AdventureLog.LIST)
+				: this.client.getWidget(MENU_NEW, NewMenu.TEXT);
+			if (entryList == null)
+				return;
+
+			IAdventureMap map = this.findMapByEntries(this.getEntryNames(entryList));
+			if (map == null)
+				return;
+
+			if (scriptId == MENU_SETUP_SCRIPT_ID)
+			{
+				setAdventureLogWidgetsHidden(new int[] {
+					AdventureLog.LIST,
+					AdventureLog.SCROLLBAR
+				}, true);
+				this.showClassicMenuMap(map);
+			}
+			else
+			{
+				this.showNewMenuMap(map);
+			}
+		});
+	}
+
+	private IAdventureMap findMapByTitle(String title)
+	{
+		for (IAdventureMap map : this.adventureLogMaps)
+		{
+			if (map.isActive() && map.matchesTitle(title))
+				return map;
+		}
+		return null;
+	}
+
+	private IAdventureMap findMapByEntries(List<String> entryNames)
+	{
+		if (entryNames.isEmpty())
+			return null;
+
+		for (IAdventureMap map : this.adventureLogMaps)
+		{
+			if (map.isActive() && map.matchesEntries(entryNames))
+				return map;
+		}
+		return null;
+	}
+
+	private List<String> getEntryNames(Widget entryList)
+	{
+		List<String> names = new ArrayList<>();
+		Widget[] entries = entryList.getDynamicChildren();
+		if (entries == null)
+			return names;
+
+		for (Widget entry : entries)
+		{
+			if (entry.getText() == null)
+				continue;
+
+			Matcher matcher = ENTRY_LABEL_PATTERN_COMPILED.matcher(entry.getText());
+			if (matcher.matches())
+				names.add(Text.removeTags(matcher.group(3)));
+		}
+
+		log.debug("Menu entries: {}", names);
+		return names;
+	}
+
+	private void showClassicMenuMap(IAdventureMap map)
+	{
+		Widget adventureLogContainer = this.client.getWidget(ComponentID.ADVENTURE_LOG_CONTAINER);
+		Widget entryList = this.client.getWidget(InterfaceID.ADVENTURE_LOG, AdventureLog.LIST);
+		if (adventureLogContainer == null || entryList == null)
+			return;
+
+		setAdventureLogWidgetsHidden(new int[] {
+			AdventureLog.CONTAINER
+		}, false);
+
+		map.buildInterface(adventureLogContainer, entryList);
+	}
+
+	private void showNewMenuMap(IAdventureMap map)
+	{
+		Widget root = this.client.getWidget(MENU_NEW, NewMenu.INFINITE);
+		Widget entryList = this.client.getWidget(MENU_NEW, NewMenu.TEXT);
+		if (root == null || entryList == null)
+		{
+			// Restore the native menu rather than leaving it hidden
+			setNewMenuWidgetsHidden(new int[] {
+				NewMenu.UNIVERSE
+			}, false);
+			return;
+		}
+
+		// Hide the menu's visuals but keep the layers holding
+		// the entry key listeners shown, as the native hotkeys
+		// only work while they're visible
+		setNewMenuWidgetsHidden(new int[] {
+			NewMenu.FRAME,
+			NewMenu.TITLE,
+			NewMenu.CONTENT_SCROLL,
+			NewMenu.SCROLLBAR
+		}, true);
+		this.hideContentFrameBorder();
+
+		// The setup script may re-run in an already open menu
+		root.deleteAllChildren();
+
+		map.buildInterface(root, entryList);
+		this.createNewMenuCloseButton(root);
+
+		setNewMenuWidgetsHidden(new int[] {
+			NewMenu.UNIVERSE
+		}, false);
 	}
 
 	/**
