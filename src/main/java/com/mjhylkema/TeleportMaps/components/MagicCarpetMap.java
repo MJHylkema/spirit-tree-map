@@ -490,7 +490,7 @@ public class MagicCarpetMap extends BaseMap
 				listener[i] = arg;
 			}
 
-			this.client.runScript(listener);
+			this.runPacketSendingScript(listener);
 		});
 	}
 

@@ -248,7 +248,7 @@ public class WildernessObeliskMap extends BaseMap implements IAdventureMap
 
 	private void triggerTeleport(AdventureLogEntry<ObeliskDefinition> adventureLogEntry)
 	{
-		this.clientThread.invokeLater(() -> this.client.runScript(SCRIPT_TRIGGER_KEY, adventureLogEntry.getWidget().getId(), adventureLogEntry.getWidget().getIndex()));
+		this.clientThread.invokeLater(() -> this.runPacketSendingScript(SCRIPT_TRIGGER_KEY, adventureLogEntry.getWidget().getId(), adventureLogEntry.getWidget().getIndex()));
 	}
 
 	private void triggerLockedMessage(ObeliskDefinition obeliskDefinition)

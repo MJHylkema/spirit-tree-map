@@ -272,7 +272,7 @@ public class SpiritTreeMap extends BaseMap implements IAdventureMap
 
 	private void triggerTeleport(Tree tree)
 	{
-		this.clientThread.invokeLater(() -> this.client.runScript(SCRIPT_TRIGGER_KEY, tree.getWidget().getId(), tree.getWidget().getIndex()));
+		this.clientThread.invokeLater(() -> this.runPacketSendingScript(SCRIPT_TRIGGER_KEY, tree.getWidget().getId(), tree.getWidget().getIndex()));
 	}
 
 	private void triggerLockedMessage(TreeDefinition treeDefinition)
