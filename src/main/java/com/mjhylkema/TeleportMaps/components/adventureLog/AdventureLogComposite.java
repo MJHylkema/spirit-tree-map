@@ -223,7 +223,10 @@ public class AdventureLogComposite implements IMap
 		closeButton.setPosition(CLOSE_BUTTON_X, CLOSE_BUTTON_Y);
 		closeButton.setSize(CLOSE_BUTTON_WIDTH, CLOSE_BUTTON_HEIGHT);
 		closeButton.setSprites(CLOSE_BUTTON_SPRITE_ID, CLOSE_BUTTON_SPRITE_ID);
-		closeButton.addAction("Close", () -> this.clientThread.invokeLater(() -> this.client.runScript(IF_CLOSE_SCRIPT_ID)));
+		closeButton.addAction("Close", () -> this.clientThread.invokeLater(() -> this.client.createScriptEventBuilder(IF_CLOSE_SCRIPT_ID)
+			.build()
+			.setCanSendPackets(true)
+			.run()));
 		closeWidget.revalidate();
 	}
 

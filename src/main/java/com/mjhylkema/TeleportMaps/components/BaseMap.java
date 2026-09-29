@@ -74,6 +74,14 @@ public abstract class BaseMap implements IMap
 		this.activeUITeleports.clear();
 	}
 
+	protected void runPacketSendingScript(Object... args)
+	{
+		this.client.createScriptEventBuilder(args)
+			.build()
+			.setCanSendPackets(true)
+			.run();
+	}
+
 	protected Widget createSpriteWidget(Widget parent, int spriteWidth, int spriteHeight, int originalX, int originalY, int spriteId)
 	{
 		// Create a graphic widget

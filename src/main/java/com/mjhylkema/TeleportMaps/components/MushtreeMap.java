@@ -284,7 +284,7 @@ public class MushtreeMap extends BaseMap
 			Widget mushtreeDialog = this.client.getWidget(MUSHTREE_DIALOG_ID, 1);
 			Widget mushtreeExit = mushtreeDialog != null ? mushtreeDialog.getChild(13) : null;
 			if (mushtreeExit != null)
-				this.plugin.getClient().runScript(mushtreeExit.getOnOpListener());
+				this.runPacketSendingScript(mushtreeExit.getOnOpListener());
 		});
 	}
 
@@ -303,7 +303,7 @@ public class MushtreeMap extends BaseMap
 				return;
 
 			listener[1] = mushtree.getHotkey().getKeyCode();
-			this.client.runScript(listener);
+			this.runPacketSendingScript(listener);
 		});
 	}
 }

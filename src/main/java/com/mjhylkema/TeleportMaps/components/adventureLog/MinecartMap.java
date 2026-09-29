@@ -228,7 +228,7 @@ public class MinecartMap extends BaseMap implements IAdventureMap
 
 	private void triggerTeleport(AdventureLogEntry<MinecartDefinition> adventureLogEntry)
 	{
-		this.clientThread.invokeLater(() -> this.client.runScript(SCRIPT_TRIGGER_KEY, adventureLogEntry.getWidget().getId(), adventureLogEntry.getWidget().getIndex()));
+		this.clientThread.invokeLater(() -> this.runPacketSendingScript(SCRIPT_TRIGGER_KEY, adventureLogEntry.getWidget().getId(), adventureLogEntry.getWidget().getIndex()));
 	}
 
 	private void triggerLockedMessage(MinecartDefinition minecartDefinition)
