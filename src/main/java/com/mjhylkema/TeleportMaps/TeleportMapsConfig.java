@@ -5,9 +5,10 @@ import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigSection;
 
-@ConfigGroup("teleportmaps")
+@ConfigGroup(TeleportMapsConfig.GROUP)
 public interface TeleportMapsConfig extends Config
 {
+	String GROUP = "teleportmaps";
 	String KEY_DISPLAY_HOTKEYS = "displayHotkeys";
 	String KEY_SHOW_SPIRIT_TREE_MAP = "showSpiritTreeMap";
 	String KEY_SHOW_MUSHTREE_MAP = "showMushtreeMap";
@@ -51,8 +52,8 @@ public interface TeleportMapsConfig extends Config
 
 	@ConfigItem(
 		keyName = KEY_SHOW_SPIRIT_TREE_MAP,
-		name = "Spirit Tree Map",
-		description = "Replace the Spirit Tree travel menu with an interactive map",
+		name = "Spirit Tree Map*",
+		description = "Replace the Spirit Tree travel menu with an interactive map. Turns off the Spirit Tree Menu plugin, which conflicts with it",
 		section = teleportMaps
 	)
 	default boolean showSpiritTreeMap()

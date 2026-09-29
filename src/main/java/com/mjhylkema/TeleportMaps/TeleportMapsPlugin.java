@@ -17,15 +17,21 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
+import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.events.PluginChanged;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.PluginInstantiationException;
+import net.runelite.client.plugins.PluginManager;
 
 @Slf4j
 @PluginDescriptor(
@@ -36,6 +42,9 @@ import net.runelite.client.plugins.PluginDescriptor;
 public class TeleportMapsPlugin extends Plugin
 {
 	private static final String DEF_FILE_SPRITES = "/SpriteDefinitions.json";
+
+	/* Plugin Hub plugin that also replaces the spirit tree menu, so the two can't coexist */
+	private static final String SPIRIT_TREE_MENU_PLUGIN = "Spirit Tree Menu";
 
 	@Inject
 	private Gson gson;
@@ -49,6 +58,8 @@ public class TeleportMapsPlugin extends Plugin
 	private Client client;
 	@Inject
 	private EventBus eventBus;
+	@Inject
+	private PluginManager pluginManager;
 
 	@Inject
 	@Getter
@@ -89,12 +100,66 @@ public class TeleportMapsPlugin extends Plugin
 		this.adventureLogComposite.addAdventureLogMap(skillsNecklaceMap);
 
 		this.mapComponents.forEach(mapComponent -> eventBus.register(mapComponent));
+		this.disableSpiritTreeMenuPlugin();
 	}
 
 	@Override
 	protected void shutDown()
 	{
 		this.mapComponents.forEach(mapComponent -> eventBus.unregister(mapComponent));
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged e)
+	{
+		if (e.getGroup().equals(TeleportMapsConfig.GROUP) && e.getKey().equals(TeleportMapsConfig.KEY_SHOW_SPIRIT_TREE_MAP))
+			this.disableSpiritTreeMenuPlugin();
+	}
+
+	@Subscribe
+	public void onPluginChanged(PluginChanged e)
+	{
+		// Covers the plugin being installed or turned on while the map is enabled
+		if (e.isLoaded() && this.isSpiritTreeMenuPlugin(e.getPlugin()))
+			this.disableSpiritTreeMenuPlugin();
+	}
+
+	/**
+	 * Turns off the Spirit Tree Menu plugin while the spirit tree map is
+	 * enabled; both build over the same menu and interfere with each other
+	 */
+	private void disableSpiritTreeMenuPlugin()
+	{
+		if (!this.config.showSpiritTreeMap())
+			return;
+
+		for (Plugin plugin : this.pluginManager.getPlugins())
+		{
+			if (!this.isSpiritTreeMenuPlugin(plugin) || !this.pluginManager.isPluginEnabled(plugin))
+				continue;
+
+			log.info("Disabling the {} plugin as it conflicts with the spirit tree map", SPIRIT_TREE_MENU_PLUGIN);
+			this.pluginManager.setPluginEnabled(plugin, false);
+
+			// Plugins may only be stopped from the Swing thread
+			SwingUtilities.invokeLater(() ->
+			{
+				try
+				{
+					this.pluginManager.stopPlugin(plugin);
+				}
+				catch (PluginInstantiationException ex)
+				{
+					log.warn("Failed to stop the {} plugin", SPIRIT_TREE_MENU_PLUGIN, ex);
+				}
+			});
+		}
+	}
+
+	private boolean isSpiritTreeMenuPlugin(Plugin plugin)
+	{
+		PluginDescriptor descriptor = plugin.getClass().getAnnotation(PluginDescriptor.class);
+		return descriptor != null && descriptor.name().equals(SPIRIT_TREE_MENU_PLUGIN);
 	}
 
 	public  <T> T loadDefinitionResource(Class<T> classType, String resource)
