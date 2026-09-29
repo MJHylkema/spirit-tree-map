@@ -10,6 +10,7 @@ import com.mjhylkema.TeleportMaps.ui.UILabel;
 import com.mjhylkema.TeleportMaps.ui.UITeleport;
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
@@ -43,6 +44,7 @@ public class WildernessObeliskMap extends BaseMap implements IAdventureMap
 	private static final int ADVENTURE_LOG_CONTAINER_TITLE = 1;
 	private static final String MENU_TITLE = "Select Obelisk destination";
 	private static final int POH_OBELISK_ID = 31554;
+	private static final int MIN_MATCHING_ENTRIES = 2;
 
 	private ObeliskDefinition[] obeliskDefinitions;
 	private HashMap<String, ObeliskDefinition> obeliskDefinitionLookup;
@@ -62,6 +64,18 @@ public class WildernessObeliskMap extends BaseMap implements IAdventureMap
 	public boolean matchesTitle(String title)
 	{
 		return title.matches(MENU_TITLE);
+	}
+
+	@Override
+	public boolean matchesEntries(List<String> entryNames)
+	{
+		int matches = 0;
+		for (String entryName : entryNames)
+		{
+			if (this.obeliskDefinitionLookup.containsKey(entryName))
+				matches++;
+		}
+		return matches >= MIN_MATCHING_ENTRIES;
 	}
 
 	private void loadDefinitions()

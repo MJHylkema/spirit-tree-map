@@ -10,7 +10,7 @@ import net.runelite.client.util.ImageUtil;
  * Generates the hover, selected and disabled sprite variants each map uses
  * from its base image, so only the base art needs to be shipped.
  */
-class SpriteVariants
+public class SpriteVariants
 {
 	private static final Color HOVER_STROKE_INNER = new Color(188, 144, 0);
 	private static final Color HOVER_STROKE_OUTER = new Color(255, 191, 0);
@@ -32,16 +32,30 @@ class SpriteVariants
 				continue;
 
 			BufferedImage base = ImageUtil.loadImageResource(TeleportMapsPlugin.class, definition.getFileName());
-
-			if (definition.getHoverSpriteId() != null)
-				registerSprite(client, definition.getHoverSpriteId(), outline(vibrant(base), HOVER_STROKE_INNER, HOVER_STROKE_OUTER));
-
-			if (definition.getSelectedSpriteId() != null)
-				registerSprite(client, definition.getSelectedSpriteId(), outline(base, SELECTED_STROKE_INNER, SELECTED_STROKE_OUTER));
-
-			if (definition.getDisabledSpriteId() != null)
-				registerSprite(client, definition.getDisabledSpriteId(), grayscale(base));
+			registerVariants(client, base, definition.getHoverSpriteId(), definition.getSelectedSpriteId(), definition.getDisabledSpriteId());
 		}
+	}
+
+	/**
+	 * Registers an image built at runtime (e.g. an item icon) as a sprite,
+	 * along with any of its requested variants
+	 */
+	public static void registerImage(Client client, BufferedImage base, int spriteId, Integer hoverSpriteId, Integer selectedSpriteId, Integer disabledSpriteId)
+	{
+		registerSprite(client, spriteId, base);
+		registerVariants(client, base, hoverSpriteId, selectedSpriteId, disabledSpriteId);
+	}
+
+	private static void registerVariants(Client client, BufferedImage base, Integer hoverSpriteId, Integer selectedSpriteId, Integer disabledSpriteId)
+	{
+		if (hoverSpriteId != null)
+			registerSprite(client, hoverSpriteId, outline(vibrant(base), HOVER_STROKE_INNER, HOVER_STROKE_OUTER));
+
+		if (selectedSpriteId != null)
+			registerSprite(client, selectedSpriteId, outline(base, SELECTED_STROKE_INNER, SELECTED_STROKE_OUTER));
+
+		if (disabledSpriteId != null)
+			registerSprite(client, disabledSpriteId, grayscale(base));
 	}
 
 	private static void registerSprite(Client client, int spriteId, BufferedImage image)

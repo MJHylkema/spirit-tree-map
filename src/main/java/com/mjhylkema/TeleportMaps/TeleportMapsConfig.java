@@ -20,6 +20,8 @@ public interface TeleportMapsConfig extends Config
 	String KEY_SHOW_OBELISK_MAP_HOTKEY_LABELS = "showObeliskMapHotkeyInLabels";
 	String KEY_SHOW_SKILLS_NECKLACE_MAP = "showSkillsNecklaceMap";
 	String KEY_SHOW_MAGIC_CARPET_MAP = "showMagicCarpetMap";
+	String KEY_SHOW_JEWELLERY_BOX_MAP = "showJewelleryBoxMap";
+	String KEY_JEWELLERY_BOX_LAYOUT = "jewelleryBoxLayout";
 
 	@ConfigSection(
 		name = "Teleport Maps",
@@ -43,9 +45,16 @@ public interface TeleportMapsConfig extends Config
 	String obeliskMap = "obeliskMap";
 
 	@ConfigSection(
+		name = "Jewellery Box Map Settings",
+		description = "Settings related to the POH Jewellery Box Map",
+		position = 3
+	)
+	String jewelleryBoxMap = "jewelleryBoxMap";
+
+	@ConfigSection(
 		name = "General Settings",
 		description = "Settings that apply to all maps",
-		position = 3
+		position = 4
 	)
 	String generalSettings = "generalSettings";
 
@@ -127,6 +136,17 @@ public interface TeleportMapsConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = KEY_SHOW_JEWELLERY_BOX_MAP,
+		name = "POH Jewellery Box Map",
+		description = "Replace the house jewellery box teleport menu with an interactive map",
+		section = teleportMaps
+	)
+	default boolean showJewelleryBoxMap()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = KEY_SHOW_XERICS_MAP_LABELS,
 		name = "Display labels",
 		description = "Show named labels above each of the Xeric's Talisman teleport locations",
@@ -172,6 +192,18 @@ public interface TeleportMapsConfig extends Config
 	default boolean showObeliskMapHotkeyInLabels()
 	{
 		return false;
+	}
+
+	@ConfigItem(
+		keyName = KEY_JEWELLERY_BOX_LAYOUT,
+		name = "Layout",
+		description = "Show every destination on one map, or one tab per jewellery type",
+		section = jewelleryBoxMap,
+		position = 1
+	)
+	default JewelleryBoxLayout jewelleryBoxLayout()
+	{
+		return JewelleryBoxLayout.SINGLE_MAP;
 	}
 
 	@ConfigItem(
