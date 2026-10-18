@@ -20,6 +20,7 @@ public interface TeleportMapsConfig extends Config
 	String KEY_SHOW_OBELISK_MAP_HOTKEY_LABELS = "showObeliskMapHotkeyInLabels";
 	String KEY_SHOW_SKILLS_NECKLACE_MAP = "showSkillsNecklaceMap";
 	String KEY_SHOW_MAGIC_CARPET_MAP = "showMagicCarpetMap";
+	String KEY_SHOW_NECKLACE_OF_PASSAGE_MAP = "showNecklaceOfPassageMap";
 
 	@ConfigSection(
 		name = "Teleport Maps",
@@ -181,6 +182,17 @@ public interface TeleportMapsConfig extends Config
 		section = generalSettings
 	)
 	default boolean displayHotkeys()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = KEY_SHOW_NECKLACE_OF_PASSAGE_MAP,
+		name = "Necklace of Passage Map",
+		description = "Show an interactive map when interacting with the Necklace of Passage travel menu.",
+		section = teleportMaps
+	)
+	default boolean showNecklaceOfPassageMap()
 	{
 		return true;
 	}

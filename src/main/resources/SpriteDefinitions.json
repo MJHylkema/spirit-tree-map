@@ -212,5 +212,16 @@
     "hoverSpriteId": -19802,
     "selectedSpriteId": -19803,
     "disabledSpriteId": -19804
+  },
+  {
+    "spriteId": -19900,
+    "fileName": "/NecklaceOfPassageMap/NecklaceOfPassageMap.png"
+  },
+  {
+    "spriteId": -19901,
+    "fileName": "/NecklaceOfPassageMap/PassageJade1.png",
+    "hoverSpriteId": -19902,
+    "selectedSpriteId": -19903,
+    "disabledSpriteId": -19904
   }
 ]

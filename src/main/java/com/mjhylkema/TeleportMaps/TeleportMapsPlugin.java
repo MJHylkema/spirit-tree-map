@@ -2,6 +2,7 @@ package com.mjhylkema.TeleportMaps;
 
 import com.google.gson.Gson;
 import com.google.inject.Provides;
+import com.mjhylkema.TeleportMaps.components.NecklaceOfPassageMap;
 import com.mjhylkema.TeleportMaps.components.adventureLog.AdventureLogComposite;
 import com.mjhylkema.TeleportMaps.components.IMap;
 import com.mjhylkema.TeleportMaps.components.MagicCarpetMap;
@@ -69,6 +70,8 @@ public class TeleportMapsPlugin extends Plugin
 	@Inject
 	private MagicCarpetMap magicCarpetMap;
 	@Inject
+	private NecklaceOfPassageMap necklaceOfPassageMap;
+	@Inject
 	AdventureLogComposite adventureLogComposite;
 
 	private List<IMap> mapComponents;
@@ -80,7 +83,7 @@ public class TeleportMapsPlugin extends Plugin
 		this.spriteManager.addSpriteOverrides(spriteDefinitions);
 		this.clientThread.invokeLater(() -> SpriteVariants.register(this.client, spriteDefinitions));
 
-		this.mapComponents = Arrays.asList(mushtreeMap, adventureLogComposite, spiritTreeMap, xericsMap, minecartMap, obeliskMap, skillsNecklaceMap, magicCarpetMap);
+		this.mapComponents = Arrays.asList(mushtreeMap, adventureLogComposite, spiritTreeMap, xericsMap, minecartMap, obeliskMap, skillsNecklaceMap, magicCarpetMap, necklaceOfPassageMap);
 
 		this.adventureLogComposite.addAdventureLogMap(spiritTreeMap);
 		this.adventureLogComposite.addAdventureLogMap(xericsMap);

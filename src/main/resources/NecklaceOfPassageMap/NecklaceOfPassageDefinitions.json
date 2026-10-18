@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Wizards' Tower",
+    "x": 332,
+    "y": 125,
+    "hotkey": {
+      "key": "1",
+      "x": 357,
+      "y": 127
+    }
+  },
+  {
+    "name": "The Outpost",
+    "x": 232,
+    "y": 92,
+    "hotkey": {
+      "key": "2",
+      "x": 257,
+      "y": 94
+    }
+  },
+  {
+    "name": "Eagle's Eyrie",
+    "x": 385,
+    "y": 144,
+    "hotkey": {
+      "key": "3",
+      "x": 410,
+      "y": 146
+    }
+  },
+  {
+    "name": "Wyrmscraig",
+    "x": 243,
+    "y": 293,
+    "hotkey": {
+      "key": "4",
+      "x": 268,
+      "y": 295
+    }
+  }
+]
