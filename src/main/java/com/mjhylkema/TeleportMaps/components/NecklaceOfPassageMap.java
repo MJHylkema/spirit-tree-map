@@ -3,7 +3,6 @@ package com.mjhylkema.TeleportMaps.components;
 import com.mjhylkema.TeleportMaps.TeleportMapsConfig;
 import com.mjhylkema.TeleportMaps.TeleportMapsPlugin;
 import com.mjhylkema.TeleportMaps.definition.HotKeyDefinition;
-import com.mjhylkema.TeleportMaps.definition.MagicCarpetDefinition;
 import com.mjhylkema.TeleportMaps.definition.NecklaceOfPassageDefinition;
 import com.mjhylkema.TeleportMaps.ui.UIButton;
 import com.mjhylkema.TeleportMaps.ui.UIHotkey;
@@ -102,7 +101,6 @@ public class NecklaceOfPassageMap extends BaseMap {
     if (e.getItemOp() != INTERACTION_OP_ID)
       return;
 
-    log.error("valid interaction");
     this.interactedWith = true;
   }
 
@@ -116,8 +114,6 @@ public class NecklaceOfPassageMap extends BaseMap {
 
     if (!interactedWith)
       return;
-
-    log.error("Widget loaded!");
 
     // The dialog options are populated after the interface loads,
     // so inspect the dialog on the next client cycle
