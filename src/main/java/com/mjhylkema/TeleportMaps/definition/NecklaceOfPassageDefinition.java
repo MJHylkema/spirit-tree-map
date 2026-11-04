@@ -6,9 +6,9 @@ import lombok.Getter;
 public class NecklaceOfPassageDefinition
 {
   @Getter
-  static private final int width = 24;
+  static private final int width = 22;
   @Getter
-  static private final int height = 22;
+  static private final int height = 33;
 
   private String name;
   private int x;

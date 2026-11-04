@@ -294,12 +294,6 @@ public class NecklaceOfPassageMap extends BaseMap {
         int hotkeyDigit = destinationOption.childIndex;
         if (hotkeyDigit >= 1 && hotkeyDigit <= 9)
         {
-          gemTeleport.getWidget().setOnKeyListener((JavaScriptCallback) ev ->
-          {
-            if (ev.getTypedKeyChar() == Character.forDigit(hotkeyDigit, 10))
-              this.triggerTravel(destinationOption);
-          });
-
           UIHotkey hotkey = this.createScreenHotKey(container, definition.getHotkey(), String.valueOf(hotkeyDigit), mapX, mapY);
           gemTeleport.attachHotkey(hotkey);
         }
@@ -379,6 +373,7 @@ public class NecklaceOfPassageMap extends BaseMap {
       }
 
       this.runPacketSendingScript(listener);
+      this.destroyInterface();
     });
   }
 
