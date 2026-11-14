@@ -15,6 +15,7 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetType;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.util.Text;
 
 /**
@@ -80,6 +81,18 @@ public class ChatOptionsComposite implements IMap
 	{
 		if (e.getGroupId() == DIALOG_OPTION_GROUP_ID)
 			this.destroyInterface();
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged e)
+	{
+		// The map's own config handler may not have updated its active state yet,
+		// so check on the next client cycle
+		this.clientThread.invokeLater(() ->
+		{
+			if (this.activeMap != null && !this.activeMap.isActive())
+				this.destroyInterface();
+		});
 	}
 
 	private void tryBuildInterface()
