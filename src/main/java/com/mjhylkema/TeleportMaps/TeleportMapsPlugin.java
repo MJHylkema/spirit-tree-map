@@ -3,6 +3,8 @@ package com.mjhylkema.TeleportMaps;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
 import com.mjhylkema.TeleportMaps.components.adventureLog.AdventureLogComposite;
+import com.mjhylkema.TeleportMaps.components.chatOptions.BookOfTheDeadMap;
+import com.mjhylkema.TeleportMaps.components.chatOptions.ChatOptionsComposite;
 import com.mjhylkema.TeleportMaps.components.IMap;
 import com.mjhylkema.TeleportMaps.components.MagicCarpetMap;
 import com.mjhylkema.TeleportMaps.components.adventureLog.MinecartMap;
@@ -69,7 +71,11 @@ public class TeleportMapsPlugin extends Plugin
 	@Inject
 	private MagicCarpetMap magicCarpetMap;
 	@Inject
+	private BookOfTheDeadMap bookOfTheDeadMap;
+	@Inject
 	AdventureLogComposite adventureLogComposite;
+	@Inject
+	ChatOptionsComposite chatOptionsComposite;
 
 	private List<IMap> mapComponents;
 
@@ -80,13 +86,15 @@ public class TeleportMapsPlugin extends Plugin
 		this.spriteManager.addSpriteOverrides(spriteDefinitions);
 		this.clientThread.invokeLater(() -> SpriteVariants.register(this.client, spriteDefinitions));
 
-		this.mapComponents = Arrays.asList(mushtreeMap, adventureLogComposite, spiritTreeMap, xericsMap, minecartMap, obeliskMap, skillsNecklaceMap, magicCarpetMap);
+		this.mapComponents = Arrays.asList(mushtreeMap, adventureLogComposite, spiritTreeMap, xericsMap, minecartMap, obeliskMap, skillsNecklaceMap, magicCarpetMap, chatOptionsComposite, bookOfTheDeadMap);
 
 		this.adventureLogComposite.addAdventureLogMap(spiritTreeMap);
 		this.adventureLogComposite.addAdventureLogMap(xericsMap);
 		this.adventureLogComposite.addAdventureLogMap(minecartMap);
 		this.adventureLogComposite.addAdventureLogMap(obeliskMap);
 		this.adventureLogComposite.addAdventureLogMap(skillsNecklaceMap);
+
+		this.chatOptionsComposite.addChatOptionsMap(bookOfTheDeadMap);
 
 		this.mapComponents.forEach(mapComponent -> eventBus.register(mapComponent));
 	}
@@ -95,6 +103,7 @@ public class TeleportMapsPlugin extends Plugin
 	protected void shutDown()
 	{
 		this.mapComponents.forEach(mapComponent -> eventBus.unregister(mapComponent));
+		this.clientThread.invokeLater(this.chatOptionsComposite::destroyInterface);
 	}
 
 	public  <T> T loadDefinitionResource(Class<T> classType, String resource)

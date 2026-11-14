@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Hosidius",
+    "x": 320,
+    "y": 206,
+    "label": {
+      "title": "Hosidius",
+      "x": 294,
+      "y": 192,
+      "width": 80
+    }
+  },
+  {
+    "name": "Piscarilius",
+    "x": 342,
+    "y": 123,
+    "label": {
+      "title": "Piscarilius",
+      "x": 316,
+      "y": 109,
+      "width": 80
+    }
+  },
+  {
+    "name": "Shayzien",
+    "x": 221,
+    "y": 222,
+    "label": {
+      "title": "Shayzien",
+      "x": 195,
+      "y": 208,
+      "width": 80
+    }
+  },
+  {
+    "name": "Lovakengj",
+    "x": 249,
+    "y": 140,
+    "label": {
+      "title": "Lovakengj",
+      "x": 213,
+      "y": 126,
+      "width": 80
+    }
+  },
+  {
+    "name": "Arceuus",
+    "x": 306,
+    "y": 146,
+    "label": {
+      "title": "Arceuus",
+      "x": 280,
+      "y": 132,
+      "width": 80
+    }
+  }
+]

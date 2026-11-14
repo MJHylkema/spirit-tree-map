@@ -20,6 +20,7 @@ public interface TeleportMapsConfig extends Config
 	String KEY_SHOW_OBELISK_MAP_HOTKEY_LABELS = "showObeliskMapHotkeyInLabels";
 	String KEY_SHOW_SKILLS_NECKLACE_MAP = "showSkillsNecklaceMap";
 	String KEY_SHOW_MAGIC_CARPET_MAP = "showMagicCarpetMap";
+	String KEY_SHOW_BOOK_OF_THE_DEAD_MAP = "showBookOfTheDeadMap";
 
 	@ConfigSection(
 		name = "Teleport Maps",
@@ -122,6 +123,17 @@ public interface TeleportMapsConfig extends Config
 		section = teleportMaps
 	)
 	default boolean showMagicCarpetMap()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = KEY_SHOW_BOOK_OF_THE_DEAD_MAP,
+		name = "Book of the Dead & Memoirs Map",
+		description = "Replace the Book of the dead and Kharedst's memoirs teleport menu with an interactive map",
+		section = teleportMaps
+	)
+	default boolean showBookOfTheDeadMap()
 	{
 		return true;
 	}

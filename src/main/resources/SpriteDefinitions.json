@@ -212,5 +212,11 @@
     "hoverSpriteId": -19802,
     "selectedSpriteId": -19803,
     "disabledSpriteId": -19804
+  },
+  {
+    "spriteId": -19900,
+    "fileName": "/BookOfTheDeadMap/Rose.png",
+    "hoverSpriteId": -19901,
+    "disabledSpriteId": -19902
   }
 ]
